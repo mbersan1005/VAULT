@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  standalone: false,
+  standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
 export class HomePage {
@@ -23,7 +23,12 @@ export class HomePage {
     private router: Router,
     private apiFacade: ApiFacade,
     private modalController: ModalController,
-    public apiRequestService: ApiRequestService) {}
+    public apiRequestService: ApiRequestService,
+    private toastController: ToastController) {}
+
+  ngOnInit(){
+    this.cargarJuegos();
+  }
 
   openPage(page: string) {
     if (page === 'home') {
@@ -40,14 +45,24 @@ export class HomePage {
         if (data && data.videojuegos && data.videojuegos.length > 0) {
           this.videojuegos = data.videojuegos;  
         } else {
-          //this.message = 'No se encontraron artículos';
+          this.mostrarToast('No se encontraron datos','danger');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        //this.message = 'Error al cargar los artículos';
+        this.mostrarToast('Error al cargar los datos','danger')
       }
     );
+  }
+
+  private async mostrarToast(mensaje: string, color: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      position: 'top',
+      color: color
+    });
+    await toast.present();
   }
 
 }
