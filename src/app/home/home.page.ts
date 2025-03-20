@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class HomePage {
 
-  videojuegos: any[] = [];
+  juegos: any[] = [];
 
   constructor(
     private menu: MenuController, 
@@ -42,8 +42,9 @@ export class HomePage {
   public cargarJuegos() {
     this.apiFacade.recibirJuegos().subscribe(
       (data) => {
-        if (data && data.videojuegos && data.videojuegos.length > 0) {
-          this.videojuegos = data.videojuegos;  
+        console.log('Datos recibidos desde la API:', data); // Verifica la respuesta de la API
+        if (data && data.juegos && data.juegos.length > 0) {
+          this.juegos = data.juegos;  
         } else {
           this.mostrarToast('No se encontraron datos','danger');
         }
