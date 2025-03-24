@@ -17,6 +17,10 @@ import { FormsModule } from '@angular/forms';
 export class HomePage {
 
   juegos: any[] = [];
+  juegosFiltrados: any[] = []; 
+  searchText: string = ''; 
+  juegosCargados: number = 6; 
+  juegosPorCargar: number = 6;
 
   constructor(
     private menu: MenuController, 
@@ -42,18 +46,50 @@ export class HomePage {
   public cargarJuegos() {
     this.apiFacade.recibirJuegos().subscribe(
       (data) => {
-        console.log('Datos recibidos desde la API:', data); // Verifica la respuesta de la API
+        console.log('Datos recibidos desde la API:', data);
         if (data && data.juegos && data.juegos.length > 0) {
           this.juegos = data.juegos;  
+          this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados); 
         } else {
-          this.mostrarToast('No se encontraron datos','danger');
+          this.mostrarToast('No se encontraron datos', 'danger');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos','danger')
+        this.mostrarToast('Error al cargar los datos', 'danger');
       }
     );
+  }
+
+  public realizarBusqueda(event: any) {
+    const query = event.target.value?.toLowerCase() || ''; 
+    if (query.trim() === '') {
+      this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados); 
+    } else {
+      this.juegosFiltrados = this.juegos.filter(juego =>
+        juego.nombre?.toLowerCase().includes(query)
+      ).slice(0, this.juegosCargados);
+    }
+  }
+
+  public cargarMasJuegos(event: any) {
+    setTimeout(() => {
+      this.juegosCargados += this.juegosPorCargar;
+      
+      if (this.searchText.trim() === '') {
+        this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+      } else {
+        this.juegosFiltrados = this.juegos.filter(juego =>
+          juego.nombre?.toLowerCase().includes(this.searchText.toLowerCase())
+        ).slice(0, this.juegosCargados);
+      }
+
+      event.target.complete();
+
+      if (this.juegosCargados >= this.juegos.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
   }
 
   private async mostrarToast(mensaje: string, color: string) {
@@ -65,5 +101,4 @@ export class HomePage {
     });
     await toast.present();
   }
-
 }
