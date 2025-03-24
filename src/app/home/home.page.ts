@@ -40,7 +40,7 @@ export class HomePage {
 
   openPage(page: string) {
     if (page === 'home') {
-      //this.router.navigate(['/home']);
+      this.router.navigate(['/home']);
     } else if (page === 'profile') {
       //this.router.navigate(['/profile']);
     }
@@ -121,4 +121,9 @@ export class HomePage {
     });
     await toast.present();
   }
+
+  public verJuego(JuegoId: number){
+    this.router.navigate(['/info-juego', JuegoId]);
+  }
+
 }

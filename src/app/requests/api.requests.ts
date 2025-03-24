@@ -23,5 +23,14 @@ export class ApiRequestService {
     return this.http.get(this.baseUrl+"/recibirJuegos", {headers});
   }
 
+  public recibirDatosJuego(id: number): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.get(`${this.baseUrl}/recibirDatosJuego/${id}`, { headers });
+  }
   
 }

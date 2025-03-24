@@ -13,6 +13,8 @@ export class ApiFacade {
     return this.request.recibirJuegos();
   }
 
-  
+  public recibirDatosJuego(id: number): Observable<any>{
+    return this.request.recibirDatosJuego(id);
+  }
 
 }
