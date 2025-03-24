@@ -18,14 +18,14 @@ ion-title{
 }
 
 .card-hover:hover {
-  transform: scale(1.05); /* Aumenta el tamaño al pasar el cursor */
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Sombra para el efecto visual */
+  transform: scale(1.05); 
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); 
 }
 
 .extra-info {
-  display: none; /* Por defecto, los datos extra están ocultos */
+  display: none; 
 }
 
 .card-hover:hover .extra-info {
-  display: block; /* Se muestran cuando la tarjeta está en hover */
+  display: block; 
 }

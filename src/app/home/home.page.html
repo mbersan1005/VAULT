@@ -36,7 +36,7 @@
 
     <ion-grid *ngIf="juegosFiltrados.length > 0">
       <ion-row>
-        <ion-col size="4" *ngFor="let juego of juegosFiltrados; let i = index">
+        <ion-col size="12" size-md="4" *ngFor="let juego of juegosFiltrados; let i = index">
           <ion-card class="card-hover">
             <img [src]="juego.imagen" alt="Imagen de {{ juego.nombre }}">
             <ion-card-header>
@@ -44,7 +44,9 @@
             </ion-card-header>
             <ion-card-content>
               <div class="extra-info">
-                <p>Fecha de lanzamiento: {{ juego.fecha_lanzamiento }}</p>
+                <p><strong>Fecha de lanzamiento:</strong> {{ formatearFecha(juego.fecha_lanzamiento) }}</p>
+                <p><strong>Plataformas:</strong> {{ getPlataformas(juego.plataformas_principales) }}</p>
+                <p><strong>Géneros:</strong> {{ getGeneros(juego.generos) }}</p>
               </div>
             </ion-card-content>
           </ion-card>
@@ -52,10 +54,8 @@
       </ion-row>
     </ion-grid>
 
-
     <ion-infinite-scroll threshold="100px" (ionInfinite)="cargarMasJuegos($event)">
       <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más juegos..."></ion-infinite-scroll-content>
     </ion-infinite-scroll>
-
   </ion-content>
 </ion-app>

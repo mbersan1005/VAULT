@@ -6,13 +6,15 @@ import { ApiRequestService } from '../requests/api.requests';
 import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule],
+  providers: [DatePipe]
 })
 export class HomePage {
 
@@ -28,7 +30,9 @@ export class HomePage {
     private apiFacade: ApiFacade,
     private modalController: ModalController,
     public apiRequestService: ApiRequestService,
-    private toastController: ToastController) {}
+    private toastController: ToastController,
+    private datePipe: DatePipe
+  ) {}
 
   ngOnInit(){
     this.cargarJuegos();
@@ -61,6 +65,16 @@ export class HomePage {
     );
   }
 
+  getPlataformas(plataformasJson: string): string {
+    const plataformas = JSON.parse(plataformasJson); 
+    return plataformas.map((plataforma: { nombre: any; }) => plataforma.nombre).join(', ');
+  }
+
+  getGeneros(generosJson: string): string {
+    const generos = JSON.parse(generosJson);
+    return generos.map((genero: { nombre: any; }) => genero.nombre).join(', ');
+  }
+
   public realizarBusqueda(event: any) {
     const query = event.target.value?.toLowerCase() || ''; 
     if (query.trim() === '') {
@@ -91,6 +105,12 @@ export class HomePage {
       }
     }, 500);
   }
+
+  public formatearFecha(fecha: string): string {
+    const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
+    return fechaFormateada || fecha; 
+  }
+
 
   private async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
