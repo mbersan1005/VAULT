@@ -6,6 +6,7 @@ import { ApiRequestService } from '../requests/api.requests';
 import { DatePipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';  
 import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-info-juego',
@@ -19,6 +20,7 @@ export class InfoJuegoPage {
 
   juegoId: number | null = null;
   juego: any = [];
+  juegoAppID: number | null = null;
 
   constructor(
     private menu: MenuController,
@@ -28,7 +30,8 @@ export class InfoJuegoPage {
     public apiRequestService: ApiRequestService,
     private toastController: ToastController,
     private datePipe: DatePipe,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -36,7 +39,8 @@ export class InfoJuegoPage {
     this.juegoId = idParam ? parseInt(idParam, 10) : null;
 
     if (this.juegoId !== null && !isNaN(this.juegoId)) {
-      this.cargarJuego(this.juegoId);  
+      this.cargarJuego(this.juegoId);
+      this.obtenerAppID(this.juego.nombre);
     } else {
       this.mostrarToast('ID del juego no válido', 'danger');
     }
@@ -46,9 +50,18 @@ export class InfoJuegoPage {
     this.apiFacade.recibirDatosJuego(id).subscribe(
       (data) => {
         console.log('Datos del juego recibido desde la API:', data);
-
-        this.juego = data.juego || data;  
-
+        this.juego = data.juego || data;
+  
+        console.log('Juego cargado:', this.juego);  // Verifica que 'nombre' está en el objeto
+  
+        // Verificar que 'juego.nombre' no es undefined
+        if (this.juego && this.juego.nombre) {
+          console.log('Nombre del juego:', this.juego.nombre);  // Verificar el valor de nombre antes de llamar a la API
+          this.obtenerAppID(this.juego.nombre);
+        } else {
+          console.error('Nombre del juego no disponible');
+          this.mostrarToast('Nombre del juego no disponible', 'danger');
+        }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
@@ -56,6 +69,8 @@ export class InfoJuegoPage {
       }
     );
   }
+  
+  
   
   private parseJsonData(data: any): any[] {
     if (!data) return []; 
@@ -108,5 +123,20 @@ export class InfoJuegoPage {
     });
     await toast.present();
   }
+
+  obtenerAppID(juegoNombre: string) {
+    this.apiFacade.recibirJuegoAppID(juegoNombre).subscribe(
+      (data: number) => {  
+        console.log('AppID recibido desde la API:', data);
+        this.juegoAppID = data || null;
+
+      },
+      (error: any) => {
+        console.error('Error al obtener el AppID:', error);
+        this.mostrarToast('Error al cargar la gráfica', 'danger');
+      }
+    );
+  }
+
 
 }

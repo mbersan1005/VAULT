@@ -32,5 +32,19 @@ export class ApiRequestService {
 
     return this.http.get(`${this.baseUrl}/recibirDatosJuego/${id}`, { headers });
   }
+
+  public recibirJuegoAppID(juegoNombre: string): Observable<any>{
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+      // Sanitize the game name to ensure it is correctly formatted for the URL
+  const nombreSanitizado = encodeURIComponent(juegoNombre);
+
+  // Ahora la URL debería estar correctamente formateada
+  return this.http.get(`${this.baseUrl}/recibirAppID/${nombreSanitizado}`, { headers });
+
+  }
   
 }
