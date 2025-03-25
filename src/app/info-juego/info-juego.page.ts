@@ -6,7 +6,6 @@ import { ApiRequestService } from '../requests/api.requests';
 import { DatePipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';  
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-info-juego',
@@ -20,7 +19,6 @@ export class InfoJuegoPage {
 
   juegoId: number | null = null;
   juego: any = [];
-  juegoAppID: number | null = null;
 
   constructor(
     private menu: MenuController,
@@ -31,7 +29,6 @@ export class InfoJuegoPage {
     private toastController: ToastController,
     private datePipe: DatePipe,
     private route: ActivatedRoute,
-    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -40,7 +37,6 @@ export class InfoJuegoPage {
 
     if (this.juegoId !== null && !isNaN(this.juegoId)) {
       this.cargarJuego(this.juegoId);
-      this.obtenerAppID(this.juego.nombre);
     } else {
       this.mostrarToast('ID del juego no válido', 'danger');
     }
@@ -52,12 +48,10 @@ export class InfoJuegoPage {
         console.log('Datos del juego recibido desde la API:', data);
         this.juego = data.juego || data;
   
-        console.log('Juego cargado:', this.juego);  // Verifica que 'nombre' está en el objeto
+        console.log('Juego cargado:', this.juego);  
   
-        // Verificar que 'juego.nombre' no es undefined
         if (this.juego && this.juego.nombre) {
-          console.log('Nombre del juego:', this.juego.nombre);  // Verificar el valor de nombre antes de llamar a la API
-          this.obtenerAppID(this.juego.nombre);
+          console.log('Nombre del juego:', this.juego.nombre);  
         } else {
           console.error('Nombre del juego no disponible');
           this.mostrarToast('Nombre del juego no disponible', 'danger');
@@ -70,7 +64,6 @@ export class InfoJuegoPage {
     );
   }
   
-<<<<<<< HEAD
   
   
   private parseJsonData(data: any): any[] {
@@ -82,35 +75,38 @@ export class InfoJuegoPage {
       console.error('Error al parsear JSON:', error, data);
       return []; 
     }
-=======
-  getPlataformas(plataformasJson: string): string {
-    const plataformas = JSON.parse(plataformasJson); 
-    return plataformas.map((plataforma: { nombre: any; }) => plataforma.nombre).join(', ');
->>>>>>> parent of a451056 (Errores de parsear JSON de Info-juego corregido)
   }
-
-  getGeneros(generosJson: string): string {
-    const generos = JSON.parse(generosJson);
-    return generos.map((genero: { nombre: any; }) => genero.nombre).join(', ');
+  
+  getPlataformas(plataformasJson: any): string {
+    const plataformas = this.parseJsonData(plataformasJson);
+    return plataformas.length > 0 ? plataformas.map((p: { nombre: string }) => p.nombre).join(', ') : 'No disponible';
   }
-
-  getDesarrolladoras(desarrolladorasJson: string): string{
-    const desarrolladoras = JSON.parse(desarrolladorasJson);
-    return desarrolladoras.map((desarrolladora: { nombre: any}) => desarrolladora.nombre).join(', ');
+  
+  getGeneros(generosJson: any): string {
+    const generos = this.parseJsonData(generosJson);
+    return generos.length > 0 ? generos.map((g: { nombre: string }) => g.nombre).join(', ') : 'No disponible';
   }
-
-  getPublishers(publishersJson: string): string{
-    const publishers = JSON.parse(publishersJson);
-    return publishers.map((publisher: { nombre: any}) => publisher.nombre).join(', ');
+  
+  getDesarrolladoras(desarrolladorasJson: any): string {
+    const desarrolladoras = this.parseJsonData(desarrolladorasJson);
+    return desarrolladoras.length > 0 ? desarrolladoras.map((d: { nombre: string }) => d.nombre).join(', ') : 'No disponible';
   }
-
-  getTiendas(tiendasJson: string): string{
-    const tiendas = JSON.parse(tiendasJson);
-    return tiendas.map((tienda: { nombre: any}) => tienda.nombre).join(', ');
+  
+  getPublishers(publishersJson: any): string {
+    const publishers = this.parseJsonData(publishersJson);
+    return publishers.length > 0 ? publishers.map((p: { nombre: string }) => p.nombre).join(', ') : 'No disponible';
   }
+  
+  getTiendas(tiendasJson: any): string {
+    const tiendas = this.parseJsonData(tiendasJson);
+    return tiendas.length > 0 ? tiendas.map((t: { nombre: string }) => t.nombre).join(', ') : 'No disponible';
+  }
+  
 
-
-
+  public formatearFecha(fecha: string): string {
+    const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
+    return fechaFormateada || fecha; 
+  }
 
   private async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
@@ -121,20 +117,5 @@ export class InfoJuegoPage {
     });
     await toast.present();
   }
-
-  obtenerAppID(juegoNombre: string) {
-    this.apiFacade.recibirJuegoAppID(juegoNombre).subscribe(
-      (data: number) => {  
-        console.log('AppID recibido desde la API:', data);
-        this.juegoAppID = data || null;
-
-      },
-      (error: any) => {
-        console.error('Error al obtener el AppID:', error);
-        this.mostrarToast('Error al cargar la gráfica', 'danger');
-      }
-    );
-  }
-
 
 }
