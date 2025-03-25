@@ -57,33 +57,47 @@ export class InfoJuegoPage {
     );
   }
   
-  getPlataformas(plataformasJson: string): string {
-    const plataformas = JSON.parse(plataformasJson); 
-    return plataformas.map((plataforma: { nombre: any; }) => plataforma.nombre).join(', ');
+  private parseJsonData(data: any): any[] {
+    if (!data) return []; 
+  
+    try {
+      return typeof data === 'string' ? JSON.parse(data) : data; 
+    } catch (error) {
+      console.error('Error al parsear JSON:', error, data);
+      return []; 
+    }
   }
-
-  getGeneros(generosJson: string): string {
-    const generos = JSON.parse(generosJson);
-    return generos.map((genero: { nombre: any; }) => genero.nombre).join(', ');
+  
+  getPlataformas(plataformasJson: any): string {
+    const plataformas = this.parseJsonData(plataformasJson);
+    return plataformas.length > 0 ? plataformas.map((p: { nombre: string }) => p.nombre).join(', ') : 'No disponible';
   }
-
-  getDesarrolladoras(desarrolladorasJson: string): string{
-    const desarrolladoras = JSON.parse(desarrolladorasJson);
-    return desarrolladoras.map((desarrolladora: { nombre: any}) => desarrolladora.nombre).join(', ');
+  
+  getGeneros(generosJson: any): string {
+    const generos = this.parseJsonData(generosJson);
+    return generos.length > 0 ? generos.map((g: { nombre: string }) => g.nombre).join(', ') : 'No disponible';
   }
-
-  getPublishers(publishersJson: string): string{
-    const publishers = JSON.parse(publishersJson);
-    return publishers.map((publisher: { nombre: any}) => publisher.nombre).join(', ');
+  
+  getDesarrolladoras(desarrolladorasJson: any): string {
+    const desarrolladoras = this.parseJsonData(desarrolladorasJson);
+    return desarrolladoras.length > 0 ? desarrolladoras.map((d: { nombre: string }) => d.nombre).join(', ') : 'No disponible';
   }
-
-  getTiendas(tiendasJson: string): string{
-    const tiendas = JSON.parse(tiendasJson);
-    return tiendas.map((tienda: { nombre: any}) => tienda.nombre).join(', ');
+  
+  getPublishers(publishersJson: any): string {
+    const publishers = this.parseJsonData(publishersJson);
+    return publishers.length > 0 ? publishers.map((p: { nombre: string }) => p.nombre).join(', ') : 'No disponible';
   }
+  
+  getTiendas(tiendasJson: any): string {
+    const tiendas = this.parseJsonData(tiendasJson);
+    return tiendas.length > 0 ? tiendas.map((t: { nombre: string }) => t.nombre).join(', ') : 'No disponible';
+  }
+  
 
-
-
+  public formatearFecha(fecha: string): string {
+    const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
+    return fechaFormateada || fecha; 
+  }
 
   private async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
