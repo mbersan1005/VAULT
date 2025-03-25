@@ -38,15 +38,6 @@ export class HomePage {
     this.cargarJuegos();
   }
 
-  openPage(page: string) {
-    if (page === 'home') {
-      this.router.navigate(['/home']);
-    } else if (page === 'profile') {
-      //this.router.navigate(['/profile']);
-    }
-    this.menu.close();
-  }
-
   public cargarJuegos() {
     this.apiFacade.recibirJuegos().subscribe(
       (data) => {

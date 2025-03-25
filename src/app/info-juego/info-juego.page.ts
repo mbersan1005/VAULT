@@ -42,7 +42,6 @@ export class InfoJuegoPage {
     }
   }
   
-
   cargarJuego(id: number) {
     this.apiFacade.recibirDatosJuego(id).subscribe(
       (data) => {
@@ -58,6 +57,33 @@ export class InfoJuegoPage {
     );
   }
   
+  getPlataformas(plataformasJson: string): string {
+    const plataformas = JSON.parse(plataformasJson); 
+    return plataformas.map((plataforma: { nombre: any; }) => plataforma.nombre).join(', ');
+  }
+
+  getGeneros(generosJson: string): string {
+    const generos = JSON.parse(generosJson);
+    return generos.map((genero: { nombre: any; }) => genero.nombre).join(', ');
+  }
+
+  getDesarrolladoras(desarrolladorasJson: string): string{
+    const desarrolladoras = JSON.parse(desarrolladorasJson);
+    return desarrolladoras.map((desarrolladora: { nombre: any}) => desarrolladora.nombre).join(', ');
+  }
+
+  getPublishers(publishersJson: string): string{
+    const publishers = JSON.parse(publishersJson);
+    return publishers.map((publisher: { nombre: any}) => publisher.nombre).join(', ');
+  }
+
+  getTiendas(tiendasJson: string): string{
+    const tiendas = JSON.parse(tiendasJson);
+    return tiendas.map((tienda: { nombre: any}) => tienda.nombre).join(', ');
+  }
+
+
+
 
   private async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({

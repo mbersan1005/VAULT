@@ -1,9 +1,64 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>{{ juego.nombre }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>IONIC</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
+  <ion-grid>
+    <h1> {{ juego.nombre }}</h1>
+    <ion-row>
+      <ion-col id="primera_columna">
+        <ion-grid>
+          <ion-row>
+            <h2>Descripción</h2>
+            <p [innerHTML]="juego.descripcion"></p>
+          </ion-row>
+
+          <ion-row>
+            <ion-grid>
+              <ion-row>
+                <p><strong>Plataformas:</strong> {{ getPlataformas(juego.plataformas_principales) }}</p>
+              </ion-row>
+
+              <ion-row>
+                <p><strong>Generos:</strong> {{ getGeneros(juego.generos) }}</p>
+              </ion-row>
+
+              <ion-row>
+                <p><strong>Desarrolladoras:</strong> {{ getDesarrolladoras(juego.desarrolladoras) }}</p>
+              </ion-row>
+
+              <ion-row>
+                <p><strong>Publishers:</strong> {{ getPublishers(juego.publishers) }}</p>
+              </ion-row>
+
+            </ion-grid>
+          </ion-row>
+
+        </ion-grid>
+      </ion-col>
+      <ion-col size="auto">
+        <img [src]="juego.imagen" alt="Imagen de {{ juego.nombre }}">
+        <ion-grid>
+          <ion-row>
+            <p><strong>Nota en Metacritic:</strong> {{ juego.nota_metacritic }}</p>
+          </ion-row>
+          <ion-row>
+            <p><strong>Fecha de lanzamiento:</strong> {{ juego.fecha_lanzamiento }}</p>
+          </ion-row>
+          <ion-row>
+            <p><strong>Sitio Web: </strong> <a [href]="juego.sitio_web" target="_blank">{{ juego.sitio_web }}</a></p>
+          </ion-row>
+          <ion-row>
+            <p><strong>Tiendas:</strong> {{ getTiendas(juego.tiendas) }}</p>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 </ion-content>
