@@ -17,7 +17,4 @@ export class ApiFacade {
     return this.request.recibirDatosJuego(id);
   }
 
-  public recibirJuegoAppID(juegoNombre: string): Observable<any>{
-    return this.request.recibirJuegoAppID(juegoNombre);
-  }
 }

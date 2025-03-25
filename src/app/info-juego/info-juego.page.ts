@@ -64,8 +64,6 @@ export class InfoJuegoPage {
     );
   }
   
-  
-  
   private parseJsonData(data: any): any[] {
     if (!data) return []; 
   

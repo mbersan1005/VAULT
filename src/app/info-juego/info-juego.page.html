@@ -8,57 +8,31 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <h1> {{ juego.nombre }}</h1>
-    <ion-row>
-      <ion-col id="primera_columna">
-        <ion-grid>
-          <ion-row>
-            <h2>Descripción</h2>
-            <p [innerHTML]="juego.descripcion"></p>
-          </ion-row>
-
-          <ion-row>
-            <ion-grid>
-              <ion-row>
-                <p><strong>Plataformas:</strong> {{ getPlataformas(juego.plataformas_principales) }}</p>
-              </ion-row>
-
-              <ion-row>
-                <p><strong>Generos:</strong> {{ getGeneros(juego.generos) }}</p>
-              </ion-row>
-
-              <ion-row>
-                <p><strong>Desarrolladoras:</strong> {{ getDesarrolladoras(juego.desarrolladoras) }}</p>
-              </ion-row>
-
-              <ion-row>
-                <p><strong>Publishers:</strong> {{ getPublishers(juego.publishers) }}</p>
-              </ion-row>
-
-            </ion-grid>
-          </ion-row>
-
-        </ion-grid>
-      </ion-col>
-      <ion-col size="auto">
+  <div class="container">
+    <h1>{{ juego.nombre }}</h1>
+    <div class="content-grid">
+      <div class="image-section">
         <img [src]="juego.imagen" alt="Imagen de {{ juego.nombre }}">
-        <ion-grid>
-          <ion-row>
-            <p><strong>Nota en Metacritic:</strong> {{ juego.nota_metacritic }}</p>
-          </ion-row>
-          <ion-row>
-            <p><strong>Fecha de lanzamiento:</strong> {{ juego.fecha_lanzamiento }}</p>
-          </ion-row>
-          <ion-row>
-            <p><strong>Sitio Web: </strong> <a [href]="juego.sitio_web" target="_blank">{{ juego.sitio_web }}</a></p>
-          </ion-row>
-          <ion-row>
-            <p><strong>Tiendas:</strong> {{ getTiendas(juego.tiendas) }}</p>
-          </ion-row>
-        </ion-grid>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
+        
+        <div class="additional-info">
+          <p><strong>Nota en Metacritic:</strong> {{ juego.nota_metacritic }}</p>
+          <p><strong>Fecha de lanzamiento:</strong> {{ formatearFecha(juego.fecha_lanzamiento) }}</p>
+          <p><strong>Sitio Web: </strong> <a [href]="juego.sitio_web" target="_blank">{{ juego.sitio_web }}</a></p>
+          <p><strong>Tiendas:</strong> {{ getTiendas(juego.tiendas) }}</p>
+        </div>
+      </div>
+      
+      <div class="description-section">
+        <h2>Descripción</h2>
+        <p [innerHTML]="juego.descripcion"></p>
+        
+        <div class="details">
+          <p><strong>Plataformas:</strong> {{ getPlataformas(juego.plataformas_principales) }}</p>
+          <p><strong>Generos:</strong> {{ getGeneros(juego.generos) }}</p>
+          <p><strong>Desarrolladoras:</strong> {{ getDesarrolladoras(juego.desarrolladoras) }}</p>
+          <p><strong>Publishers:</strong> {{ getPublishers(juego.publishers) }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>

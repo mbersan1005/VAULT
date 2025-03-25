@@ -1,8 +1,80 @@
-img{
-    width: 500px;
-    margin-right: 320px;
-}
-
-#primera_columna, h1{
-    margin-left: 320px;
-}
+/* Estilos CSS para el diseño responsive */
+.container {
+    padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .content-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--ion-color-primary);
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--ion-color-secondary);
+  }
+  
+  img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 8px;
+    margin: 0 auto;
+    display: block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .details p, 
+  .additional-info p {
+    margin-bottom: 0.8rem;
+    line-height: 1.5;
+  }
+  
+  .additional-info {
+    background: var(--ion-color-light);
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 16px;
+  }
+  
+  .details {
+    background: var(--ion-color-light);
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 16px;
+  }
+  
+  /* Diseño para pantallas medianas y grandes (tablet y escritorio) */
+  @media (min-width: 768px) {
+    .content-grid {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    
+    .image-section {
+      position: sticky;
+      top: 16px;
+      flex: 0 0 40%;
+    }
+    
+    .description-section {
+      flex: 1;
+    }
+  }
+  
+  /* Diseño para pantallas muy grandes */
+  @media (min-width: 992px) {
+    .image-section {
+      flex: 0 0 35%;
+    }
+  }
