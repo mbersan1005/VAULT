@@ -1,21 +1,40 @@
-<ion-app>
-  <ion-menu side="start" menuId="first" contentId="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Menú</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <ion-list>
-        <ion-item button (click)="openPage('home')">
-          <ion-label>Inicio</ion-label>
-        </ion-item>
-        <ion-item button (click)="openPage('profile')">
-          <ion-label>TO-DO</ion-label>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
+<ion-menu side="start" menuId="first" contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menú</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="openPage('admin-login')">
+          Admin
+          <ion-icon slot="end" name="log-in"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item button (click)="openPage('home')">
+        <ion-label>Inicio</ion-label>
+      </ion-item>
+      <ion-item button (click)="openPage('generos')">
+        <ion-label>Generos</ion-label>
+      </ion-item>
+      <ion-item button (click)="openPage('plataformas')">
+        <ion-label>Plataformas</ion-label>
+      </ion-item>
+      <ion-item button (click)="openPage('tiendas')">
+        <ion-label>Tiendas</ion-label>
+      </ion-item>
+      <ion-item button (click)="openPage('desarrolladoras')">
+        <ion-label>Desarrolladoras</ion-label>
+      </ion-item>
+      <ion-item button (click)="openPage('publishers')">
+        <ion-label>Publishers</ion-label>
+      </ion-item>
+      <ion-item button (click)="openPage('sobreNosotros')">
+        <ion-label>Sobre nosotros...</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
 
-  <ion-router-outlet id="main-content"></ion-router-outlet>
-</ion-app>
+<ion-router-outlet id="main-content"></ion-router-outlet>

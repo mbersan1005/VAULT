@@ -1,0 +1,30 @@
+
+<ion-content>
+  <div class="login-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Iniciar sesión como Administrador</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <form (submit)="submitForm()">
+          <ion-item>
+            <ion-input type="text" [(ngModel)]="form.nombre" placeholder="Ingrese su nombre de usuario" name="nombre" required></ion-input>
+          </ion-item>
+          
+          <ion-item>
+            <ion-input type="password" [(ngModel)]="form.password" placeholder="Ingresa su contraseña" name="password" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="password" [(ngModel)]="form.confirmarPassword" placeholder="Repita su contraseña" name="confirmarPassword" required></ion-input>
+          </ion-item>
+
+          <ion-button expand="full" type="submit" [disabled]="!form.nombre || !form.password || !form.confirmarPassword">
+            Enviar
+          </ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
