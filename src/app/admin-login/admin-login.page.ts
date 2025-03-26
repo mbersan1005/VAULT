@@ -42,7 +42,9 @@ export class AdminLoginPage {
   
     this.apiFacade.inicioSesion(this.form.nombre, this.form.password).subscribe({
       next: (respuesta) => {
-        if (respuesta?.success) {
+        console.log('Respuesta API:', respuesta); 
+  
+        if (respuesta?.mensaje === 'Inicio de sesión exitoso') { 
           this.mostrarToast('Inicio de sesión exitoso.', 'success');
           this.intentosFallidos = 0; 
           this.router.navigate(['/home']); 
@@ -50,11 +52,13 @@ export class AdminLoginPage {
           this.registrarIntentoFallido();
         }
       },
-      error: () => {
+      error: (error) => {
+        console.error('Error en inicio de sesión:', error); 
         this.registrarIntentoFallido();
       }
     });
   }
+  
   
 
   private registrarIntentoFallido() {
