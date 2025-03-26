@@ -17,4 +17,8 @@ export class ApiFacade {
     return this.request.recibirDatosJuego(id);
   }
 
+  public inicioSesion(nombre: string, password: string): Observable<any>{
+    return this.request.inicioSesion(nombre, password);
+  }
+
 }

@@ -33,4 +33,16 @@ export class ApiRequestService {
     return this.http.get(`${this.baseUrl}/recibirDatosJuego/${id}`, { headers });
   }
 
+  public inicioSesion(nombre: string, password: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+  
+    const body = { nombre, password };
+  
+    return this.http.post(`${this.baseUrl}/inicioSesion`, body, { headers });
+  }
+  
+
 }

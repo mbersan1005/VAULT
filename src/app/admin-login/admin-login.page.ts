@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms'; 
+import { Router } from '@angular/router';
+import { ApiFacade } from '../facades/api.facade';
 
 @Component({
   selector: 'app-admin-login',
@@ -10,13 +12,73 @@ import { FormsModule } from '@angular/forms';
   imports: [IonicModule, FormsModule],  
 })
 export class AdminLoginPage {
+  
   form: any = {
     nombre: '',
     password: '',
     confirmarPassword: ''
   };
 
+  intentosFallidos: number = 0;
+  bloqueoActivo: boolean = false;
+  tiempoBloqueo: number = 30000; //30 segundos
+
+  constructor(
+    private toastController: ToastController,
+    private router: Router,
+    private apiFacade: ApiFacade,
+  ) {}
+
   submitForm() {
-    console.log('Formulario enviado', this.form);
+    if (this.bloqueoActivo) {
+      this.mostrarToast('Acceso bloqueado. Intenta más tarde.', 'danger');
+      return;
+    }
+  
+    if (this.form.password !== this.form.confirmarPassword) {
+      this.mostrarToast('Las contraseñas no coinciden.', 'warning');
+      return;
+    }
+  
+    this.apiFacade.inicioSesion(this.form.nombre, this.form.password).subscribe({
+      next: (respuesta) => {
+        if (respuesta?.success) {
+          this.mostrarToast('Inicio de sesión exitoso.', 'success');
+          this.intentosFallidos = 0; 
+          this.router.navigate(['/home']); 
+        } else {
+          this.registrarIntentoFallido();
+        }
+      },
+      error: () => {
+        this.registrarIntentoFallido();
+      }
+    });
+  }
+  
+
+  private registrarIntentoFallido() {
+    this.intentosFallidos++;
+    if (this.intentosFallidos >= 3) {
+      this.bloqueoActivo = true;
+      this.mostrarToast('Acceso bloqueado. Inténtalo más tarde.', 'danger');
+      
+      setTimeout(() => {
+        this.bloqueoActivo = false;
+        this.intentosFallidos = 0;
+      }, this.tiempoBloqueo);
+    } else {
+      this.mostrarToast(`Intento fallido. Quedan ${3 - this.intentosFallidos} intentos.`, 'warning');
+    }
+  }
+
+  private async mostrarToast(mensaje: string, color: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      position: 'top',
+      color: color
+    });
+    await toast.present();
   }
 }
