@@ -59,8 +59,6 @@ export class AdminLoginPage {
     });
   }
   
-  
-
   private registrarIntentoFallido() {
     this.intentosFallidos++;
     if (this.intentosFallidos >= 3) {

@@ -67,12 +67,12 @@ export class HomePage {
   }
 
   public realizarBusqueda(event: any) {
-    const query = event.target.value?.toLowerCase() || ''; 
-    if (query.trim() === '') {
+    this.searchText = event.target.value?.toLowerCase() || ''; 
+    if (this.searchText.trim() === '') {
       this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados); 
     } else {
       this.juegosFiltrados = this.juegos.filter(juego =>
-        juego.nombre?.toLowerCase().includes(query)
+        juego.nombre?.toLowerCase().includes(this.searchText)
       ).slice(0, this.juegosCargados);
     }
   }
@@ -80,7 +80,7 @@ export class HomePage {
   public cargarMasJuegos(event: any) {
     setTimeout(() => {
       this.juegosCargados += this.juegosPorCargar;
-      
+  
       if (this.searchText.trim() === '') {
         this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
       } else {
@@ -88,14 +88,15 @@ export class HomePage {
           juego.nombre?.toLowerCase().includes(this.searchText.toLowerCase())
         ).slice(0, this.juegosCargados);
       }
-
+  
       event.target.complete();
-
+  
       if (this.juegosCargados >= this.juegos.length) {
         event.target.disabled = true;
       }
     }, 500);
   }
+  
 
   public formatearFecha(fecha: string): string {
     const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
