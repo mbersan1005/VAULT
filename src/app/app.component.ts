@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { SesionService } from './services/sesion.service';
 
 @Component({
   selector: 'app-root',
@@ -11,53 +12,20 @@ import { MenuController } from '@ionic/angular';
 export class AppComponent {
   constructor(
     private menu: MenuController,
-    private router: Router
-
-
+    private router: Router,
+    public sesion: SesionService,
+  
   ) {}
 
   openPage(page: string) {
-
-    switch (page) {
-      
-      case 'home':
-        this.router.navigate(['/home']);
-      break;
-    
-      case 'generos':
-        this.router.navigate(['/generos']);
-      break;
-
-      case 'plataformas':
-        this.router.navigate(['/plataformas']);
-      break;
-
-      case 'tiendas':
-        this.router.navigate(['/tiendas']);
-      break;
-
-      case 'desarrolladoras':
-        this.router.navigate(['/desarrolladoras']);
-      break;
-
-      case 'publishers':
-        this.router.navigate(['/publishers']);
-      break;
-  
-      case 'sobreNosotros':
-        this.router.navigate(['/sobreNosotros']);
-      break;
-
-      case 'admin-login':
-        this.router.navigate(['/admin-login']);
-      break;
-
-      default:
-        break;
-    }
-
+    this.router.navigate([`/${page}`]);
     this.menu.close();
+  }
 
+  logout() {
+    this.sesion.establecerSesion(false);
+    this.router.navigate(['/home']);
+    this.menu.close();
   }
 
 }

@@ -3,9 +3,13 @@
     <ion-toolbar>
       <ion-title>Menú</ion-title>
       <ion-buttons slot="end">
-        <ion-button (click)="openPage('admin-login')">
+        <ion-button *ngIf="!sesion.comprobarSesion()" (click)="openPage('admin-login')" id="login">
           Admin
           <ion-icon slot="end" name="log-in"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="sesion.comprobarSesion()" (click)="logout()" id="logout">
+          Logout
+          <ion-icon slot="end" name="log-out"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-toolbar>

@@ -3,6 +3,8 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms'; 
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
+import { SesionService } from 'src/app/services/sesion.service';
+
 
 @Component({
   selector: 'app-admin-login',
@@ -27,6 +29,7 @@ export class AdminLoginPage {
     private toastController: ToastController,
     private router: Router,
     private apiFacade: ApiFacade,
+    private sesion: SesionService,
   ) {}
 
   submitForm() {
@@ -42,15 +45,16 @@ export class AdminLoginPage {
   
     this.apiFacade.inicioSesion(this.form.nombre, this.form.password).subscribe({
       next: (respuesta) => {
-        console.log('Respuesta API:', respuesta); 
-  
+
         if (respuesta?.mensaje === 'Inicio de sesión exitoso') { 
+          this.sesion.establecerSesion(true);
           this.mostrarToast('Inicio de sesión exitoso.', 'success');
           this.intentosFallidos = 0; 
           this.router.navigate(['/home']); 
         } else {
           this.registrarIntentoFallido();
         }
+
       },
       error: (error) => {
         console.error('Error en inicio de sesión:', error); 
@@ -82,5 +86,10 @@ export class AdminLoginPage {
       color: color
     });
     await toast.present();
+  }
+
+  logout(){
+    this.sesion.establecerSesion(false);
+    this.router.navigate(['/home']);
   }
 }

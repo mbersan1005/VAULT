@@ -7,6 +7,7 @@ import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { SesionService } from 'src/app/services/sesion.service';
 
 @Component({
   selector: 'app-home',
@@ -31,7 +32,8 @@ export class HomePage {
     private modalController: ModalController,
     public apiRequestService: ApiRequestService,
     private toastController: ToastController,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public sesion: SesionService,
   ) {}
 
   ngOnInit(){
