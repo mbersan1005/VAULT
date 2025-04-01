@@ -26,6 +26,10 @@ const routes: Routes = [
   {
     path: 'plataformas',
     loadChildren: () => import('./plataformas/plataformas.module').then( m => m.PlataformasPageModule)
+  },
+  {
+    path: 'tiendas',
+    loadChildren: () => import('./tiendas/tiendas.module').then( m => m.TiendasPageModule)
   }
 ];
 
