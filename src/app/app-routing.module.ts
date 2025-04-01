@@ -34,6 +34,10 @@ const routes: Routes = [
   {
     path: 'desarrolladoras',
     loadChildren: () => import('./desarrolladoras/desarrolladoras.module').then( m => m.DesarrolladorasPageModule)
+  },
+  {
+    path: 'publishers',
+    loadChildren: () => import('./publishers/publishers.module').then( m => m.PublishersPageModule)
   }
 ];
 
