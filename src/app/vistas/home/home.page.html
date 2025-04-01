@@ -11,6 +11,12 @@
 </ion-header>
 
 <ion-content>
+  <div *ngIf="sesion.comprobarSesion()" class="admin-buttons">
+    <ion-button color="success">Añadir Videojuego</ion-button>
+    <ion-button color="warning">Actualizar Datos</ion-button>
+    <ion-button color="danger">Resetear Datos</ion-button>
+  </div>
+
   <ion-text *ngIf="juegosFiltrados.length === 0">
     <h3>No se encontraron juegos</h3>
   </ion-text>
@@ -29,11 +35,16 @@
               <p><strong>Plataformas:</strong> {{ getPlataformas(juego.plataformas_principales) }}</p>
               <p><strong>Géneros:</strong> {{ getGeneros(juego.generos) }}</p>
             </div>
+            <div *ngIf="sesion.comprobarSesion()">  
+              <ion-button color="primary" (click)="$event.stopPropagation()">Editar</ion-button>
+              <ion-button color="danger" (click)="$event.stopPropagation()">Eliminar</ion-button>
+            </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
+  
 
   <ion-infinite-scroll threshold="100px" (ionInfinite)="cargarMasJuegos($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más juegos..."></ion-infinite-scroll-content>
