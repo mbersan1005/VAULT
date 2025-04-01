@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms'; 
 import { Router } from '@angular/router';
-import { ApiFacade } from '../facades/api.facade';
+import { ApiFacade } from '../../facades/api.facade';
 
 @Component({
   selector: 'app-admin-login',

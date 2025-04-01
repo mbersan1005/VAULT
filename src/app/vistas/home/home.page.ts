@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { ApiFacade } from '../facades/api.facade';
-import { ApiRequestService } from '../requests/api.requests';
+import { ApiFacade } from '../../facades/api.facade';
+import { ApiRequestService } from '../../requests/api.requests';
 import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

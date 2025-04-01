@@ -2,16 +2,16 @@ import { Component} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { ApiFacade } from '../facades/api.facade';
+import { ApiFacade } from '../../facades/api.facade';
 
 @Component({
-  selector: 'app-plataformas',
-  templateUrl: './plataformas.page.html',
-  styleUrls: ['./plataformas.page.scss'],
+  selector: 'app-desarrolladoras',
+  templateUrl: './desarrolladoras.page.html',
+  styleUrls: ['./desarrolladoras.page.scss'],
   standalone: true,
   imports: [IonicModule, FormsModule],
 })
-export class PlataformasPage {
+export class DesarrolladorasPage {
 
   constructor(
     private toastController: ToastController,
