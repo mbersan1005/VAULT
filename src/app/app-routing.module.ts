@@ -18,6 +18,10 @@ const routes: Routes = [
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'
+  },
+  {
+    path: 'generos',
+    loadChildren: () => import('./generos/generos.module').then( m => m.GenerosPageModule)
   }
 ];
 
