@@ -5,13 +5,13 @@ import { Router } from '@angular/router';
 import { ApiFacade } from '../facades/api.facade';
 
 @Component({
-  selector: 'app-generos',
-  templateUrl: './generos.page.html',
-  styleUrls: ['./generos.page.scss'],
+  selector: 'app-plataformas',
+  templateUrl: './plataformas.page.html',
+  styleUrls: ['./plataformas.page.scss'],
   standalone: true,
   imports: [IonicModule, FormsModule],
 })
-export class GenerosPage {
+export class PlataformasPage {
 
   constructor(
     private toastController: ToastController,

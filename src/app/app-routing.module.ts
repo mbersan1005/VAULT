@@ -22,6 +22,10 @@ const routes: Routes = [
   {
     path: 'generos',
     loadChildren: () => import('./generos/generos.module').then( m => m.GenerosPageModule)
+  },
+  {
+    path: 'plataformas',
+    loadChildren: () => import('./plataformas/plataformas.module').then( m => m.PlataformasPageModule)
   }
 ];
 
