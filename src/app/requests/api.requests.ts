@@ -74,4 +74,14 @@ export class ApiRequestService {
     return this.http.get(this.baseUrl+"/recibirTiendas", {headers});
   }
 
+  public recibirDesarrolladoras(): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.get(this.baseUrl+"/recibirDesarrolladoras", {headers});
+  }
+
 }

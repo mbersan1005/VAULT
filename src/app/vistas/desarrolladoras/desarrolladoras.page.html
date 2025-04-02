@@ -9,4 +9,28 @@
 
 <ion-content>
   
+  <ion-text *ngIf="desarrolladoras.length === 0">
+    <h3>No se encontraron desarrolladoras</h3>
+  </ion-text>
+
+  <ion-grid *ngIf="desarrolladoras.length > 0">
+    <ion-row>
+      <ion-col size="12" size-md="4" *ngFor="let desarrolladora of desarrolladoras; let i = index">
+        <ion-card (click)="verJuegosDesarrolladoras(desarrolladora.id)">
+          <div class="image-container">
+            <img [src]="desarrolladora.imagen" alt="Imagen de {{ desarrolladora.nombre }}">
+            <div class="card-title-overlay">
+              <h3>{{ desarrolladora.nombre }}</h3>
+            </div>
+          </div>
+          <ion-card-content>
+            <div>
+              <p><strong>Cantidad de juegos:</strong> {{ desarrolladora.cantidad_juegos }} </p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>

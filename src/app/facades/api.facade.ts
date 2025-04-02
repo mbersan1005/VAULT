@@ -33,4 +33,8 @@ export class ApiFacade {
     return this.request.recibirTiendas();
   }
 
+  public recibirDesarrolladoras(): Observable<any>{
+    return this.request.recibirDesarrolladoras();
+  }
+
 }
