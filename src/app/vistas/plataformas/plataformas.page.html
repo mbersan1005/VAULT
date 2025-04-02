@@ -8,5 +8,33 @@
 </ion-header>
 
 <ion-content>
-  
+
+  <ion-text *ngIf="plataformas.length === 0">
+    <h3>No se encontraron plataformas</h3>
+  </ion-text>
+
+  <ion-grid *ngIf="plataformas.length > 0">
+    <ion-row>
+      <ion-col size="12" size-md="4" *ngFor="let plataforma of plataformasFiltradas; let i = index">
+        <ion-card (click)="verJuegosPlataforma(plataforma.id)">
+          <div class="image-container">
+            <img [src]="plataforma.imagen" alt="Imagen de {{ plataforma.nombre }}">
+            <div class="card-title-overlay">
+              <h3>{{ plataforma.nombre }}</h3>
+            </div>
+          </div>
+          <ion-card-content>
+            <div>
+              <p><strong>Cantidad de juegos:</strong> {{ plataforma.cantidad_juegos }} </p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="cargarMasPlataformas($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más plataformas..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
 </ion-content>

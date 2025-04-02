@@ -21,9 +21,9 @@ export class HomePage {
 
   juegos: any[] = [];
   juegosFiltrados: any[] = []; 
-  searchText: string = ''; 
-  juegosCargados: number = 6; 
-  juegosPorCargar: number = 6;
+  textoBusqueda: string = ''; 
+  juegosCargados: number = 9; 
+  juegosPorCargar: number = 9;
 
   constructor(
     private menu: MenuController, 
@@ -69,12 +69,12 @@ export class HomePage {
   }
 
   public realizarBusqueda(event: any) {
-    this.searchText = event.target.value?.toLowerCase() || ''; 
-    if (this.searchText.trim() === '') {
+    this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
+    if (this.textoBusqueda.trim() === '') {
       this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados); 
     } else {
       this.juegosFiltrados = this.juegos.filter(juego =>
-        juego.nombre?.toLowerCase().includes(this.searchText)
+        juego.nombre?.toLowerCase().includes(this.textoBusqueda)
       ).slice(0, this.juegosCargados);
     }
   }
@@ -83,11 +83,11 @@ export class HomePage {
     setTimeout(() => {
       this.juegosCargados += this.juegosPorCargar;
   
-      if (this.searchText.trim() === '') {
+      if (this.textoBusqueda.trim() === '') {
         this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
       } else {
         this.juegosFiltrados = this.juegos.filter(juego =>
-          juego.nombre?.toLowerCase().includes(this.searchText.toLowerCase())
+          juego.nombre?.toLowerCase().includes(this.textoBusqueda.toLowerCase())
         ).slice(0, this.juegosCargados);
       }
   
@@ -116,8 +116,8 @@ export class HomePage {
     await toast.present();
   }
 
-  public verJuego(JuegoId: number){
-    this.router.navigate(['/info-juego', JuegoId]);
+  public verJuego(juegoId: number){
+    this.router.navigate(['/info-juego', juegoId]);
   }
 
 }

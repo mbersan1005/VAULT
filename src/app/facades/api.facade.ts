@@ -21,4 +21,12 @@ export class ApiFacade {
     return this.request.inicioSesion(nombre, password);
   }
 
+  public recibirGeneros(): Observable<any>{
+    return this.request.recibirGeneros();
+  }
+
+  public recibirPlataformas(): Observable<any>{
+    return this.request.recibirPlataformas();
+  }
+
 }

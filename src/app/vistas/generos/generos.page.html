@@ -9,4 +9,28 @@
 
 <ion-content>
   
+  <ion-text *ngIf="generos.length === 0">
+    <h3>No se encontraron generos</h3>
+  </ion-text>
+
+  <ion-grid *ngIf="generos.length > 0">
+    <ion-row>
+      <ion-col size="12" size-md="4" *ngFor="let genero of generos; let i = index">
+        <ion-card (click)="verJuegosGenero(genero.id)">
+          <div class="image-container">
+            <img [src]="genero.imagen" alt="Imagen de {{ genero.nombre }}">
+            <div class="card-title-overlay">
+              <h3>{{ genero.nombre }}</h3>
+            </div>
+          </div>
+          <ion-card-content>
+            <div>
+              <p><strong>Cantidad de juegos:</strong> {{ genero.cantidad_juegos }} </p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>

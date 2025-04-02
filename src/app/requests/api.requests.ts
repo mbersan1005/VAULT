@@ -44,5 +44,24 @@ export class ApiRequestService {
     return this.http.post(`${this.baseUrl}/inicioSesion`, body, { headers });
   }
   
+  public recibirGeneros(): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.get(this.baseUrl+"/recibirGeneros", {headers});
+  }
+
+  public recibirPlataformas(): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.get(this.baseUrl+"/recibirPlataformas", {headers});
+  }
 
 }
