@@ -64,4 +64,14 @@ export class ApiRequestService {
     return this.http.get(this.baseUrl+"/recibirPlataformas", {headers});
   }
 
+  public recibirTiendas(): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.get(this.baseUrl+"/recibirTiendas", {headers});
+  }
+
 }

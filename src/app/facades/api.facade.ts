@@ -29,4 +29,8 @@ export class ApiFacade {
     return this.request.recibirPlataformas();
   }
 
+  public recibirTiendas(): Observable<any>{
+    return this.request.recibirTiendas();
+  }
+
 }

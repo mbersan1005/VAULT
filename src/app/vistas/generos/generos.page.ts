@@ -29,10 +29,10 @@ export class GenerosPage {
   public cargarGeneros() {
     this.apiFacade.recibirGeneros().subscribe(
       (data) => {
-        console.log('Datos recibidos desde la API:', data);  // Verifica si 'data' contiene 'generos'
+        console.log('Datos recibidos desde la API:', data);  
         if (data && data.generos && data.generos.length > 0) {
           this.generos = data.generos;
-          console.log('Generos cargados:', this.generos); // Verifica el contenido de generos
+          console.log('Generos cargados:', this.generos);
         } else {
           this.mostrarToast('No se encontraron datos', 'danger');
         }

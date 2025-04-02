@@ -9,4 +9,29 @@
 
 <ion-content>
   
+  <ion-text *ngIf="tiendas.length === 0">
+    <h3>No se encontraron tiendas</h3>
+  </ion-text>
+
+  <ion-grid *ngIf="tiendas.length > 0">
+    <ion-row>
+      <ion-col size="12" size-md="4" *ngFor="let tienda of tiendas; let i = index">
+        <ion-card (click)="verJuegosTienda(tienda.id)">
+          <div class="image-container">
+            <img [src]="tienda.imagen" alt="Imagen de {{ tienda.nombre }}">
+            <div class="card-title-overlay">
+              <h3>{{ tienda.nombre }}</h3>
+            </div>
+          </div>
+          <ion-card-content>
+            <div>
+              <p><strong>Dominio: </strong> <a [href]="getUrlCompleta(tienda.dominio)" target="_blank">{{ tienda.dominio }}</a></p>
+              <p><strong>Cantidad de juegos:</strong> {{ tienda.cantidad_juegos }} </p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 </ion-content>
