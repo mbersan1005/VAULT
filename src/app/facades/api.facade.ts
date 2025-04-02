@@ -37,4 +37,8 @@ export class ApiFacade {
     return this.request.recibirDesarrolladoras();
   }
 
+  public recibirPublishers(): Observable<any>{
+    return this.request.recibirPublishers();
+  }
+
 }
