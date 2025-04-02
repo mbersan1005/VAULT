@@ -5,17 +5,20 @@
     </ion-buttons>
     <ion-title>Desarrolladoras</ion-title>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar [debounce]="1000" (ionInput)="realizarBusqueda($event)" placeholder="Buscar..."></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
   
-  <ion-text *ngIf="desarrolladoras.length === 0">
+  <ion-text *ngIf="desarrolladorasFiltradas.length === 0">
     <h3>No se encontraron desarrolladoras</h3>
   </ion-text>
 
-  <ion-grid *ngIf="desarrolladoras.length > 0">
+  <ion-grid *ngIf="desarrolladorasFiltradas.length > 0">
     <ion-row>
-      <ion-col size="12" size-md="4" *ngFor="let desarrolladora of desarrolladoras; let i = index">
+      <ion-col size="12" size-md="4" *ngFor="let desarrolladora of desarrolladorasFiltradas; let i = index">
         <ion-card (click)="verJuegosDesarrolladoras(desarrolladora.id)">
           <div class="image-container">
             <img [src]="desarrolladora.imagen" alt="Imagen de {{ desarrolladora.nombre }}">
@@ -33,4 +36,7 @@
     </ion-row>
   </ion-grid>
 
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="cargarMasDesarrolladoras($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más juegos..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

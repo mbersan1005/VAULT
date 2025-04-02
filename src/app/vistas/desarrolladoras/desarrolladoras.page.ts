@@ -15,6 +15,10 @@ import { CommonModule } from '@angular/common';
 export class DesarrolladorasPage {
 
   desarrolladoras: any[] = [];
+  desarrolladorasFiltradas: any[] = [];
+  textoBusqueda: string = '';
+  desarrolladorasCargadas: number = 9;
+  desarrolladorasPorCargar: number = 9;
 
   constructor(
     private toastController: ToastController,
@@ -32,7 +36,7 @@ export class DesarrolladorasPage {
         console.log('Datos recibidos desde la API:', data);  
         if (data && data.desarrolladoras && data.desarrolladoras.length > 0) {
           this.desarrolladoras = data.desarrolladoras;
-          console.log('Desarrolladoras cargadas:', this.desarrolladoras);
+          this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
         } else {
           this.mostrarToast('No se encontraron datos', 'danger');
         }
@@ -42,6 +46,37 @@ export class DesarrolladorasPage {
         this.mostrarToast('Error al cargar los datos', 'danger');
       }
     );
+  }
+
+  public realizarBusqueda(event: any) {
+    this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
+    if (this.textoBusqueda.trim() === '') {
+      this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas); 
+    } else {
+      this.desarrolladorasFiltradas = this.desarrolladoras.filter(desarrolladoras =>
+        desarrolladoras.nombre?.toLowerCase().includes(this.textoBusqueda)
+      ).slice(0, this.desarrolladorasCargadas);
+    }
+  }
+
+  public cargarMasDesarrolladoras(event: any) {
+    setTimeout(() => {
+      this.desarrolladorasCargadas += this.desarrolladorasPorCargar;
+  
+      if (this.textoBusqueda.trim() === '') {
+        this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
+      } else {
+        this.desarrolladorasFiltradas = this.desarrolladoras.filter(desarrolladoras =>
+          desarrolladoras.nombre?.toLowerCase().includes(this.textoBusqueda.toLowerCase())
+        ).slice(0, this.desarrolladorasCargadas);
+      }
+  
+      event.target.complete();
+  
+      if (this.desarrolladorasCargadas >= this.desarrolladoras.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
   }
 
   private async mostrarToast(mensaje: string, color: string) {
