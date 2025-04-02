@@ -15,6 +15,10 @@ import { CommonModule } from '@angular/common';
 export class PublishersPage {
 
   publishers: any[] = [];
+  publishersFiltrados: any[] = [];
+  textoBusqueda: string = '';
+  publishersCargados: number = 9;
+  publishersPorCargar: number = 9;
 
   constructor(
     private toastController: ToastController,
@@ -32,7 +36,7 @@ export class PublishersPage {
         console.log('Datos recibidos desde la API:', data);  
         if (data && data.publishers && data.publishers.length > 0) {
           this.publishers = data.publishers;
-          console.log('Publishers cargados:', this.publishers);
+          this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
         } else {
           this.mostrarToast('No se encontraron datos', 'danger');
         }
@@ -44,6 +48,36 @@ export class PublishersPage {
     );
   }
   
+  public realizarBusqueda(event: any) {
+    this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
+    if (this.textoBusqueda.trim() === '') {
+      this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados); 
+    } else {
+      this.publishersFiltrados = this.publishers.filter(desarrolladoras =>
+        desarrolladoras.nombre?.toLowerCase().includes(this.textoBusqueda)
+      ).slice(0, this.publishersCargados);
+    }
+  }
+
+  public cargarMasPublishers(event: any) {
+    setTimeout(() => {
+      this.publishersCargados += this.publishersPorCargar;
+  
+      if (this.textoBusqueda.trim() === '') {
+        this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
+      } else {
+        this.publishersFiltrados = this.publishers.filter(desarrolladoras =>
+          desarrolladoras.nombre?.toLowerCase().includes(this.textoBusqueda.toLowerCase())
+        ).slice(0, this.publishersCargados);
+      }
+  
+      event.target.complete();
+  
+      if (this.publishersCargados >= this.publishers.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
+  }
 
   private async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
