@@ -21,23 +21,43 @@ const routes: Routes = [
   },
   {
     path: 'generos',
-    loadChildren: () => import('./vistas/generos/generos.module').then( m => m.GenerosPageModule)
+    loadChildren: () => import('./vistas/generos/generos.module').then(m => m.GenerosPageModule)
+  },
+  {
+    path: 'generos/:nombre',
+    loadChildren: () => import('./vistas/juegos-lista-filtro/juegos-lista-filtro.module').then(m => m.JuegosListaFiltroPageModule)
   },
   {
     path: 'plataformas',
-    loadChildren: () => import('./vistas/plataformas/plataformas.module').then( m => m.PlataformasPageModule)
+    loadChildren: () => import('./vistas/plataformas/plataformas.module').then(m => m.PlataformasPageModule)
+  },
+  {
+    path: 'plataformas/:nombre',
+    loadChildren: () => import('./vistas/juegos-lista-filtro/juegos-lista-filtro.module').then(m => m.JuegosListaFiltroPageModule)
   },
   {
     path: 'tiendas',
-    loadChildren: () => import('./vistas/tiendas/tiendas.module').then( m => m.TiendasPageModule)
+    loadChildren: () => import('./vistas/tiendas/tiendas.module').then(m => m.TiendasPageModule)
+  },
+  {
+    path: 'tiendas/:nombre',
+    loadChildren: () => import('./vistas/juegos-lista-filtro/juegos-lista-filtro.module').then(m => m.JuegosListaFiltroPageModule)
   },
   {
     path: 'desarrolladoras',
-    loadChildren: () => import('./vistas/desarrolladoras/desarrolladoras.module').then( m => m.DesarrolladorasPageModule)
+    loadChildren: () => import('./vistas/desarrolladoras/desarrolladoras.module').then(m => m.DesarrolladorasPageModule)
+  },
+  {
+    path: 'desarrolladoras/:nombre',
+    loadChildren: () => import('./vistas/juegos-lista-filtro/juegos-lista-filtro.module').then(m => m.JuegosListaFiltroPageModule)
   },
   {
     path: 'publishers',
-    loadChildren: () => import('./vistas/publishers/publishers.module').then( m => m.PublishersPageModule)
+    loadChildren: () => import('./vistas/publishers/publishers.module').then(m => m.PublishersPageModule)
+  },
+  {
+    path: 'publishers/:nombre',
+    loadChildren: () => import('./vistas/juegos-lista-filtro/juegos-lista-filtro.module').then(m => m.JuegosListaFiltroPageModule)
   }
 ];
 

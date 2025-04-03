@@ -41,4 +41,8 @@ export class ApiFacade {
     return this.request.recibirPublishers();
   }
 
+  public recibirJuegosPorCategoria(categoria: string, nombre: string): Observable<any>{
+    return this.request.recibirJuegosPorCategoria(categoria, nombre);
+  }
+
 }

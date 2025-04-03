@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Juegos en {{ nombre }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar debounce="500" (ionInput)="realizarBusqueda($event)" placeholder="Buscar juegos..."></ion-searchbar>
+
+  <ion-list>
+    <ion-item *ngFor="let juego of juegosFiltrados" (click)="verJuego(juego.id)">
+      <ion-thumbnail slot="start">
+        <img [src]="juego.imagen" alt="{{ juego.nombre }}">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ juego.nombre }}</h2>
+        <p>{{ getPlataformas(juego.plataformas_principales) }}</p>
+        <p>{{ getGeneros(juego.generos) }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="cargarMasJuegos($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más juegos...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

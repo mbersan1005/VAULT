@@ -94,4 +94,14 @@ export class ApiRequestService {
     return this.http.get(this.baseUrl+"/recibirPublishers", {headers});
   }
 
+  public recibirJuegosPorCategoria(categoria: string, nombre: string): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.get(`${this.baseUrl}/recibirJuegosFiltrados?${categoria}=${nombre}`);
+  }
+
 }
