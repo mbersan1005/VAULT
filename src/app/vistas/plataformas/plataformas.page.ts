@@ -59,8 +59,8 @@ export class PlataformasPage {
     await toast.present();
   }
 
-  public verJuegosPlataforma(plataformaId: number){
-    this.router.navigate(['', plataformaId]);
+  public verJuegosPlataforma(categoria: string, nombre: string){
+    this.router.navigate(['/juegos-lista-filtro', categoria, nombre]);
   }
 
   public cargarMasPlataformas(event: any) {

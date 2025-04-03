@@ -89,8 +89,8 @@ export class DesarrolladorasPage {
     await toast.present();
   }
 
-  public verJuegosDesarrolladoras(desarrolladoraId: number){
-    this.router.navigate(['',desarrolladoraId]);
+  public verJuegosDesarrolladoras(categoria: string, nombre: string){
+    this.router.navigate(['/juegos-lista-filtro', categoria, nombre]);
   }
 
 }

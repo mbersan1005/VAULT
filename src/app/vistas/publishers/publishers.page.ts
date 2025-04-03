@@ -89,8 +89,8 @@ export class PublishersPage {
     await toast.present();
   }
 
-  public verJuegosPublisher(publisherId: number){
-    this.router.navigate(['',publisherId]);
+  public verJuegosPublisher(categoria: string, nombre: string){
+    this.router.navigate(['/juegos-lista-filtro', categoria, nombre]);
   }
   
 }

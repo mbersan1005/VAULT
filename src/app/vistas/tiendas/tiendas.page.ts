@@ -54,8 +54,8 @@ export class TiendasPage {
     await toast.present();
   }
 
-  public verJuegosTienda(tiendaId: number){
-    this.router.navigate(['',tiendaId]);
+  public verJuegosTienda(categoria: string, nombre: string){
+    this.router.navigate(['/juegos-lista-filtro', categoria, nombre]);
   }
 
   getUrlCompleta(dominio: string): string {

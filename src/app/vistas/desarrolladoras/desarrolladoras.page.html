@@ -19,7 +19,7 @@
   <ion-grid *ngIf="desarrolladorasFiltradas.length > 0">
     <ion-row>
       <ion-col size="12" size-md="4" *ngFor="let desarrolladora of desarrolladorasFiltradas; let i = index">
-        <ion-card (click)="verJuegosDesarrolladoras(desarrolladora.id)">
+        <ion-card class="card-hover" (click)="verJuegosDesarrolladoras('desarrolladoras', desarrolladora.nombre)">
           <div class="image-container">
             <img [src]="desarrolladora.imagen" alt="Imagen de {{ desarrolladora.nombre }}">
             <div class="card-title-overlay">

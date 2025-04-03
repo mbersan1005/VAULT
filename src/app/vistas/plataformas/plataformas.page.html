@@ -16,7 +16,7 @@
   <ion-grid *ngIf="plataformas.length > 0">
     <ion-row>
       <ion-col size="12" size-md="4" *ngFor="let plataforma of plataformasFiltradas; let i = index">
-        <ion-card (click)="verJuegosPlataforma(plataforma.id)">
+        <ion-card class="card-hover" (click)="verJuegosPlataforma('plataformas_principales', plataforma.nombre)">
           <div class="image-container">
             <img [src]="plataforma.imagen" alt="Imagen de {{ plataforma.nombre }}">
             <div class="card-title-overlay">
