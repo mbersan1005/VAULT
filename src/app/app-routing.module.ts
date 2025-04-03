@@ -58,6 +58,10 @@ const routes: Routes = [
   {
     path: 'publishers/:nombre',
     loadChildren: () => import('./vistas/juegos-lista-filtro/juegos-lista-filtro.module').then(m => m.JuegosListaFiltroPageModule)
+  },
+  {
+    path: 'juegos-lista-filtro/:categoria/:nombre',
+    loadChildren: () => import('./vistas/juegos-lista-filtro/juegos-lista-filtro.module').then(m => m.JuegosListaFiltroPageModule)
   }
 ];
 

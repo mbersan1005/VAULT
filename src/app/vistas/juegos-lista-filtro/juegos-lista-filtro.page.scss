@@ -1,0 +1,31 @@
+ion-menu::part(backdrop) {
+    background-color: rgba(255, 0, 255, 0.5);
+  }
+  
+  ion-menu::part(container) {
+    border-radius: 0 20px 20px 0;
+    box-shadow: 4px 0px 16px rgb(255, 255, 255);
+  }
+  
+  ion-title {
+    text-align: center;
+  }
+  
+  .card-hover {
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card-hover:hover {
+    transform: scale(1.05); 
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); 
+  }
+  
+  .extra-info {
+    display: none; 
+  }
+  
+  .card-hover:hover .extra-info {
+    display: block; 
+  }
+  

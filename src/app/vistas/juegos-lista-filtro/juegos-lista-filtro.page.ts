@@ -33,9 +33,9 @@ export class JuegosListaFiltroPage {
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-    this.nombre = params.get('nombre') || '';
-    this.categoria = this.route.snapshot.url[0].path;
-    this.cargarJuegosPorCategoria();
+      this.categoria = params.get('categoria')!;
+      this.nombre = params.get('nombre')!;
+      this.cargarJuegosPorCategoria();
     });
   }
 
@@ -43,19 +43,22 @@ export class JuegosListaFiltroPage {
     this.apiFacade.recibirJuegosPorCategoria(this.categoria, this.nombre).subscribe(
       (data) => {
         console.log('Datos recibidos:', data);
-        if (data && data.juegos && data.juegos.length > 0) {
-          this.juegos = data.juegos;
-          this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+  
+        if (data && data.juegosFiltrados && data.juegosFiltrados.length > 0) {
+          this.juegos = data.juegosFiltrados; 
+          this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados); 
         } else {
-          this.mostrarToast('No se encontraron juegos', 'warning');
+          console.log('No se encontraron juegos');
+          this.mostrarToast('No se encontraron juegos', 'danger'); 
         }
       },
       (error) => {
         console.error('Error al obtener datos:', error);
-        this.mostrarToast('Error al cargar los juegos', 'danger');
+        this.mostrarToast('Error al cargar los datos', 'danger'); 
       }
     );
   }
+  
 
   public realizarBusqueda(event: any) {
     this.textoBusqueda = event.target.value?.toLowerCase() || '';

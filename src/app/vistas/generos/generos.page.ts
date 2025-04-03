@@ -55,8 +55,8 @@ export class GenerosPage {
     await toast.present();
   }
 
-  public verJuegosGenero(generoId: number){
-    this.router.navigate(['',generoId]);
+  public verJuegosGenero(categoria: string, nombre: string){
+    this.router.navigate(['/juegos-lista-filtro', categoria, nombre]);
   }
 
 }

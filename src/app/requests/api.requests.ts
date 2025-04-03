@@ -101,7 +101,9 @@ export class ApiRequestService {
       'Token': this.apiToken
     });
 
-    return this.http.get(`${this.baseUrl}/recibirJuegosFiltrados?${categoria}=${nombre}`);
+    const url = `${this.baseUrl}/recibirJuegosFiltrados/${categoria}/${nombre}`;
+
+    return this.http.get(url, { headers });
   }
 
 }

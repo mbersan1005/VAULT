@@ -1,27 +1,42 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Juegos en {{ nombre }}</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-searchbar [debounce]="1000" (ionInput)="realizarBusqueda($event)" placeholder="Buscar juegos..."></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-searchbar debounce="500" (ionInput)="realizarBusqueda($event)" placeholder="Buscar juegos..."></ion-searchbar>
+  <ion-text *ngIf="juegosFiltrados.length === 0">
+    <h3>No se encontraron juegos</h3>
+  </ion-text>
 
-  <ion-list>
-    <ion-item *ngFor="let juego of juegosFiltrados" (click)="verJuego(juego.id)">
-      <ion-thumbnail slot="start">
-        <img [src]="juego.imagen" alt="{{ juego.nombre }}">
-      </ion-thumbnail>
-      <ion-label>
-        <h2>{{ juego.nombre }}</h2>
-        <p>{{ getPlataformas(juego.plataformas_principales) }}</p>
-        <p>{{ getGeneros(juego.generos) }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  <ion-grid *ngIf="juegosFiltrados.length > 0">
+    <ion-row>
+      <ion-col size="12" size-md="4" *ngFor="let juego of juegosFiltrados; let i = index">
+        <ion-card class="card-hover" (click)="verJuego(juego.id)">
+          <img [src]="juego.imagen" alt="Imagen de {{ juego.nombre }}">
+          <ion-card-header>
+            <ion-card-title>{{ juego.nombre }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="extra-info">
+              <p><strong>Fecha de lanzamiento:</strong> {{ formatearFecha(juego.fecha_lanzamiento) }}</p>
+              <p><strong>Plataformas:</strong> {{ getPlataformas(juego.plataformas_principales) }}</p>
+              <p><strong>Géneros:</strong> {{ getGeneros(juego.generos) }}</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-  <ion-infinite-scroll (ionInfinite)="cargarMasJuegos($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más juegos...">
-    </ion-infinite-scroll-content>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="cargarMasJuegos($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más juegos..."></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>
