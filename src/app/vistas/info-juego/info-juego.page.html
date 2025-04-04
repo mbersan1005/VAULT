@@ -13,29 +13,75 @@
     <div class="content-grid">
       <div class="image-section">
         <img [src]="juego.imagen" alt="Imagen de {{ juego.nombre }}">
-        
+
         <div class="additional-info">
           <p><strong>Nota en Metacritic:</strong> 
             {{ juego.nota_metacritic || 'No establecida' }}
-          </p>          
-          
+          </p>
+
           <p><strong>Fecha de lanzamiento:</strong> {{ formatearFecha(juego.fecha_lanzamiento) }}</p>
-          
+
           <p><strong>Sitio Web: </strong> <span [innerHTML]="getSitioWeb(juego.sitio_web)"></span></p>
-                  
-          <p><strong>Tiendas:</strong> {{ getTiendas(juego.tiendas) }}</p>
+
+          <p><strong>Tiendas: </strong> 
+            <span *ngIf="juego.tiendas && juego.tiendas.length > 0">
+              <ng-container *ngFor="let tienda of juego.tiendas">
+                <a [routerLink]="['/juegos-lista-filtro/tiendas', tienda.nombre]">{{ tienda.nombre }}</a>
+                <span *ngIf="!isLastItem(juego.tiendas, tienda)">, </span> 
+              </ng-container>
+            </span>
+            <span *ngIf="!juego.tiendas || juego.tiendas.length === 0">No disponible</span>
+          </p>
+          
         </div>
       </div>
-      
+
       <div class="description-section">
         <h2>Descripción</h2>
         <p [innerHTML]="juego.descripcion"></p>
-        
+
         <div class="details">
-          <p><strong>Plataformas:</strong> {{ getPlataformas(juego.plataformas_principales) }}</p>
-          <p><strong>Generos:</strong> {{ getGeneros(juego.generos) }}</p>
-          <p><strong>Desarrolladoras:</strong> {{ getDesarrolladoras(juego.desarrolladoras) }}</p>
-          <p><strong>Publishers:</strong> {{ getPublishers(juego.publishers) }}</p>
+          <p><strong>Plataformas: </strong> 
+            <span *ngIf="juego.plataformas_principales && juego.plataformas_principales.length > 0">
+              <ng-container *ngFor="let plataforma of juego.plataformas_principales">
+                <a [routerLink]="['/juegos-lista-filtro/plataformas_principales', plataforma.nombre]">{{ plataforma.nombre }}</a>
+                <span *ngIf="!isLastItem(juego.plataformas_principales, plataforma)">, </span>
+              </ng-container>
+            </span>
+            <span *ngIf="!juego.plataformas_principales || juego.plataformas_principales.length === 0">No disponible</span>
+          </p>
+          
+
+          <p><strong>Géneros: </strong> 
+            <span *ngIf="juego.generos && juego.generos.length > 0">
+              <ng-container *ngFor="let genero of juego.generos">
+                <a [routerLink]="['/juegos-lista-filtro/generos', genero.nombre]">{{ genero.nombre }}</a>
+                <span *ngIf="!isLastItem(juego.generos, genero)">, </span>
+              </ng-container>
+            </span>
+            <span *ngIf="!juego.generos || juego.generos.length === 0">No disponible</span>
+          </p>
+          
+
+          <p><strong>Desarrolladoras: </strong> 
+            <span *ngIf="juego.desarrolladoras && juego.desarrolladoras.length > 0">
+              <ng-container *ngFor="let desarrolladora of juego.desarrolladoras">
+                <a [routerLink]="['/juegos-lista-filtro/desarrolladoras', desarrolladora.nombre]">{{ desarrolladora.nombre }}</a>
+                <span *ngIf="!isLastItem(juego.desarrolladoras, desarrolladora)">, </span>
+              </ng-container>
+            </span>
+            <span *ngIf="!juego.desarrolladoras || juego.desarrolladoras.length === 0">No disponible</span>
+          </p>
+
+          <p><strong>Publishers: </strong> 
+            <span *ngIf="juego.publishers && juego.publishers.length > 0">
+              <ng-container *ngFor="let publisher of juego.publishers">
+                <a [routerLink]="['/juegos-lista-filtro/publishers', publisher.nombre]">{{ publisher.nombre }}</a>
+                <span *ngIf="!isLastItem(juego.publishers, publisher)">, </span>
+              </ng-container>
+            </span>
+            <span *ngIf="!juego.publishers || juego.publishers.length === 0">No disponible</span>
+          </p>          
         </div>
       </div>
     </div>

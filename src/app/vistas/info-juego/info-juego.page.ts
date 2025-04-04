@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { MenuController, ModalController, ToastController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { ApiRequestService } from '../../requests/api.requests';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';  
 import { ActivatedRoute } from '@angular/router';
 
@@ -12,13 +12,13 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: 'info-juego.page.html',
   styleUrls: ['info-juego.page.scss'],
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonicModule, RouterModule, CommonModule],
   providers: [DatePipe]
 })
 export class InfoJuegoPage {
 
   juegoId: number | null = null;
-  juego: any = [];
+  juego: any = {};
 
   constructor(
     private menu: MenuController,
@@ -41,21 +41,43 @@ export class InfoJuegoPage {
       this.mostrarToast('ID del juego no válido', 'danger');
     }
   }
-  
+
   cargarJuego(id: number) {
     this.apiFacade.recibirDatosJuego(id).subscribe(
       (data) => {
         console.log('Datos del juego recibido desde la API:', data);
         this.juego = data.juego || data;
   
-        console.log('Juego cargado:', this.juego);  
+        console.log('Juego cargado:', this.juego);
   
-        if (this.juego && this.juego.nombre) {
-          console.log('Nombre del juego:', this.juego.nombre);  
-        } else {
-          console.error('Nombre del juego no disponible');
-          this.mostrarToast('Nombre del juego no disponible', 'danger');
+        // Asegúrate de que las propiedades estén correctamente inicializadas
+        if (this.juego) {
+          this.juego.tiendas = this.parseJsonData(this.juego.tiendas);
+          this.juego.plataformas_principales = this.parseJsonData(this.juego.plataformas_principales);
+          this.juego.generos = this.parseJsonData(this.juego.generos); 
+          this.juego.desarrolladoras = this.parseJsonData(this.juego.desarrolladoras);
+          this.juego.publishers = this.parseJsonData(this.juego.publishers);  // Asegúrate de parsear correctamente
+  
+          console.log('Publishers:', this.juego.publishers);  // Log para verificar
+  
+          // Asegúrate de inicializar las propiedades si no vienen del servidor
+          if (!this.juego.publishers) {
+            this.juego.publishers = [];  // Inicializa publishers si no vienen de la API
+          }
+          if (!this.juego.desarrolladoras) {
+            this.juego.desarrolladoras = [];  // Inicializa desarrolladoras si no vienen de la API
+          }
+          if (!this.juego.generos) {
+            this.juego.generos = [];  // Inicializa géneros si no vienen de la API
+          }
+          if (!this.juego.plataformas_principales) {
+            this.juego.plataformas_principales = []; // Inicializa plataformas si no vienen de la API
+          }
+          if (!this.juego.tiendas) {
+            this.juego.tiendas = [];  // Inicializa tiendas si no vienen de la API
+          }
         }
+  
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
@@ -64,9 +86,13 @@ export class InfoJuegoPage {
     );
   }
   
+  
+  
+  
+  
+
   private parseJsonData(data: any): any[] {
     if (!data) return []; 
-  
     try {
       return typeof data === 'string' ? JSON.parse(data) : data; 
     } catch (error) {
@@ -74,32 +100,7 @@ export class InfoJuegoPage {
       return []; 
     }
   }
-  
-  getPlataformas(plataformasJson: any): string {
-    const plataformas = this.parseJsonData(plataformasJson);
-    return plataformas.length > 0 ? plataformas.map((p: { nombre: string }) => p.nombre).join(', ') : 'No disponible';
-  }
-  
-  getGeneros(generosJson: any): string {
-    const generos = this.parseJsonData(generosJson);
-    return generos.length > 0 ? generos.map((g: { nombre: string }) => g.nombre).join(', ') : 'No disponible';
-  }
-  
-  getDesarrolladoras(desarrolladorasJson: any): string {
-    const desarrolladoras = this.parseJsonData(desarrolladorasJson);
-    return desarrolladoras.length > 0 ? desarrolladoras.map((d: { nombre: string }) => d.nombre).join(', ') : 'No disponible';
-  }
-  
-  getPublishers(publishersJson: any): string {
-    const publishers = this.parseJsonData(publishersJson);
-    return publishers.length > 0 ? publishers.map((p: { nombre: string }) => p.nombre).join(', ') : 'No disponible';
-  }
-  
-  getTiendas(tiendasJson: any): string {
-    const tiendas = this.parseJsonData(tiendasJson);
-    return tiendas.length > 0 ? tiendas.map((t: { nombre: string }) => t.nombre).join(', ') : 'No disponible';
-  }
-  
+
   getSitioWeb(sitio: string | null): string {
     if (sitio) {
       return `<a href="${sitio}" target="_blank">${sitio}</a>`;
@@ -107,7 +108,6 @@ export class InfoJuegoPage {
       return 'No establecido';
     }
   }
-  
 
   public formatearFecha(fecha: string): string {
     const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
@@ -124,4 +124,37 @@ export class InfoJuegoPage {
     await toast.present();
   }
 
+  getTiendas(tiendas: any[]): string {
+    return this.getListAsString(tiendas);
+  }
+  
+  getPlataformas(plataformas: any[]): string {
+    return this.getListAsString(plataformas);
+  }
+  
+  getGeneros(generos: any[]): string {
+    return this.getListAsString(generos);
+  }
+  
+  getDesarrolladoras(desarrolladoras: any[]): string {
+    return this.getListAsString(desarrolladoras);
+  }
+  
+  getPublishers(publishers: any[]): string {
+    return this.getListAsString(publishers);
+  }
+  
+  private getListAsString(items: any[]): string {
+    if (items && items.length > 0) {
+      return items.map((item: { nombre: string }) => item.nombre).join(', ');
+    } else {
+      return 'No disponible';
+    }
+  }
+  
+  isLastItem(array: any[], item: any): boolean {
+    return array[array.length - 1] === item;
+  }
+  
+  
 }
