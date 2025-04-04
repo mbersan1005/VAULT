@@ -15,9 +15,14 @@
         <img [src]="juego.imagen" alt="Imagen de {{ juego.nombre }}">
         
         <div class="additional-info">
-          <p><strong>Nota en Metacritic:</strong> {{ juego.nota_metacritic }}</p>
+          <p><strong>Nota en Metacritic:</strong> 
+            {{ juego.nota_metacritic || 'No establecida' }}
+          </p>          
+          
           <p><strong>Fecha de lanzamiento:</strong> {{ formatearFecha(juego.fecha_lanzamiento) }}</p>
-          <p><strong>Sitio Web: </strong> <a [href]="juego.sitio_web" target="_blank">{{ juego.sitio_web }}</a></p>
+          
+          <p><strong>Sitio Web: </strong> <span [innerHTML]="getSitioWeb(juego.sitio_web)"></span></p>
+                  
           <p><strong>Tiendas:</strong> {{ getTiendas(juego.tiendas) }}</p>
         </div>
       </div>

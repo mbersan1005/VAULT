@@ -100,6 +100,14 @@ export class InfoJuegoPage {
     return tiendas.length > 0 ? tiendas.map((t: { nombre: string }) => t.nombre).join(', ') : 'No disponible';
   }
   
+  getSitioWeb(sitio: string | null): string {
+    if (sitio) {
+      return `<a href="${sitio}" target="_blank">${sitio}</a>`;
+    } else {
+      return 'No establecido';
+    }
+  }
+  
 
   public formatearFecha(fecha: string): string {
     const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
