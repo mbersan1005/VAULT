@@ -50,31 +50,27 @@ export class InfoJuegoPage {
   
         console.log('Juego cargado:', this.juego);
   
-        // Asegúrate de que las propiedades estén correctamente inicializadas
         if (this.juego) {
           this.juego.tiendas = this.parseJsonData(this.juego.tiendas);
           this.juego.plataformas_principales = this.parseJsonData(this.juego.plataformas_principales);
           this.juego.generos = this.parseJsonData(this.juego.generos); 
           this.juego.desarrolladoras = this.parseJsonData(this.juego.desarrolladoras);
-          this.juego.publishers = this.parseJsonData(this.juego.publishers);  // Asegúrate de parsear correctamente
+          this.juego.publishers = this.parseJsonData(this.juego.publishers);  
   
-          console.log('Publishers:', this.juego.publishers);  // Log para verificar
-  
-          // Asegúrate de inicializar las propiedades si no vienen del servidor
           if (!this.juego.publishers) {
-            this.juego.publishers = [];  // Inicializa publishers si no vienen de la API
+            this.juego.publishers = []; 
           }
           if (!this.juego.desarrolladoras) {
-            this.juego.desarrolladoras = [];  // Inicializa desarrolladoras si no vienen de la API
+            this.juego.desarrolladoras = []; 
           }
           if (!this.juego.generos) {
-            this.juego.generos = [];  // Inicializa géneros si no vienen de la API
+            this.juego.generos = [];
           }
           if (!this.juego.plataformas_principales) {
-            this.juego.plataformas_principales = []; // Inicializa plataformas si no vienen de la API
+            this.juego.plataformas_principales = [];
           }
           if (!this.juego.tiendas) {
-            this.juego.tiendas = [];  // Inicializa tiendas si no vienen de la API
+            this.juego.tiendas = [];
           }
         }
   
@@ -86,11 +82,6 @@ export class InfoJuegoPage {
     );
   }
   
-  
-  
-  
-  
-
   private parseJsonData(data: any): any[] {
     if (!data) return []; 
     try {
@@ -122,34 +113,6 @@ export class InfoJuegoPage {
       color: color
     });
     await toast.present();
-  }
-
-  getTiendas(tiendas: any[]): string {
-    return this.getListAsString(tiendas);
-  }
-  
-  getPlataformas(plataformas: any[]): string {
-    return this.getListAsString(plataformas);
-  }
-  
-  getGeneros(generos: any[]): string {
-    return this.getListAsString(generos);
-  }
-  
-  getDesarrolladoras(desarrolladoras: any[]): string {
-    return this.getListAsString(desarrolladoras);
-  }
-  
-  getPublishers(publishers: any[]): string {
-    return this.getListAsString(publishers);
-  }
-  
-  private getListAsString(items: any[]): string {
-    if (items && items.length > 0) {
-      return items.map((item: { nombre: string }) => item.nombre).join(', ');
-    } else {
-      return 'No disponible';
-    }
   }
   
   isLastItem(array: any[], item: any): boolean {
