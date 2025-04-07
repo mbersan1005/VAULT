@@ -134,6 +134,9 @@ export class ApiRequestService {
       'Token': this.apiToken
     });
 
-    return this.http.post(this.baseUrl + "/agregarJuego", juegoData, { headers });
+    console.log("Datos antes de enviar:", juegoData);
+
+    return this.http.post(this.baseUrl + "/agregarJuego", juegoData, { headers })
+
   }
 }

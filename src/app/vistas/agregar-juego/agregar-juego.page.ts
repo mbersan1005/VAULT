@@ -18,7 +18,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class AgregarJuegoPage{
 
   nuevoJuegoForm!: FormGroup;
-  fechaLanzamiento: string = '';
   generos: { id: number, nombre: string }[] = [];
   plataformas: { id: number, nombre: string }[] = [];
   tiendas: { id: number, nombre: string }[] = [];
@@ -34,11 +33,10 @@ export class AgregarJuegoPage{
   ) { }
 
   ngOnInit() {
-
     this.nuevoJuegoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      nota_metacritic: ['', [Validators.required, Validators.min(0), Validators.max(10)]],
+      nota_metacritic: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
       fecha_lanzamiento: ['', Validators.required],
       imagen: ['', [Validators.required, Validators.pattern('https?://.+')]],
       tiendas: [[]],
@@ -49,7 +47,6 @@ export class AgregarJuegoPage{
     });
 
     this.cargarDatos();
-
   }
 
   private async mostrarToast(mensaje: string, color: string) {
@@ -64,7 +61,6 @@ export class AgregarJuegoPage{
 
   cargarDatos() {
     this.apiFacade.obtenerDatosFormulario().subscribe((response) => {
-      console.log(response);
       this.generos = response.generos || [];
       this.plataformas = response.plataformas || [];
       this.tiendas = response.tiendas || [];
@@ -73,19 +69,8 @@ export class AgregarJuegoPage{
     });
   }
 
-  onFechaChange(event: any) {
-    this.fechaLanzamiento = event.detail.value;
-  }
-
   guardarJuego() {
     if (this.nuevoJuegoForm.valid) {
-
-      let fechaSeleccionada = this.nuevoJuegoForm.value.fecha_lanzamiento;
-      const fechaConvertida = this.adaptarFormatoFecha(fechaSeleccionada);
-      
-      this.nuevoJuegoForm.patchValue({
-        fecha_lanzamiento: fechaConvertida
-      });
 
       const juegoData = this.nuevoJuegoForm.value;
 
@@ -103,17 +88,6 @@ export class AgregarJuegoPage{
     } else {
       this.mostrarToast('Por favor, complete todos los campos correctamente', 'danger');
     }
-  }
-
-  adaptarFormatoFecha(fecha: string): string {
-    const partes = fecha.split('-');
-    if (partes.length === 3) {
-      const dia = partes[0];
-      const mes = partes[1];
-      const anio = partes[2];
-      return `${anio}-${mes}-${dia}`;
-    }
-    return fecha;
   }
 
 }
