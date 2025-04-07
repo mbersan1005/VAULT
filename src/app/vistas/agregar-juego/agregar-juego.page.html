@@ -42,6 +42,11 @@
         </ion-item>
 
         <ion-item>
+          <ion-label position="floating">Sitio Web</ion-label>
+          <ion-input formControlName="sitio_web" type="url"></ion-input>
+        </ion-item>
+
+        <ion-item>
           <ion-label>Tiendas</ion-label>
           <ion-select formControlName="tiendas" multiple="true" interface="popover" placeholder="Selecciona tienda(s)">
             <ion-select-option *ngFor="let tienda of tiendas" [value]="tienda.id">{{ tienda.nombre }}</ion-select-option>
@@ -51,7 +56,7 @@
         <ion-item>
           <ion-label>Plataformas</ion-label>
           <ion-select formControlName="plataformas" multiple="true" interface="popover" placeholder="Selecciona plataforma(s)">
-            <ion-select-option *ngFor="let plataforma of plataformas" [value]="plataforma.id">{{ plataforma.nombre }}</ion-select-option>
+            <ion-select-option *ngFor="let plataforma of plataformas" [value]="plataforma.id"> {{ plataforma.nombre }} </ion-select-option>
           </ion-select>
         </ion-item>
         

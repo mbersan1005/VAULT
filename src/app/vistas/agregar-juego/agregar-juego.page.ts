@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { ApiFacade } from 'src/app/facades/api.facade';
 import { SesionService } from 'src/app/services/sesion.service';
-import { Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -15,7 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [IonicModule, FormsModule, CommonModule, ReactiveFormsModule],  
 })
-export class AgregarJuegoPage{
+export class AgregarJuegoPage {
 
   nuevoJuegoForm!: FormGroup;
   generos: { id: number, nombre: string }[] = [];
@@ -36,9 +35,10 @@ export class AgregarJuegoPage{
     this.nuevoJuegoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      nota_metacritic: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
+      nota_metacritic: [''], 
       fecha_lanzamiento: ['', Validators.required],
       imagen: ['', [Validators.required, Validators.pattern('https?://.+')]],
+      sitio_web: [''], 
       tiendas: [[]],
       plataformas: [[]],
       generos: [[]],
@@ -72,7 +72,17 @@ export class AgregarJuegoPage{
   guardarJuego() {
     if (this.nuevoJuegoForm.valid) {
 
-      const juegoData = this.nuevoJuegoForm.value;
+      const juegoData = {
+        ...this.nuevoJuegoForm.value,
+        plataformas: this.extraerIdNombre(this.nuevoJuegoForm.value.plataformas, this.plataformas),
+        generos: this.extraerIdNombre(this.nuevoJuegoForm.value.generos, this.generos),
+        tiendas: this.extraerIdNombre(this.nuevoJuegoForm.value.tiendas, this.tiendas),
+        desarrolladoras: this.extraerIdNombre(this.nuevoJuegoForm.value.desarrolladoras, this.desarrolladoras),
+        publishers: this.extraerIdNombre(this.nuevoJuegoForm.value.publishers, this.publishers),
+        creado_por_admin: 1,
+        nota_metacritic: this.nuevoJuegoForm.value.nota_metacritic || null, 
+        sitio_web: this.nuevoJuegoForm.value.sitio_web || null 
+      };
 
       this.apiFacade.agregarJuego(juegoData).subscribe(
         (response) => {
@@ -90,4 +100,10 @@ export class AgregarJuegoPage{
     }
   }
 
+  private extraerIdNombre(idsSeleccionados: any[], fuente: { id: number, nombre: string }[]): { id: number, nombre: string }[] {
+    return fuente.filter(item => idsSeleccionados.includes(item.id) || idsSeleccionados.includes(String(item.id))).map(item => ({
+      id: item.id,
+      nombre: item.nombre
+    }));
+  }
 }
