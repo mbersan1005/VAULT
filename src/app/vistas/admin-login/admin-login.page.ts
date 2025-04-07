@@ -88,8 +88,4 @@ export class AdminLoginPage {
     await toast.present();
   }
 
-  logout(){
-    this.sesion.establecerSesion(false);
-    this.router.navigate(['/home']);
-  }
 }

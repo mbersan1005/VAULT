@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
+import { AlertController, MenuController, ToastController } from '@ionic/angular';
 import { SesionService } from './services/sesion.service';
 
 @Component({
@@ -14,6 +14,8 @@ export class AppComponent {
     private menu: MenuController,
     private router: Router,
     public sesion: SesionService,
+    private alertController: AlertController,
+    private toastController: ToastController,
   
   ) {}
 
@@ -22,10 +24,41 @@ export class AppComponent {
     this.menu.close();
   }
 
-  logout() {
-    this.sesion.establecerSesion(false);
-    this.router.navigate(['/home']);
-    this.menu.close();
+   async logout() {
+
+    const alert = await this.alertController.create({
+      header: 'Confirmar Logout',
+      message: '¿Estás seguro de que quieres cerrar sesión',
+      cssClass: 'custom-alert',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel'
+        },
+        {
+          text: 'Sí',
+          handler: () => {
+            this.sesion.establecerSesion(false);
+            this.router.navigate(['/home']);
+            this.mostrarToast('Cierre de sesión exitoso.', 'success');
+            this.menu.close();
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+    
+  }
+
+  private async mostrarToast(mensaje: string, color: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      position: 'top',
+      color: color
+    });
+    await toast.present();
   }
 
 }
