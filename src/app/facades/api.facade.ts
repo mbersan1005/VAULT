@@ -49,4 +49,12 @@ export class ApiFacade {
     return this.request.eliminarJuego(idJuego);
   }
 
+  public obtenerDatosFormulario(): Observable<any>{
+    return this.request.obtenerDatosFormulario();
+  }
+
+  public agregarJuego(juegoData: any): Observable<any>{
+    return this.request.agregarJuego(juegoData);
+  }
+
 }

@@ -62,6 +62,10 @@ const routes: Routes = [
   {
     path: 'juegos-lista-filtro/:categoria/:nombre',
     loadChildren: () => import('./vistas/juegos-lista-filtro/juegos-lista-filtro.module').then(m => m.JuegosListaFiltroPageModule)
+  },
+  {
+    path: 'agregar-juego',
+    loadChildren: () => import('./vistas/agregar-juego/agregar-juego.module').then( m => m.AgregarJuegoPageModule)
   }
 ];
 

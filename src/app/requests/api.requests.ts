@@ -117,5 +117,23 @@ export class ApiRequestService {
     return this.http.post(this.baseUrl + "/eliminarJuego", body, { headers });
   }
   
+  public obtenerDatosFormulario(): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
 
+    return this.http.get(this.baseUrl+"/obtenerDatosFormulario", {headers});
+  }
+
+  public agregarJuego(juegoData: any): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.post(this.baseUrl + "/agregarJuego", juegoData, { headers });
+  }
 }

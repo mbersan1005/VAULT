@@ -121,6 +121,10 @@ export class HomePage {
     this.router.navigate(['/info-juego', juegoId]);
   }
 
+  public agregarJuego(){
+    this.router.navigate(['/agregar-juego']);
+  }
+
   public async eliminarJuego(juegoId: number) {
     const alert = await this.alertController.create({
       header: 'Confirmar eliminación',
