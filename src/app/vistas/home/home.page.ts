@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { AlertController, MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { ApiRequestService } from '../../requests/api.requests';
@@ -34,6 +34,7 @@ export class HomePage {
     private toastController: ToastController,
     private datePipe: DatePipe,
     public sesion: SesionService,
+    private alertController: AlertController,
   ) {}
 
   ngOnInit(){
@@ -119,5 +120,42 @@ export class HomePage {
   public verJuego(juegoId: number){
     this.router.navigate(['/info-juego', juegoId]);
   }
+
+  public async eliminarJuego(juegoId: number) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: '¿Estás seguro de que quieres eliminar este juego?',
+      cssClass: 'custom-alert',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel'
+        },
+        {
+          text: 'Sí',
+          handler: () => {
+            this.apiFacade.eliminarJuego(juegoId).subscribe(
+              (data) => {
+                console.log('Juego eliminado:', data);
+                
+                this.juegos = this.juegos.filter(juego => juego.id !== juegoId);
+                this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+  
+                this.mostrarToast('Juego eliminado correctamente', 'success');
+              },
+              (error) => {
+                console.error('Error al eliminar el juego:', error);
+                this.mostrarToast('Error al eliminar el juego', 'danger');
+              }
+            );
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  }
+  
+  
 
 }

@@ -35,9 +35,9 @@
               <p><strong>Plataformas:</strong> {{ getPlataformas(juego.plataformas_principales) }}</p>
               <p><strong>Géneros:</strong> {{ getGeneros(juego.generos) }}</p>
             </div>
-            <div *ngIf="sesion.comprobarSesion()">  
+            <div *ngIf="sesion.comprobarSesion()" class="admin-buttons">  
               <ion-button color="primary" (click)="$event.stopPropagation()">Editar</ion-button>
-              <ion-button color="danger" (click)="$event.stopPropagation()">Eliminar</ion-button>
+              <ion-button color="danger" (click)="$event.stopPropagation(); eliminarJuego(juego.id)">Eliminar</ion-button>
             </div>
           </ion-card-content>
         </ion-card>

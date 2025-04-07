@@ -106,6 +106,16 @@ export class ApiRequestService {
     return this.http.get(url, { headers });
   }
 
-
+  public eliminarJuego(idJuego: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+  
+    const body = { id: idJuego };
+  
+    return this.http.post(this.baseUrl + "/eliminarJuego", body, { headers });
+  }
+  
 
 }

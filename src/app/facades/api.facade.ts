@@ -45,4 +45,8 @@ export class ApiFacade {
     return this.request.recibirJuegosPorCategoria(categoria, nombre);
   }
 
+  public eliminarJuego(idJuego: number): Observable<any>{
+    return this.request.eliminarJuego(idJuego);
+  }
+
 }
