@@ -126,13 +126,16 @@ export class HomePage {
     this.router.navigate(['/agregar-juego']);
   }
 
-  public async crearAdministrador(){
+  public async crearAdministrador() {
     const modal = await this.modalController.create({
-      component: CrearAdminModalComponent
+      component: CrearAdminModalComponent,
+      breakpoints: [0.32, 0.5],
+      initialBreakpoint: 0.32
     });
-    
+  
     return await modal.present();
   }
+  
 
   public async eliminarJuego(juegoId: number) {
     const alert = await this.alertController.create({
