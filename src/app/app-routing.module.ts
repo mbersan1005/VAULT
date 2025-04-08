@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { autentificadorGuard } from './guards/autentificador.guard';
 
 const routes: Routes = [
   {
@@ -65,13 +66,19 @@ const routes: Routes = [
   },
   {
     path: 'agregar-juego',
-    loadChildren: () => import('./vistas/agregar-juego/agregar-juego.module').then( m => m.AgregarJuegoPageModule)
+    loadChildren: () => import('./vistas/agregar-juego/agregar-juego.module').then( m => m.AgregarJuegoPageModule),
+    canActivate: [autentificadorGuard]
+  },
+  {
+    path: '**',
+    redirectTo: 'home',
+    pathMatch: 'full'
   }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })  // Aquí es donde lo configuramos
+    RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' }) 
   ],
   exports: [RouterModule]
 })
