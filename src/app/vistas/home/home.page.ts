@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { SesionService } from 'src/app/services/sesion.service';
+import { CrearAdminModalComponent } from 'src/app/components/crear-admin-modal/crear-admin-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -123,6 +124,14 @@ export class HomePage {
 
   public agregarJuego(){
     this.router.navigate(['/agregar-juego']);
+  }
+
+  public async crearAdministrador(){
+    const modal = await this.modalController.create({
+      component: CrearAdminModalComponent
+    });
+    
+    return await modal.present();
   }
 
   public async eliminarJuego(juegoId: number) {

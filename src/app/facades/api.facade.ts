@@ -57,4 +57,8 @@ export class ApiFacade {
     return this.request.agregarJuego(juegoData);
   }
 
+  public crearAdministrador(adminData: any): Observable<any>{
+    return this.request.crearAdministrador(adminData);
+  }
+
 }

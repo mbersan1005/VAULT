@@ -88,7 +88,10 @@ export class AgregarJuegoPage {
         (response) => {
           console.log('Juego agregado con éxito:', response);
           this.mostrarToast('Juego agregado correctamente', 'success');
-          this.router.navigate(['/home']);
+          this.router.navigateByUrl('/home').then(() => {
+            window.location.reload();
+          });
+          
         },
         (error) => {
           console.error('Error al agregar el juego:', error);

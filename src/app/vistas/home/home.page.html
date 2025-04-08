@@ -13,7 +13,7 @@
 <ion-content>
   <div *ngIf="sesion.comprobarSesion()" class="admin-buttons">
     <ion-button color="success" (click)="agregarJuego()">Añadir Videojuego</ion-button>
-    <ion-button color="tertiary">Crear cuenta Admin</ion-button>
+    <ion-button color="tertiary" (click)="crearAdministrador()">Crear cuenta Admin</ion-button>
     <ion-button color="warning">Actualizar Datos</ion-button>
     <ion-button color="danger">Resetear Datos</ion-button>
   </div>

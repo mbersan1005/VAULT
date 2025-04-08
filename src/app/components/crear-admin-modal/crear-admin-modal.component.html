@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Crear Admin</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="adminForm" (ngSubmit)="crearCuentaAdmin()">
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input formControlName="nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Repetir Contraseña</ion-label>
+      <ion-input type="password" formControlName="repetirPassword"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="adminForm.invalid">Crear cuenta</ion-button>
+  </form>
+</ion-content>
