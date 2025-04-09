@@ -150,60 +150,63 @@ export class EditarJuegoPage {
 
   editarJuego() {
     if (this.editarJuegoForm.valid) {
-  
-      let huboCambios = false;
       const formValues = this.editarJuegoForm.value;
+      let juegoData: any = { ...this.juego };
   
-      const juegoData: any = {
-        ...formValues,
-        plataformas: null,
-        generos: null,
-        tiendas: null,
-        desarrolladoras: null,
-        publishers: null,
-        creado_por_admin: 1,
-        nota_metacritic: formValues.nota_metacritic || null,
-        sitio_web: formValues.sitio_web || null,
-      };
-  
-      // Comparar plataformas
-      if (!this.compararArrays(this.juego.plataformas_principales, formValues.plataformas)) {
-        juegoData.plataformas = this.extraerIdNombre(formValues.plataformas, this.plataformas);
-        huboCambios = true;
-      }
-  
-      // Comparar géneros
-      if (!this.compararArrays(this.juego.generos, formValues.generos)) {
-        juegoData.generos = this.extraerIdNombre(formValues.generos, this.generos);
-        huboCambios = true;
-      }
-  
-      // Comparar tiendas
-      if (!this.compararArrays(this.juego.tiendas, formValues.tiendas)) {
-        juegoData.tiendas = this.extraerIdNombre(formValues.tiendas, this.tiendas);
-        huboCambios = true;
-      }
-  
-      // Comparar desarrolladoras
-      if (!this.compararArrays(this.juego.desarrolladoras, formValues.desarrolladoras)) {
-        juegoData.desarrolladoras = this.extraerIdNombre(formValues.desarrolladoras, this.desarrolladoras);
-        huboCambios = true;
-      }
-  
-      // Comparar publishers
       if (!this.compararArrays(this.juego.publishers, formValues.publishers)) {
-        juegoData.publishers = this.extraerIdNombre(formValues.publishers, this.publishers);
-        huboCambios = true;
+        juegoData.publishers = formValues.publishers.length ?
+          this.extraerIdNombre(formValues.publishers, this.publishers) : this.juego.publishers;
       }
   
-      // Si no hubo cambios, mostrar un toast
-      if (!huboCambios) {
+      if (!this.compararArrays(this.juego.desarrolladoras, formValues.desarrolladoras)) {
+        juegoData.desarrolladoras = formValues.desarrolladoras.length ?
+          this.extraerIdNombre(formValues.desarrolladoras, this.desarrolladoras) : this.juego.desarrolladoras;
+      }
+  
+      if (formValues.nombre !== this.juego.nombre && formValues.nombre !== '') {
+        juegoData.nombre = formValues.nombre;
+      }
+  
+      if (formValues.descripcion !== this.juego.descripcion && formValues.descripcion !== '') {
+        juegoData.descripcion = formValues.descripcion;
+      }
+  
+      if (formValues.nota_metacritic !== this.juego.nota_metacritic && formValues.nota_metacritic != null) {
+        juegoData.nota_metacritic = formValues.nota_metacritic || null;
+      }
+  
+      if (formValues.fecha_lanzamiento !== this.juego.fecha_lanzamiento && formValues.fecha_lanzamiento !== '') {
+        juegoData.fecha_lanzamiento = formValues.fecha_lanzamiento || null;
+      }
+  
+      if (formValues.imagen !== this.juego.imagen && formValues.imagen !== '') {
+        juegoData.imagen = formValues.imagen || null;
+      }
+  
+      if (formValues.sitio_web !== this.juego.sitio_web && formValues.sitio_web !== '') {
+        juegoData.sitio_web = formValues.sitio_web || null;
+      }
+  
+      if (!this.compararArrays(this.juego.tiendas, formValues.tiendas)) {
+        juegoData.tiendas = formValues.tiendas.length ? this.extraerIdNombre(formValues.tiendas, this.tiendas) : [];
+      }
+  
+      if (!this.compararArrays(this.juego.plataformas_principales, formValues.plataformas)) {
+        juegoData.plataformas_principales = formValues.plataformas.length ? this.extraerIdNombre(formValues.plataformas, this.plataformas) : [];
+      }
+  
+      if (!this.compararArrays(this.juego.generos, formValues.generos)) {
+        juegoData.generos = formValues.generos.length ? this.extraerIdNombre(formValues.generos, this.generos) : [];
+      }
+  
+      if (Object.keys(juegoData).length === 0 || JSON.stringify(juegoData) === JSON.stringify(this.juego)) {
         this.mostrarToast('Debe editar al menos un dato.', 'warning');
-        return;
+        return; 
       }
   
-      // Si hubo cambios, proceder con la actualización
-      this.apiFacade.agregarJuego(juegoData).subscribe(
+      console.log('Datos a enviar:', juegoData);
+  
+      this.apiFacade.editarJuego(juegoData).subscribe(
         (response: any) => {
           console.log('Juego actualizado con éxito:', response);
           this.mostrarToast('Juego actualizado correctamente', 'success');
@@ -221,21 +224,25 @@ export class EditarJuegoPage {
     }
   }
   
+
+
+  
+  
+  
   private compararArrays(a: any[], b: any[]): boolean {
-    // Comparar los arrays basándose en los IDs, se asegura de que los objetos sean del mismo tipo y se ordenen por ID
+    // Asegurarse de que todos los IDs sean números antes de comparar
     const idsA = (a || []).map(o => +o.id || +o).sort();
     const idsB = (b || []).map(o => +o.id || +o).sort();
     return JSON.stringify(idsA) === JSON.stringify(idsB);
   }
-  
-  
 
   private extraerIdNombre(idsSeleccionados: any[], fuente: { id: number, nombre: string }[]): { id: number, nombre: string }[] {
     return fuente.filter(item => idsSeleccionados.includes(item.id) || idsSeleccionados.includes(String(item.id))).map(item => ({
-      id: item.id,
-      nombre: item.nombre
+        id: item.id,
+        nombre: item.nombre
     }));
   }
+
 
   getNombresDesarrolladoras(): string {
     return this.juego?.desarrolladoras?.map((d: any) => d.nombre).join(', ') || '';

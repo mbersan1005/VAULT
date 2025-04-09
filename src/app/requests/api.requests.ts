@@ -143,9 +143,16 @@ export class ApiRequestService {
         'Token': this.apiToken
       });
 
-      console.log(adminData); // Verifica que adminData tiene los valores esperados
-
       return this.http.post(this.baseUrl + "/crearAdministrador", adminData, { headers })
+  }
 
-    }
+  public editarJuego(juegoData: any): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.post(this.baseUrl + "/editarJuego", juegoData, { headers })
+  }
 }
