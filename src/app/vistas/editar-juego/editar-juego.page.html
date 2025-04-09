@@ -1,0 +1,117 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Editar Juego</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Formulario de Editar Juego</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form [formGroup]="editarJuegoForm" (ngSubmit)="editarJuego()">
+        
+        <!-- Nombre del Juego -->
+        <ion-item>
+          <ion-label position="stacked">Nombre del Juego</ion-label>
+          <ion-input formControlName="nombre" type="text"></ion-input>
+        </ion-item>
+
+        <!-- Descripción -->
+        <ion-item>
+          <ion-label position="stacked">Descripción</ion-label>
+          <ion-textarea formControlName="descripcion" rows="6"></ion-textarea>
+        </ion-item>
+
+        <!-- Nota -->
+        <ion-item>
+          <ion-label position="stacked">Nota</ion-label>
+          <ion-input formControlName="nota_metacritic" type="number"></ion-input>
+        </ion-item>
+
+        <!-- Fecha de Lanzamiento -->
+        <ion-item>
+          <ion-label position="stacked">Fecha de Lanzamiento</ion-label>
+          <ion-input formControlName="fecha_lanzamiento" type="date"></ion-input>
+        </ion-item>
+
+        <!-- URL de la Imagen -->
+        <ion-item>
+          <ion-label position="stacked">URL de la Imagen</ion-label>
+          <ion-input formControlName="imagen" type="url"></ion-input>
+        </ion-item>
+
+        <!-- Sitio Web -->
+        <ion-item>
+          <ion-label position="stacked">Sitio Web</ion-label>
+          <ion-input formControlName="sitio_web" type="url"></ion-input>
+        </ion-item>
+
+        <!-- Tiendas -->
+        <ion-item>
+          <ion-label>Tiendas:</ion-label>
+          <ion-select formControlName="tiendas" multiple="true" interface="popover">
+            <ion-select-option *ngFor="let tienda of tiendas" [value]="tienda.id">
+              {{ tienda.nombre }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+          
+
+        <!-- Plataformas -->
+        <ion-item>
+          <ion-label>Plataformas:</ion-label>
+          <ion-select formControlName="plataformas" multiple="true" interface="popover">
+            <ion-select-option *ngFor="let plataforma of plataformas" [value]="plataforma.id"> {{ plataforma.nombre }} </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Géneros -->
+        <ion-item>
+          <ion-label>Géneros:</ion-label>
+          <ion-select formControlName="generos" multiple="true" interface="popover">
+            <ion-select-option *ngFor="let genero of generos" [value]="genero.id">{{ genero.nombre }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Desarrolladoras -->
+        <ion-item>
+          <ion-label>Desarrolladoras:</ion-label>
+          <ion-select formControlName="desarrolladoras" multiple="true" interface="popover" >
+            <ion-select-option *ngFor="let desarrolladora of desarrolladoras" [value]="desarrolladora.id">
+              {{ desarrolladora.nombre }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Mostrar desarrolladoras ya seleccionadas -->
+        <ion-text color="medium" *ngIf="juego?.desarrolladoras?.length">
+          <p><strong>Actuales:</strong> {{ getNombresDesarrolladoras() }}</p>
+        </ion-text>
+
+        <!-- Publishers -->
+        <ion-item>
+          <ion-label>Publishers:</ion-label>
+          <ion-select formControlName="publishers" multiple="true" interface="popover" >
+            <ion-select-option *ngFor="let publisher of publishers" [value]="publisher.id">
+              {{ publisher.nombre }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Mostrar publishers ya seleccionados -->
+        <ion-text color="medium" *ngIf="juego?.publishers?.length">
+          <p><strong>Actuales:</strong> {{ getNombresPublishers() }}</p>
+        </ion-text>
+
+        <!-- Botón de guardar -->
+        <ion-button expand="full" type="submit" [disabled]="!editarJuegoForm.valid">Editar Juego</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

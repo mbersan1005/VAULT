@@ -126,6 +126,10 @@ export class HomePage {
     this.router.navigate(['/agregar-juego']);
   }
 
+  public editarJuego(juegoId: number){
+    this.router.navigate(['/editar-juego', juegoId]);
+  }
+
   public async crearAdministrador() {
     const modal = await this.modalController.create({
       component: CrearAdminModalComponent,

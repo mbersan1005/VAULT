@@ -70,10 +70,15 @@ const routes: Routes = [
     canActivate: [autentificadorGuard]
   },
   {
+    path: 'editar-juego/:id',
+    loadChildren: () => import('./vistas/editar-juego/editar-juego.module').then( m => m.EditarJuegoPageModule),
+    canActivate: [autentificadorGuard]
+  },
+  {
     path: '**',
     redirectTo: 'home',
     pathMatch: 'full'
-  }
+  },
 ];
 
 @NgModule({

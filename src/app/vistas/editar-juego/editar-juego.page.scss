@@ -1,0 +1,56 @@
+ion-title{
+    text-align: center;
+  }
+  
+  /* Hacer que el formulario ocupe todo el ancho disponible */
+  ion-card {
+      width: 100%;
+      max-width: 600px; /* Limitar el tamaño máximo en pantallas grandes */
+      margin: 0 auto; /* Centrar el formulario */
+      padding: 10px;
+    }
+    
+    /* Asegurarse de que el contenido del formulario se ajuste en pantallas más pequeñas */
+    ion-item {
+      margin-bottom: 15px; /* Espaciado entre los elementos */
+    }
+    
+    /* Ajustes de responsividad */
+    @media screen and (max-width: 576px) {
+      ion-card {
+        padding: 15px;
+      }
+      
+      ion-item {
+        margin-bottom: 10px; /* Reducir el espaciado en pantallas pequeñas */
+      }
+    
+      ion-button {
+        font-size: 16px; /* Ajustar el tamaño de la fuente del botón */
+      }
+    }
+    
+    /* Ajustar el tamaño de los títulos en pantallas más pequeñas */
+    @media screen and (max-width: 576px) {
+      ion-card-title {
+        font-size: 1.4rem; /* Reducir el tamaño del título */
+        text-align: center;
+      }
+    }
+    
+    /* Ajustes de márgenes y padding en el header */
+    ion-toolbar {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    
+    ion-title {
+      font-size: 1.6rem; /* Reducir tamaño en pantallas pequeñas */
+    }
+    
+    @media screen and (max-width: 600px) {
+      ion-title {
+        font-size: 1.4rem;
+      }
+    }
+    
