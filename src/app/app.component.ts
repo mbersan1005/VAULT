@@ -10,6 +10,9 @@ import { SesionService } from './services/sesion.service';
   standalone: false,
 })
 export class AppComponent {
+  
+  paletteToggle = false;
+  
   constructor(
     private menu: MenuController,
     private router: Router,
@@ -18,6 +21,14 @@ export class AppComponent {
     private toastController: ToastController,
   
   ) {}
+
+  ngOnInit(){
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+        this.initializeDarkPalette(prefersDark.matches);
+    
+        prefersDark.addEventListener('change', (mediaQuery) => this.initializeDarkPalette(mediaQuery.matches));
+  }
 
   openPage(page: string) {
     this.router.navigate([`/${page}`]);
@@ -59,6 +70,19 @@ export class AppComponent {
       color: color
     });
     await toast.present();
+  }
+
+  initializeDarkPalette(isDark: boolean) {
+    this.paletteToggle = isDark;
+    this.toggleDarkPalette(isDark);
+  }
+
+  toggleChange(event: CustomEvent) {
+    this.toggleDarkPalette(event.detail.checked);
+  }
+
+  toggleDarkPalette(shouldAdd: boolean) {
+    document.documentElement.classList.toggle('ion-palette-dark', shouldAdd);
   }
 
 }
