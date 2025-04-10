@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, MenuController } from '@ionic/angular';
+import { AlertController, LoadingController, MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { ApiRequestService } from '../../requests/api.requests';
@@ -26,6 +26,8 @@ export class HomePage {
   juegosCargados: number = 9; 
   juegosPorCargar: number = 9;
 
+  isLoading = false;
+
   constructor(
     private menu: MenuController, 
     private router: Router,
@@ -36,6 +38,7 @@ export class HomePage {
     private datePipe: DatePipe,
     public sesion: SesionService,
     private alertController: AlertController,
+    private loadingController: LoadingController
   ) {}
 
   ngOnInit(){
@@ -189,13 +192,17 @@ export class HomePage {
         {
           text: 'Sí',
           handler: () => {
+            this.mostrarLoading();
+
             this.apiFacade.actualizarDatosAPI().subscribe(
               (data) => {
                 console.log('Datos actualizados', data);
+                this.ocultarLoading();
                 this.mostrarToast('Datos actualizados correctamente', 'success');
               },
               (error) => {
                 console.error('Error al actualizar los datos:', error);
+                this.ocultarLoading();
                 this.mostrarToast('Error al actualizar los datos', 'danger');
               }
             );
@@ -206,5 +213,19 @@ export class HomePage {
   
     await alert.present();
   }
+
+    async mostrarLoading() {
+      const loading = await this.loadingController.create({
+        message: 'Actualizando datos, por favor espere...',
+        spinner: 'crescent',
+        duration: 0,
+      });
+  
+      await loading.present();
+    }
+  
+    async ocultarLoading() {
+      await this.loadingController.dismiss();
+    }
 
 }

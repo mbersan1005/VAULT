@@ -17,6 +17,8 @@
     <ion-button color="warning" (click)="actualizarDatosAPI()">Actualizar Datos</ion-button>
     <ion-button color="danger">Resetear Datos</ion-button>
   </div>
+  
+  <ion-loading [isOpen]="isLoading" message="Actualizando datos, por favor espere..." duration="0"></ion-loading>
 
   <ion-text *ngIf="juegosFiltrados.length === 0">
     <h3>No se encontraron juegos</h3>
