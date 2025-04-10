@@ -68,4 +68,12 @@ export class ApiFacade {
   public actualizarDatosAPI(): Observable<any>{
     return this.request.actualizarDatosAPI();
   }
+
+  public recibirJuegosAdmin(): Observable<any>{
+    return this.request.recibirJuegosAdmin();
+  }
+
+  public purgarDatos(): Observable<any>{
+    return this.request.purgarDatos();
+  }
 }

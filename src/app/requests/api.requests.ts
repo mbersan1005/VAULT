@@ -166,4 +166,23 @@ export class ApiRequestService {
     return this.http.get(this.baseUrl+"/actualizarDatosAPI", {headers});
   }
 
+  public recibirJuegosAdmin(): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.get(this.baseUrl+"/recibirJuegosAdmin", {headers});
+  }
+
+  public purgarDatos(): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.get(this.baseUrl+"/purgarDatos", {headers});
+  }
 }

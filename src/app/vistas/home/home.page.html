@@ -15,7 +15,7 @@
     <ion-button color="success" (click)="agregarJuego()">Añadir Videojuego</ion-button>
     <ion-button color="tertiary" (click)="crearAdministrador()">Crear cuenta Admin</ion-button>
     <ion-button color="warning" (click)="actualizarDatosAPI()">Actualizar Datos</ion-button>
-    <ion-button color="danger">Resetear Datos</ion-button>
+    <ion-button color="danger" (click)="purgarDatosAPI()">Resetear Datos</ion-button>
   </div>
   
   <ion-loading [isOpen]="isLoading" message="Actualizando datos, por favor espere..." duration="0"></ion-loading>

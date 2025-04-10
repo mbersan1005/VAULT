@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { SesionService } from 'src/app/services/sesion.service';
 import { CrearAdminModalComponent } from 'src/app/components/crear-admin-modal/crear-admin-modal.component';
+import { PurgarDatosComponent } from 'src/app/components/purgar-datos/purgar-datos.component';
 
 @Component({
   selector: 'app-home',
@@ -233,4 +234,13 @@ export class HomePage {
       await this.loadingController.dismiss();
     }
 
+    public async purgarDatosAPI() {
+      const modal = await this.modalController.create({
+        component: PurgarDatosComponent,
+        breakpoints: [0.32, 1],
+        initialBreakpoint: 0.32
+      });
+    
+      return await modal.present();
+    }
 }

@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Purgar Datos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div>
+    <h3>Juegos Modificados o Insertados</h3>
+    <ion-list>
+      <ion-item *ngFor="let juego of juegos">
+        {{ juego.nombre }}
+      </ion-item>
+    </ion-list>
+  </div>
+  <ion-footer>
+    <ion-button expand="full" color="primary" (click)="confirmarAccion()">Confirmar Purgado</ion-button>
+  </ion-footer>
+</ion-content>
