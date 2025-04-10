@@ -237,8 +237,8 @@ export class HomePage {
     public async purgarDatosAPI() {
       const modal = await this.modalController.create({
         component: PurgarDatosComponent,
-        breakpoints: [0.32, 1],
-        initialBreakpoint: 0.32
+        breakpoints: [0.5, 1],
+        initialBreakpoint: 0.5
       });
     
       return await modal.present();

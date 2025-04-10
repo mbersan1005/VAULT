@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicModule, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, IonicModule, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiFacade } from 'src/app/facades/api.facade';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -17,7 +17,10 @@ export class PurgarDatosComponent {
   constructor(
     private modalController: ModalController,
     private toastController: ToastController,
-    private apiFacade: ApiFacade
+    private apiFacade: ApiFacade,
+    private loadingController: LoadingController,
+    private alertController: AlertController,
+  
   ) {}
 
   ngOnInit() {
@@ -28,18 +31,41 @@ export class PurgarDatosComponent {
     this.modalController.dismiss();
   }
 
-  confirmarAccion() {
-    this.apiFacade.purgarDatos().subscribe(
-      (response) => {
-        console.log('Datos purgados con éxito:', response);
-        this.mostrarToast('Datos purgados correctamente', 'success');
-        this.cerrarModal();
-      },
-      (error) => {
-        console.error('Error al purgar los datos:', error);
-        this.mostrarToast('Error al purgar los datos', 'danger');
-      }
-    );
+  async confirmarAccion() {
+    
+    const alert = await this.alertController.create({
+      header: 'Confirmar reseteo de datos',
+      message: '¿Estás seguro de que quieres resetear los datos?\nPuede conllevar unos minutos',
+      cssClass: 'custom-alert',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel'
+        },
+        {
+          text: 'Sí',
+          handler: () => {
+            this.mostrarLoading();
+            this.apiFacade.purgarDatos().subscribe(
+              (response) => {
+                console.log('Datos reseteados con éxito:', response);
+                this.ocultarLoading();
+                this.mostrarToast('Datos reseteados correctamente', 'success');
+                this.cerrarModal();
+              },
+              (error) => {
+                console.error('Error al resetear los datos:', error);
+                this.ocultarLoading();
+                this.mostrarToast('Error al resetear los datos', 'danger');
+              }
+            );
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+
   }
 
   private async mostrarToast(mensaje: string, color: string) {
@@ -65,5 +91,19 @@ export class PurgarDatosComponent {
         this.mostrarToast('Error al cargar los juegos del admin', 'danger');
       }
     );
+  }
+
+  async mostrarLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Actualizando datos, por favor espere...',
+      spinner: 'crescent',
+      duration: 0,
+    });
+
+    await loading.present();
+  }
+
+  async ocultarLoading() {
+    await this.loadingController.dismiss();
   }
 }
