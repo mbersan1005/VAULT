@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { AlertController, LoadingController, MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
@@ -38,7 +38,8 @@ export class HomePage {
     private datePipe: DatePipe,
     public sesion: SesionService,
     private alertController: AlertController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private changeDetector: ChangeDetectorRef,
   ) {}
 
   ngOnInit(){
@@ -51,7 +52,9 @@ export class HomePage {
         console.log('Datos recibidos desde la API:', data);
         if (data && data.juegos && data.juegos.length > 0) {
           this.juegos = data.juegos;  
-          this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados); 
+          this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+          
+          this.changeDetector.detectChanges();
         } else {
           this.mostrarToast('No se encontraron datos', 'danger');
         }
@@ -199,6 +202,8 @@ export class HomePage {
                 console.log('Datos actualizados', data);
                 this.ocultarLoading();
                 this.mostrarToast('Datos actualizados correctamente', 'success');
+                
+                this.cargarJuegos();
               },
               (error) => {
                 console.error('Error al actualizar los datos:', error);
