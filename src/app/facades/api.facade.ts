@@ -64,4 +64,8 @@ export class ApiFacade {
   public editarJuego(juegoData: any): Observable<any>{
     return this.request.editarJuego(juegoData);
   }
+
+  public actualizarDatosAPI(): Observable<any>{
+    return this.request.actualizarDatosAPI();
+  }
 }

@@ -155,4 +155,15 @@ export class ApiRequestService {
 
     return this.http.post(this.baseUrl + "/editarJuego", juegoData, { headers })
   }
+
+  public actualizarDatosAPI(): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.get(this.baseUrl+"/actualizarDatosAPI", {headers});
+  }
+
 }

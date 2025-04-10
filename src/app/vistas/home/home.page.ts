@@ -176,4 +176,35 @@ export class HomePage {
     await alert.present();
   }
   
+  public async actualizarDatosAPI(){
+    const alert = await this.alertController.create({
+      header: 'Confirmar actualización de Datos',
+      message: '¿Estás seguro de que quieres actualizar los datos?\nPuede conllevar unos minutos',
+      cssClass: 'custom-alert',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel'
+        },
+        {
+          text: 'Sí',
+          handler: () => {
+            this.apiFacade.actualizarDatosAPI().subscribe(
+              (data) => {
+                console.log('Datos actualizados', data);
+                this.mostrarToast('Datos actualizados correctamente', 'success');
+              },
+              (error) => {
+                console.error('Error al actualizar los datos:', error);
+                this.mostrarToast('Error al actualizar los datos', 'danger');
+              }
+            );
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  }
+
 }
