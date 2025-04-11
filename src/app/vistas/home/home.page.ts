@@ -78,15 +78,26 @@ export class HomePage {
   }
 
   public realizarBusqueda(event: any) {
-    this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
-    if (this.textoBusqueda.trim() === '') {
-      this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados); 
-    } else {
-      this.juegosFiltrados = this.juegos.filter(juego =>
-        juego.nombre?.toLowerCase().includes(this.textoBusqueda)
-      ).slice(0, this.juegosCargados);
+    const texto = event.target.value?.toLowerCase() || '';
+  
+    if (texto.trim() === '') {
+      this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+      return;
     }
+  
+    this.apiFacade.realizarBusqueda(texto).subscribe(
+      (response) => {
+        console.log('Respuesta de la API:', response);
+        this.juegosFiltrados = response.juegos || [];
+      },
+      (error) => {
+        console.error('Error al buscar:', error);
+        this.mostrarToast('Error en la búsqueda', 'danger');
+      }
+    );
+    
   }
+  
 
   public cargarMasJuegos(event: any) {
     setTimeout(() => {

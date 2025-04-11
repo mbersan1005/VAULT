@@ -76,4 +76,8 @@ export class ApiFacade {
   public purgarDatos(): Observable<any>{
     return this.request.purgarDatos();
   }
+
+  public realizarBusqueda(nombre: string): Observable<any>{
+    return this.request.realizarBusqueda(nombre);
+  }
 }

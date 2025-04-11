@@ -185,4 +185,18 @@ export class ApiRequestService {
 
     return this.http.get(this.baseUrl+"/purgarDatos", {headers});
   }
+
+  public realizarBusqueda(nombre: string): Observable<any>{
+    
+    console.log('Búsqueda realizada con:', nombre);
+
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+  
+    const body = { nombre };
+  
+    return this.http.post(`${this.baseUrl}/realizarBusqueda`, body, { headers });
+  }
 }
