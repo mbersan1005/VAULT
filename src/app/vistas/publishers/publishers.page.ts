@@ -49,31 +49,39 @@ export class PublishersPage {
   }
   
   public realizarBusqueda(event: any) {
-    this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
+    this.textoBusqueda = event.target.value?.toLowerCase() || '';  
+    
     if (this.textoBusqueda.trim() === '') {
-      this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados); 
-    } else {
-      this.publishersFiltrados = this.publishers.filter(desarrolladoras =>
-        desarrolladoras.nombre?.toLowerCase().includes(this.textoBusqueda)
-      ).slice(0, this.publishersCargados);
+      this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
+      return;
     }
+  
+    this.apiFacade.realizarBusquedaPublishers(this.textoBusqueda).subscribe(
+      (response) => {
+        console.log('Respuesta de la API:', response);
+        this.publishersFiltrados = response.publishers || [];
+        this.publishersCargados = 9;
+      },
+      (error) => {
+        console.error('Error al buscar:', error);
+        this.mostrarToast('Error en la búsqueda', 'danger');
+      }
+    );
   }
 
   public cargarMasPublishers(event: any) {
     setTimeout(() => {
       this.publishersCargados += this.publishersPorCargar;
   
-      if (this.textoBusqueda.trim() === '') {
-        this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
+      if (this.textoBusqueda.trim() !== '') {
+        this.publishersFiltrados = this.publishersFiltrados.slice(0, this.publishersCargados);
       } else {
-        this.publishersFiltrados = this.publishers.filter(desarrolladoras =>
-          desarrolladoras.nombre?.toLowerCase().includes(this.textoBusqueda.toLowerCase())
-        ).slice(0, this.publishersCargados);
+        this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
       }
   
       event.target.complete();
   
-      if (this.publishersCargados >= this.publishers.length) {
+      if (this.publishersCargados >= (this.textoBusqueda.trim() !== '' ? this.publishersFiltrados.length : this.publishers.length)) {
         event.target.disabled = true;
       }
     }, 500);

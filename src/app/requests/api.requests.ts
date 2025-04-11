@@ -199,4 +199,32 @@ export class ApiRequestService {
   
     return this.http.post(`${this.baseUrl}/realizarBusqueda`, body, { headers });
   }
+
+  public realizarBusquedaDesarrolladoras(nombre: string): Observable<any>{
+    
+    console.log('Búsqueda realizada con:', nombre);
+
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+  
+    const body = { nombre };
+  
+    return this.http.post(`${this.baseUrl}/realizarBusquedaDesarrolladoras`, body, { headers });
+  }
+
+  public realizarBusquedaPublishers(nombre: string): Observable<any>{
+    
+    console.log('Búsqueda realizada con:', nombre);
+
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+  
+    const body = { nombre };
+  
+    return this.http.post(`${this.baseUrl}/realizarBusquedaPublishers`, body, { headers });
+  }
 }

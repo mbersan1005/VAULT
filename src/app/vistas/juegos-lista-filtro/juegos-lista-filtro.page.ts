@@ -61,22 +61,39 @@ export class JuegosListaFiltroPage {
   
 
   public realizarBusqueda(event: any) {
-    this.textoBusqueda = event.target.value?.toLowerCase() || '';
+    this.textoBusqueda = event.target.value?.toLowerCase() || '';  // Usamos textoBusqueda aquí
+    
     if (this.textoBusqueda.trim() === '') {
       this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
-    } else {
-      this.juegosFiltrados = this.juegos.filter(juego =>
-        juego.nombre?.toLowerCase().includes(this.textoBusqueda)
-      ).slice(0, this.juegosCargados);
+      return;
     }
+  
+    this.apiFacade.realizarBusqueda(this.textoBusqueda).subscribe(
+      (response) => {
+        console.log('Respuesta de la API:', response);
+        this.juegosFiltrados = response.juegos || [];
+        this.juegosCargados = 9;
+      },
+      (error) => {
+        console.error('Error al buscar:', error);
+        this.mostrarToast('Error en la búsqueda', 'danger');
+      }
+    );
   }
-
+  
   public cargarMasJuegos(event: any) {
     setTimeout(() => {
       this.juegosCargados += this.juegosPorCargar;
-      this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+  
+      if (this.textoBusqueda.trim() !== '') {
+        this.juegosFiltrados = this.juegosFiltrados.slice(0, this.juegosCargados);
+      } else {
+        this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+      }
+  
       event.target.complete();
-      if (this.juegosCargados >= this.juegos.length) {
+  
+      if (this.juegosCargados >= (this.textoBusqueda.trim() !== '' ? this.juegosFiltrados.length : this.juegos.length)) {
         event.target.disabled = true;
       }
     }, 500);

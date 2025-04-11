@@ -78,7 +78,7 @@ export class HomePage {
   }
 
   public realizarBusqueda(event: any) {
-    this.textoBusqueda = event.target.value?.toLowerCase() || '';  // Usamos textoBusqueda aquí
+    this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
     
     if (this.textoBusqueda.trim() === '') {
       this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
@@ -98,8 +98,6 @@ export class HomePage {
     );
   }
   
-  
-
   public cargarMasJuegos(event: any) {
     setTimeout(() => {
       this.juegosCargados += this.juegosPorCargar;
@@ -118,14 +116,10 @@ export class HomePage {
     }, 500);
   }
   
-  
-  
-
   public formatearFecha(fecha: string): string {
     const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
     return fechaFormateada || fecha; 
   }
-
 
   private async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({

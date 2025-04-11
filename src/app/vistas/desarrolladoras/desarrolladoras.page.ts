@@ -49,31 +49,39 @@ export class DesarrolladorasPage {
   }
 
   public realizarBusqueda(event: any) {
-    this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
+    this.textoBusqueda = event.target.value?.toLowerCase() || '';  
+    
     if (this.textoBusqueda.trim() === '') {
-      this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas); 
-    } else {
-      this.desarrolladorasFiltradas = this.desarrolladoras.filter(desarrolladoras =>
-        desarrolladoras.nombre?.toLowerCase().includes(this.textoBusqueda)
-      ).slice(0, this.desarrolladorasCargadas);
+      this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
+      return;
     }
+  
+    this.apiFacade.realizarBusquedaDesarrolladoras(this.textoBusqueda).subscribe(
+      (response) => {
+        console.log('Respuesta de la API:', response);
+        this.desarrolladorasFiltradas = response.desarrolladoras || [];
+        this.desarrolladorasCargadas = 9;
+      },
+      (error) => {
+        console.error('Error al buscar:', error);
+        this.mostrarToast('Error en la búsqueda', 'danger');
+      }
+    );
   }
 
   public cargarMasDesarrolladoras(event: any) {
     setTimeout(() => {
       this.desarrolladorasCargadas += this.desarrolladorasPorCargar;
   
-      if (this.textoBusqueda.trim() === '') {
-        this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
+      if (this.textoBusqueda.trim() !== '') {
+        this.desarrolladorasFiltradas = this.desarrolladorasFiltradas.slice(0, this.desarrolladorasCargadas);
       } else {
-        this.desarrolladorasFiltradas = this.desarrolladoras.filter(desarrolladoras =>
-          desarrolladoras.nombre?.toLowerCase().includes(this.textoBusqueda.toLowerCase())
-        ).slice(0, this.desarrolladorasCargadas);
+        this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
       }
   
       event.target.complete();
   
-      if (this.desarrolladorasCargadas >= this.desarrolladoras.length) {
+      if (this.desarrolladorasCargadas >= (this.textoBusqueda.trim() !== '' ? this.desarrolladorasFiltradas.length : this.desarrolladoras.length)) {
         event.target.disabled = true;
       }
     }, 500);

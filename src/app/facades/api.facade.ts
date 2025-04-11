@@ -80,4 +80,12 @@ export class ApiFacade {
   public realizarBusqueda(nombre: string): Observable<any>{
     return this.request.realizarBusqueda(nombre);
   }
+
+  public realizarBusquedaDesarrolladoras(nombre: string): Observable<any>{
+    return this.request.realizarBusquedaDesarrolladoras(nombre);
+  }
+
+  public realizarBusquedaPublishers(nombre: string): Observable<any>{
+    return this.request.realizarBusquedaPublishers(nombre);
+  }
 }
