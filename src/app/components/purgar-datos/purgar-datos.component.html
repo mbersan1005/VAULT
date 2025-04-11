@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Purgar Datos</ion-title>
+    <ion-title>Resetear Datos</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="cerrarModal()">Cerrar</ion-button>
     </ion-buttons>
@@ -9,14 +9,21 @@
 
 <ion-content class="ion-padding">
   <div>
-    <h3>Juegos Modificados o Insertados</h3>
-    <ion-list>
-      <ion-item *ngFor="let juego of juegos">
-        {{ juego.nombre }}
-      </ion-item>
-    </ion-list>
+    <ion-text *ngIf="juegos.length === 0">
+      <h3>No se encontraron juegos modificados o insertados por administradores</h3>
+    </ion-text>  
+
+    <div *ngIf="juegos.length > 0">
+      <h3>Juegos modificados o insertados por administradores</h3>
+      <ion-list>
+        <ion-item *ngFor="let juego of juegos">
+          {{ juego.nombre }}
+        </ion-item>
+      </ion-list>
+    </div>
   </div>
-  <ion-footer>
-    <ion-button expand="full" color="primary" (click)="confirmarAccion()">Confirmar Purgado</ion-button>
+
+  <ion-footer *ngIf="juegos.length > 0">
+    <ion-button expand="full" color="primary" (click)="confirmarAccion()">Confirmar Reseteo de datos</ion-button>
   </ion-footer>
 </ion-content>
