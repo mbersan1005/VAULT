@@ -6,6 +6,7 @@ import { ApiRequestService } from '../../requests/api.requests';
 import { CommonModule, DatePipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';  
 import { ActivatedRoute } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-info-juego',
@@ -19,6 +20,7 @@ export class InfoJuegoPage {
 
   juegoId: number | null = null;
   juego: any = {};
+  iframeSrc: SafeResourceUrl | null = null;
 
   constructor(
     private menu: MenuController,
@@ -29,6 +31,7 @@ export class InfoJuegoPage {
     private toastController: ToastController,
     private datePipe: DatePipe,
     private route: ActivatedRoute,
+    private sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit() {
@@ -45,35 +48,37 @@ export class InfoJuegoPage {
   cargarJuego(id: number) {
     this.apiFacade.recibirDatosJuego(id).subscribe(
       (data) => {
-        console.log('Datos del juego recibido desde la API:', data);
         this.juego = data.juego || data;
   
-        console.log('Juego cargado:', this.juego);
+        this.juego.tiendas = this.parseJsonData(this.juego.tiendas);
+        this.juego.plataformas_principales = this.parseJsonData(this.juego.plataformas_principales);
+        this.juego.generos = this.parseJsonData(this.juego.generos);
+        this.juego.desarrolladoras = this.parseJsonData(this.juego.desarrolladoras);
+        this.juego.publishers = this.parseJsonData(this.juego.publishers);
   
-        if (this.juego) {
-          this.juego.tiendas = this.parseJsonData(this.juego.tiendas);
-          this.juego.plataformas_principales = this.parseJsonData(this.juego.plataformas_principales);
-          this.juego.generos = this.parseJsonData(this.juego.generos); 
-          this.juego.desarrolladoras = this.parseJsonData(this.juego.desarrolladoras);
-          this.juego.publishers = this.parseJsonData(this.juego.publishers);  
+        this.juego.publishers = this.juego.publishers || [];
+        this.juego.desarrolladoras = this.juego.desarrolladoras || [];
+        this.juego.generos = this.juego.generos || [];
+        this.juego.plataformas_principales = this.juego.plataformas_principales || [];
+        this.juego.tiendas = this.juego.tiendas || [];
   
-          if (!this.juego.publishers) {
-            this.juego.publishers = []; 
-          }
-          if (!this.juego.desarrolladoras) {
-            this.juego.desarrolladoras = []; 
-          }
-          if (!this.juego.generos) {
-            this.juego.generos = [];
-          }
-          if (!this.juego.plataformas_principales) {
-            this.juego.plataformas_principales = [];
-          }
-          if (!this.juego.tiendas) {
-            this.juego.tiendas = [];
-          }
+        if (this.juego.nombre) {
+          this.apiFacade.obtenerAppId(this.juego.nombre).subscribe(
+            (res) => {
+              if (res?.appid) {
+                this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(
+                  `https://steamdb.info/embed/?appid=${res.appid}`
+                );
+              } else {
+                this.iframeSrc = null;
+              }
+            },
+            (err) => {
+              console.error('Error al obtener AppID:', err);
+              this.iframeSrc = null;
+            }
+          );
         }
-  
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
@@ -118,6 +123,5 @@ export class InfoJuegoPage {
   isLastItem(array: any[], item: any): boolean {
     return array[array.length - 1] === item;
   }
-  
   
 }

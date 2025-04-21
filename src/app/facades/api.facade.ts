@@ -88,4 +88,9 @@ export class ApiFacade {
   public realizarBusquedaPublishers(nombre: string): Observable<any>{
     return this.request.realizarBusquedaPublishers(nombre);
   }
+
+  public obtenerAppId(nombre: string): Observable<any> {
+    return this.request.obtenerAppId(nombre);
+  }
+  
 }
