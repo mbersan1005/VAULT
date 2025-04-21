@@ -5,16 +5,20 @@ import { Injectable } from '@angular/core';
 })
 export class SesionService {
 
-  private sesionEstablecida: boolean = false;
+  private readonly claveSesion = 'adminSesionActiva';
 
   constructor() { }
 
-  establecerSesion(estado: boolean){
-    this.sesionEstablecida = estado;
+  establecerSesion(estado: boolean) {
+    localStorage.setItem(this.claveSesion, estado ? 'true' : 'false');
   }
 
-  comprobarSesion(): boolean{
-    return this.sesionEstablecida;
+  comprobarSesion(): boolean {
+    return localStorage.getItem(this.claveSesion) === 'true';
   }
 
+  cerrarSesion() {
+    localStorage.removeItem(this.claveSesion);
+  }
 }
+
