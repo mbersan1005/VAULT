@@ -11,12 +11,13 @@
 </ion-header>
 
 <ion-content>
-  <div *ngIf="sesion.comprobarSesion()" class="admin-buttons">
-    <ion-button color="success" (click)="agregarJuego()">Añadir Videojuego</ion-button>
-    <ion-button color="tertiary" (click)="crearAdministrador()">Crear cuenta Admin</ion-button>
-    <ion-button color="warning" (click)="actualizarDatosAPI()">Actualizar Datos</ion-button>
-    <ion-button color="danger" (click)="purgarDatosAPI()">Resetear Datos</ion-button>
+  <div *ngIf="sesion.comprobarSesion()" class="admin-buttons top-buttons">
+    <ion-button expand="block" color="success" (click)="agregarJuego()">Añadir Videojuego</ion-button>
+    <ion-button expand="block" color="tertiary" (click)="crearAdministrador()">Crear cuenta Admin</ion-button>
+    <ion-button expand="block" color="warning" (click)="actualizarDatosAPI()">Actualizar Datos</ion-button>
+    <ion-button expand="block" color="danger" (click)="purgarDatosAPI()">Resetear Datos</ion-button>
   </div>
+  
   
   <ion-loading [isOpen]="isLoading" message="Actualizando datos, por favor espere..." duration="0"></ion-loading>
 
@@ -29,22 +30,27 @@
       <ion-col size="12" size-md="4" *ngFor="let juego of juegosFiltrados; let i = index">
         <ion-card class="card-hover" (click)="verJuego(juego.id)">
           <img [src]="juego.imagen" alt="Imagen de {{ juego.nombre }}">
+          
           <ion-card-header>
             <ion-card-title>{{ juego.nombre }}</ion-card-title>
           </ion-card-header>
+          
           <ion-card-content>
             <div class="extra-info">
               <p><strong>Fecha de lanzamiento:</strong> {{ formatearFecha(juego.fecha_lanzamiento) }}</p>
               <p><strong>Plataformas:</strong> {{ getPlataformas(juego.plataformas_principales) }}</p>
               <p><strong>Géneros:</strong> {{ getGeneros(juego.generos) }}</p>
             </div>
-            <div *ngIf="sesion.comprobarSesion()" class="admin-buttons">  
-              <ion-button color="primary" (click)="$event.stopPropagation(); editarJuego(juego.id)">Editar</ion-button>
-              <ion-button color="danger" (click)="$event.stopPropagation(); eliminarJuego(juego.id)">Eliminar</ion-button>
+      
+            <div *ngIf="sesion.comprobarSesion()" class="admin-buttons card-buttons">
+              <ion-button expand="block" color="primary" (click)="$event.stopPropagation(); editarJuego(juego.id)">Editar</ion-button>
+              <ion-button expand="block" color="danger" (click)="$event.stopPropagation(); eliminarJuego(juego.id)">Eliminar</ion-button>
             </div>
+            
           </ion-card-content>
         </ion-card>
       </ion-col>
+      
     </ion-row>
   </ion-grid>
   
