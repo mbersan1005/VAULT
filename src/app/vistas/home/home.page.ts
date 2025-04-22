@@ -26,9 +26,10 @@ export class HomePage {
   textoBusqueda: string = ''; 
   juegosCargados: number = 9; 
   juegosPorCargar: number = 9;
+  ordenActual: string ='nombre_asc';
 
   isLoading = false;
-
+  
   constructor(
     private menu: MenuController, 
     private router: Router,
@@ -54,7 +55,7 @@ export class HomePage {
         if (data && data.juegos && data.juegos.length > 0) {
           this.juegos = data.juegos;  
           this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
-          
+          this.ordenarJuegos(this.ordenActual);
           this.changeDetector.detectChanges();
         } else {
           this.mostrarToast('No se encontraron datos', 'danger');
@@ -89,6 +90,7 @@ export class HomePage {
       (response) => {
         console.log('Respuesta de la API:', response);
         this.juegosFiltrados = response.juegos || [];
+        this.ordenarJuegos(this.ordenActual); 
         this.juegosCargados = 9;
       },
       (error) => {
@@ -153,7 +155,6 @@ export class HomePage {
     return await modal.present();
   }
   
-
   public async eliminarJuego(juegoId: number) {
     const alert = await this.alertController.create({
       header: 'Confirmar eliminación',
@@ -226,27 +227,62 @@ export class HomePage {
     await alert.present();
   }
 
-    async mostrarLoading() {
-      const loading = await this.loadingController.create({
-        message: 'Actualizando datos, por favor espere...',
-        spinner: 'crescent',
-        duration: 0,
-      });
+  async mostrarLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Actualizando datos, por favor espere...',
+      spinner: 'crescent',
+      duration: 0,
+    });
   
-      await loading.present();
-    }
+    await loading.present();
+  }
   
-    async ocultarLoading() {
-      await this.loadingController.dismiss();
-    }
+  async ocultarLoading() {
+    await this.loadingController.dismiss();
+  }
 
-    public async purgarDatosAPI() {
-      const modal = await this.modalController.create({
-        component: PurgarDatosComponent,
-        breakpoints: [0.5, 1],
-        initialBreakpoint: 0.5
-      });
+  public async purgarDatosAPI() {
+    const modal = await this.modalController.create({
+      component: PurgarDatosComponent,
+      breakpoints: [0.5, 1],
+      initialBreakpoint: 0.5
+    });
     
-      return await modal.present();
+    return await modal.present();
+  }
+
+  public ordenarJuegos(tipoOrden: string) {
+    this.ordenActual = tipoOrden;
+  
+    switch (tipoOrden) {
+      case 'nombre_asc':
+        this.juegos.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        break;
+      case 'nombre_desc':
+        this.juegos.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        break;
+      case 'fecha_asc':
+        this.juegos.sort((a, b) =>
+          new Date(a.fecha_lanzamiento).getTime() - new Date(b.fecha_lanzamiento).getTime()
+        );
+        break;
+      case 'fecha_desc':
+        this.juegos.sort((a, b) =>
+          new Date(b.fecha_lanzamiento).getTime() - new Date(a.fecha_lanzamiento).getTime()
+        );
+        break;
+      case 'nota_asc':
+        this.juegos.sort((a, b) => a.nota_metacritic - b.nota_metacritic);
+        break;
+      case 'nota_desc':
+        this.juegos.sort((a, b) => b.nota_metacritic - a.nota_metacritic);
+        break;
     }
+  
+    this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+    this.changeDetector.detectChanges();
+  }
+  
+
+
 }
