@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, MenuController, ToastController } from '@ionic/angular';
 import { SesionService } from './services/sesion.service';
+import { SplashScreen } from '@capacitor/splash-screen';
+
 
 @Component({
   selector: 'app-root',
@@ -19,8 +21,9 @@ export class AppComponent {
     public sesion: SesionService,
     private alertController: AlertController,
     private toastController: ToastController,
-  
-  ) {}
+  ) {
+    this.showSplash();
+  }
 
   ngOnInit(){
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -83,6 +86,13 @@ export class AppComponent {
 
   toggleDarkPalette(shouldAdd: boolean) {
     document.documentElement.classList.toggle('ion-palette-dark', shouldAdd);
+  }
+
+  async showSplash(){
+    await SplashScreen.show({
+      autoHide: true,
+      showDuration: 3000
+    });
   }
 
 }
