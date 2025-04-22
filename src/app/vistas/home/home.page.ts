@@ -90,7 +90,7 @@ export class HomePage {
       (response) => {
         console.log('Respuesta de la API:', response);
         this.juegosFiltrados = response.juegos || [];
-        this.ordenarJuegos(this.ordenActual); 
+        this.ordenarJuegos(this.ordenActual, response.juegos || []);
         this.juegosCargados = 9;
       },
       (error) => {
@@ -251,37 +251,39 @@ export class HomePage {
     return await modal.present();
   }
 
-  public ordenarJuegos(tipoOrden: string) {
+  public ordenarJuegos(tipoOrden: string, lista: any[] = this.juegos) {
     this.ordenActual = tipoOrden;
   
     switch (tipoOrden) {
       case 'nombre_asc':
-        this.juegos.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
         break;
       case 'nombre_desc':
-        this.juegos.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        lista.sort((a, b) => b.nombre.localeCompare(a.nombre));
         break;
       case 'fecha_asc':
-        this.juegos.sort((a, b) =>
-          new Date(a.fecha_lanzamiento).getTime() - new Date(b.fecha_lanzamiento).getTime()
-        );
+        lista.sort((a, b) => new Date(a.fecha_lanzamiento).getTime() - new Date(b.fecha_lanzamiento).getTime());
         break;
       case 'fecha_desc':
-        this.juegos.sort((a, b) =>
-          new Date(b.fecha_lanzamiento).getTime() - new Date(a.fecha_lanzamiento).getTime()
-        );
+        lista.sort((a, b) => new Date(b.fecha_lanzamiento).getTime() - new Date(a.fecha_lanzamiento).getTime());
         break;
       case 'nota_asc':
-        this.juegos.sort((a, b) => a.nota_metacritic - b.nota_metacritic);
+        lista.sort((a, b) => a.nota_metacritic - b.nota_metacritic);
         break;
       case 'nota_desc':
-        this.juegos.sort((a, b) => b.nota_metacritic - a.nota_metacritic);
+        lista.sort((a, b) => b.nota_metacritic - a.nota_metacritic);
         break;
     }
   
-    this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+    if (lista === this.juegos) {
+      this.juegosFiltrados = lista.slice(0, this.juegosCargados);
+    } else {
+      this.juegosFiltrados = [...lista];
+    }
+  
     this.changeDetector.detectChanges();
   }
+  
   
 
 
