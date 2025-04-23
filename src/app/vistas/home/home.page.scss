@@ -26,13 +26,9 @@ ion-title{
   margin-top: 20px;
 }
 
-.card-buttons {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
 .card-hover:hover .card-buttons {
   opacity: 1;
+  display: flex;
 }
 
 .top-buttons {
@@ -53,7 +49,7 @@ ion-title{
   gap: 10px;
   justify-content: center;
   margin-top: 15px;
-
+  display: none;
   opacity: 0;
   transition: opacity 0.3s ease;
 
@@ -63,6 +59,3 @@ ion-title{
   }
 }
 
-.card-hover:hover .card-buttons {
-  opacity: 1;
-}
