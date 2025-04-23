@@ -1,9 +1,10 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { AlertController, IonicModule, ToastController } from '@ionic/angular';
 import { ApiFacade } from 'src/app/facades/api.facade';
+import { SesionService } from 'src/app/services/sesion.service';
 
 @Component({
   selector: 'app-juegos-lista-filtro',
@@ -17,18 +18,24 @@ export class JuegosListaFiltroPage {
 
   juegos: any[] = [];
   juegosFiltrados: any[] = [];
+  juegosBuscados: any[] = [];  
   textoBusqueda: string = '';
   juegosCargados: number = 9;
   juegosPorCargar: number = 9;
   categoria: string = '';
   nombre: string = '';
+  ordenActual: string ='nombre_asc';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private apiFacade: ApiFacade,
     private toastController: ToastController,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private changeDetector: ChangeDetectorRef,
+    private alertController: AlertController,
+    public sesion: SesionService,
+    
   ) { }
 
   ngOnInit() {
@@ -46,7 +53,9 @@ export class JuegosListaFiltroPage {
   
         if (data && data.juegosFiltrados && data.juegosFiltrados.length > 0) {
           this.juegos = data.juegosFiltrados; 
-          this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados); 
+          this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+          this.ordenarJuegos(this.ordenActual);
+          this.changeDetector.detectChanges(); 
         } else {
           console.log('No se encontraron juegos');
           this.mostrarToast('No se encontraron juegos', 'danger'); 
@@ -61,7 +70,7 @@ export class JuegosListaFiltroPage {
   
 
   public realizarBusqueda(event: any) {
-    this.textoBusqueda = event.target.value?.toLowerCase() || '';  // Usamos textoBusqueda aquí
+    this.textoBusqueda = event.target.value?.toLowerCase() || '';
     
     if (this.textoBusqueda.trim() === '') {
       this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
@@ -71,7 +80,12 @@ export class JuegosListaFiltroPage {
     this.apiFacade.realizarBusqueda(this.textoBusqueda).subscribe(
       (response) => {
         console.log('Respuesta de la API:', response);
-        this.juegosFiltrados = response.juegos || [];
+        const resultados = response.juegos || [];
+
+        this.juegosFiltrados = resultados.slice(0, this.juegosCargados);
+        this.juegosBuscados = resultados;
+
+        this.ordenarJuegos(this.ordenActual, this.juegosFiltrados);
         this.juegosCargados = 9;
       },
       (error) => {
@@ -103,6 +117,10 @@ export class JuegosListaFiltroPage {
     this.router.navigate(['/info-juego', juegoId]);
   }
 
+  public editarJuego(juegoId: number){
+    this.router.navigate(['/editar-juego', juegoId]);
+  }
+
   private async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
       message: mensaje,
@@ -126,5 +144,86 @@ export class JuegosListaFiltroPage {
   public formatearFecha(fecha: string): string {
     const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
     return fechaFormateada || fecha; 
+  }
+
+  public ordenarJuegos(tipoOrden: string, lista: any[] = []) {
+    this.ordenActual = tipoOrden;
+  
+    if (lista.length === 0) {
+      lista = this.textoBusqueda.trim() !== ''
+        ? [...this.juegosBuscados]
+        : [...this.juegos];
+    }
+  
+    switch (tipoOrden) {
+      case 'nombre_asc':
+        lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        break;
+      case 'nombre_desc':
+        lista.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        break;
+      case 'fecha_asc':
+        lista.sort((a, b) => new Date(a.fecha_lanzamiento).getTime() - new Date(b.fecha_lanzamiento).getTime());
+        break;
+      case 'fecha_desc':
+        lista.sort((a, b) => new Date(b.fecha_lanzamiento).getTime() - new Date(a.fecha_lanzamiento).getTime());
+        break;
+      case 'nota_asc':
+        lista.sort((a, b) => a.nota_metacritic - b.nota_metacritic);
+        break;
+      case 'nota_desc':
+        lista.sort((a, b) => b.nota_metacritic - a.nota_metacritic);
+        break;
+    }
+  
+    this.juegosFiltrados = lista.slice(0, this.juegosCargados);
+    this.changeDetector.detectChanges();
+  }
+  
+  public obtenerTextoOrdenActual(): string {
+    switch (this.ordenActual) {
+      case 'nombre_asc': return 'Nombre (A-Z)';
+      case 'nombre_desc': return 'Nombre (Z-A)';
+      case 'fecha_asc': return 'Fecha (Antiguos primero)';
+      case 'fecha_desc': return 'Fecha (Recientes primero)';
+      case 'nota_asc': return 'Nota (Menor a mayor)';
+      case 'nota_desc': return 'Nota (Mayor a menor)';
+      default: return 'Ordenar por...';
+    }
+  }
+
+  public async eliminarJuego(juegoId: number) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: '¿Estás seguro de que quieres eliminar este juego?',
+      cssClass: 'custom-alert',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel'
+        },
+        {
+          text: 'Sí',
+          handler: () => {
+            this.apiFacade.eliminarJuego(juegoId).subscribe(
+              (data) => {
+                console.log('Juego eliminado:', data);
+                
+                this.juegos = this.juegos.filter(juego => juego.id !== juegoId);
+                this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+  
+                this.mostrarToast('Juego eliminado correctamente', 'success');
+              },
+              (error) => {
+                console.error('Error al eliminar el juego:', error);
+                this.mostrarToast('Error al eliminar el juego', 'danger');
+              }
+            );
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
   }
 }

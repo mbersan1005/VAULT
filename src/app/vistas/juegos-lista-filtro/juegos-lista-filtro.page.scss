@@ -1,12 +1,4 @@
-ion-menu::part(backdrop) {
-    background-color: rgba(255, 0, 255, 0.5);
-  }
-  
-  ion-menu::part(container) {
-    border-radius: 0 20px 20px 0;
-    box-shadow: 4px 0px 16px rgb(255, 255, 255);
-  }
-  
+
   ion-title {
     text-align: center;
   }
@@ -30,3 +22,32 @@ ion-menu::part(backdrop) {
     display: block; 
   }
   
+  ion-select{
+    margin-left: 20px;
+    width: 280px;
+  }
+  
+  .admin-buttons {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .card-hover:hover .card-buttons {
+    opacity: 1;
+    display: flex;
+  }
+
+  .card-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  
+    ion-button {
+      flex: 1 1 100px;
+      max-width: 120px;
+    }
+  }
