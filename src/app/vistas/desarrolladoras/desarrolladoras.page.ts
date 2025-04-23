@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { ChangeDetectorRef, Component} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
@@ -16,14 +16,19 @@ export class DesarrolladorasPage {
 
   desarrolladoras: any[] = [];
   desarrolladorasFiltradas: any[] = [];
+  desarrolladorasBuscadas: any[] = [];  
   textoBusqueda: string = '';
   desarrolladorasCargadas: number = 9;
   desarrolladorasPorCargar: number = 9;
+  ordenActual: string ='juegos_desc';
+
 
   constructor(
     private toastController: ToastController,
     private router: Router,
     private apiFacade: ApiFacade,
+    private changeDetector: ChangeDetectorRef,
+
   ) { }
 
   ngOnInit() {
@@ -37,6 +42,8 @@ export class DesarrolladorasPage {
         if (data && data.desarrolladoras && data.desarrolladoras.length > 0) {
           this.desarrolladoras = data.desarrolladoras;
           this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
+          this.ordenarJuegos(this.ordenActual);
+          this.changeDetector.detectChanges();
         } else {
           this.mostrarToast('No se encontraron datos', 'danger');
         }
@@ -50,17 +57,25 @@ export class DesarrolladorasPage {
 
   public realizarBusqueda(event: any) {
     this.textoBusqueda = event.target.value?.toLowerCase() || '';  
-    
+  
     if (this.textoBusqueda.trim() === '') {
+      this.desarrolladorasBuscadas = [];
+      this.desarrolladorasCargadas = 9;
+  
       this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
+      this.ordenarJuegos(this.ordenActual, [...this.desarrolladorasFiltradas]);
       return;
     }
   
     this.apiFacade.realizarBusquedaDesarrolladoras(this.textoBusqueda).subscribe(
       (response) => {
-        console.log('Respuesta de la API:', response);
-        this.desarrolladorasFiltradas = response.desarrolladoras || [];
+        const resultados = response.desarrolladoras || [];
+  
+        this.desarrolladorasBuscadas = resultados;
         this.desarrolladorasCargadas = 9;
+        this.desarrolladorasFiltradas = resultados.slice(0, this.desarrolladorasCargadas);
+  
+        this.ordenarJuegos(this.ordenActual, this.desarrolladorasFiltradas);
       },
       (error) => {
         console.error('Error al buscar:', error);
@@ -68,24 +83,35 @@ export class DesarrolladorasPage {
       }
     );
   }
+  
 
   public cargarMasDesarrolladoras(event: any) {
     setTimeout(() => {
       this.desarrolladorasCargadas += this.desarrolladorasPorCargar;
   
-      if (this.textoBusqueda.trim() !== '') {
-        this.desarrolladorasFiltradas = this.desarrolladorasFiltradas.slice(0, this.desarrolladorasCargadas);
+      let fuenteDatos: any[];
+  
+      // Aquí es donde mejoramos la lógica
+      if (this.textoBusqueda.trim() !== '' && this.desarrolladorasBuscadas.length > 0) {
+        fuenteDatos = [...this.desarrolladorasBuscadas];
       } else {
-        this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
+        fuenteDatos = [...this.desarrolladoras];
       }
+  
+      this.desarrolladorasFiltradas = fuenteDatos.slice(0, this.desarrolladorasCargadas);
+  
+      // Reordenar los datos después del slicing, o antes (dependiendo de preferencia visual)
+      this.ordenarJuegos(this.ordenActual, this.desarrolladorasFiltradas);
   
       event.target.complete();
   
-      if (this.desarrolladorasCargadas >= (this.textoBusqueda.trim() !== '' ? this.desarrolladorasFiltradas.length : this.desarrolladoras.length)) {
+      if (this.desarrolladorasCargadas >= fuenteDatos.length) {
         event.target.disabled = true;
       }
     }, 500);
   }
+  
+  
 
   private async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
@@ -99,6 +125,44 @@ export class DesarrolladorasPage {
 
   public verJuegosDesarrolladoras(categoria: string, nombre: string){
     this.router.navigate(['/juegos-lista-filtro', categoria, nombre]);
+  }
+
+  public ordenarJuegos(tipoOrden: string, lista: any[] = []) {
+    this.ordenActual = tipoOrden;
+  
+    if (lista.length === 0) {
+      lista = this.textoBusqueda.trim() !== ''
+        ? [...this.desarrolladorasBuscadas]
+        : [...this.desarrolladoras];
+    }
+  
+    switch (tipoOrden) {
+      case 'nombre_asc':
+        lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        break;
+      case 'nombre_desc':
+        lista.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        break;
+      case 'juegos_asc':
+        lista.sort((a, b) => a.cantidad_juegos - b.cantidad_juegos);
+        break;
+      case 'juegos_desc':
+        lista.sort((a, b) => b.cantidad_juegos - a.cantidad_juegos);
+        break;
+    }
+  
+    this.desarrolladorasFiltradas = lista.slice(0, this.desarrolladorasCargadas);
+    this.changeDetector.detectChanges();
+  }
+  
+  public obtenerTextoOrdenActual(): string {
+    switch (this.ordenActual) {
+      case 'nombre_asc': return 'Nombre (A-Z)';
+      case 'nombre_desc': return 'Nombre (Z-A)';
+      case 'juegos_asc': return 'Cantidad de juegos (Menor a mayor)';
+      case 'juegos_desc': return 'Cantidad de juegos (Mayor a menor)';
+      default: return 'Ordenar por...';
+    }
   }
 
 }
