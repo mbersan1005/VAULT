@@ -22,7 +22,8 @@ import { PurgarDatosComponent } from 'src/app/components/purgar-datos/purgar-dat
 export class HomePage {
 
   juegos: any[] = [];
-  juegosFiltrados: any[] = []; 
+  juegosFiltrados: any[] = [];
+  juegosBuscados: any[] = [];  
   textoBusqueda: string = ''; 
   juegosCargados: number = 9; 
   juegosPorCargar: number = 9;
@@ -89,8 +90,12 @@ export class HomePage {
     this.apiFacade.realizarBusqueda(this.textoBusqueda).subscribe(
       (response) => {
         console.log('Respuesta de la API:', response);
-        this.juegosFiltrados = response.juegos || [];
-        this.ordenarJuegos(this.ordenActual, response.juegos || []);
+        const resultados = response.juegos || [];
+  
+        this.juegosFiltrados = resultados.slice(0, this.juegosCargados);
+        this.juegosBuscados = resultados;
+  
+        this.ordenarJuegos(this.ordenActual, this.juegosFiltrados);
         this.juegosCargados = 9;
       },
       (error) => {
@@ -251,8 +256,14 @@ export class HomePage {
     return await modal.present();
   }
 
-  public ordenarJuegos(tipoOrden: string, lista: any[] = this.juegos) {
+  public ordenarJuegos(tipoOrden: string, lista: any[] = []) {
     this.ordenActual = tipoOrden;
+  
+    if (lista.length === 0) {
+      lista = this.textoBusqueda.trim() !== ''
+        ? [...this.juegosBuscados]
+        : [...this.juegos];
+    }
   
     switch (tipoOrden) {
       case 'nombre_asc':
@@ -275,16 +286,20 @@ export class HomePage {
         break;
     }
   
-    if (lista === this.juegos) {
-      this.juegosFiltrados = lista.slice(0, this.juegosCargados);
-    } else {
-      this.juegosFiltrados = [...lista];
-    }
-  
+    this.juegosFiltrados = lista.slice(0, this.juegosCargados);
     this.changeDetector.detectChanges();
   }
   
+  public obtenerTextoOrdenActual(): string {
+    switch (this.ordenActual) {
+      case 'nombre_asc': return 'Nombre (A-Z)';
+      case 'nombre_desc': return 'Nombre (Z-A)';
+      case 'fecha_asc': return 'Fecha (Antiguos primero)';
+      case 'fecha_desc': return 'Fecha (Recientes primero)';
+      case 'nota_asc': return 'Nota (Menor a mayor)';
+      case 'nota_desc': return 'Nota (Mayor a menor)';
+      default: return 'Ordenar por...';
+    }
+  }
   
-
-
 }
