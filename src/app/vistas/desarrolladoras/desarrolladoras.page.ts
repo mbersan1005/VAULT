@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component} from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule, IonInfiniteScroll, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { CommonModule } from '@angular/common';
@@ -22,6 +22,7 @@ export class DesarrolladorasPage {
   desarrolladorasPorCargar: number = 9;
   ordenActual: string ='juegos_desc';
 
+  @ViewChild(IonInfiniteScroll) infiniteScroll?: IonInfiniteScroll;
 
   constructor(
     private toastController: ToastController,
@@ -62,8 +63,12 @@ export class DesarrolladorasPage {
       this.desarrolladorasBuscadas = [];
       this.desarrolladorasCargadas = 9;
   
-      this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
-      this.ordenarJuegos(this.ordenActual, [...this.desarrolladorasFiltradas]);
+      this.desarrolladorasFiltradas = this.ordenarJuegos(this.ordenActual, this.desarrolladoras).slice(0, this.desarrolladorasCargadas);
+  
+      if (this.infiniteScroll) {
+        this.infiniteScroll.disabled = false;
+      }
+  
       return;
     }
   
@@ -73,9 +78,12 @@ export class DesarrolladorasPage {
   
         this.desarrolladorasBuscadas = resultados;
         this.desarrolladorasCargadas = 9;
-        this.desarrolladorasFiltradas = resultados.slice(0, this.desarrolladorasCargadas);
   
-        this.ordenarJuegos(this.ordenActual, this.desarrolladorasFiltradas);
+        this.desarrolladorasFiltradas = this.ordenarJuegos(this.ordenActual, resultados).slice(0, this.desarrolladorasCargadas);
+  
+        if (this.infiniteScroll) {
+          this.infiniteScroll.disabled = false;
+        }
       },
       (error) => {
         console.error('Error al buscar:', error);
@@ -84,24 +92,21 @@ export class DesarrolladorasPage {
     );
   }
   
-
   public cargarMasDesarrolladoras(event: any) {
     setTimeout(() => {
       this.desarrolladorasCargadas += this.desarrolladorasPorCargar;
   
-      let fuenteDatos: any[];
+      let fuenteDatos: any[] = [];
   
-      // Aquí es donde mejoramos la lógica
-      if (this.textoBusqueda.trim() !== '' && this.desarrolladorasBuscadas.length > 0) {
+      if (this.textoBusqueda.trim() !== '') {
         fuenteDatos = [...this.desarrolladorasBuscadas];
       } else {
         fuenteDatos = [...this.desarrolladoras];
       }
   
+      fuenteDatos = this.ordenarJuegos(this.ordenActual, fuenteDatos);
+      
       this.desarrolladorasFiltradas = fuenteDatos.slice(0, this.desarrolladorasCargadas);
-  
-      // Reordenar los datos después del slicing, o antes (dependiendo de preferencia visual)
-      this.ordenarJuegos(this.ordenActual, this.desarrolladorasFiltradas);
   
       event.target.complete();
   
@@ -111,8 +116,6 @@ export class DesarrolladorasPage {
     }, 500);
   }
   
-  
-
   private async mostrarToast(mensaje: string, color: string) {
     const toast = await this.toastController.create({
       message: mensaje,
@@ -151,8 +154,7 @@ export class DesarrolladorasPage {
         break;
     }
   
-    this.desarrolladorasFiltradas = lista.slice(0, this.desarrolladorasCargadas);
-    this.changeDetector.detectChanges();
+    return lista;
   }
   
   public obtenerTextoOrdenActual(): string {
@@ -165,4 +167,20 @@ export class DesarrolladorasPage {
     }
   }
 
+  public aplicarOrden(nuevoOrden: string) {
+    this.ordenActual = nuevoOrden;
+  
+    const fuenteDatos = this.textoBusqueda.trim() !== ''
+      ? [...this.desarrolladorasBuscadas]
+      : [...this.desarrolladoras];
+  
+    const ordenados = this.ordenarJuegos(nuevoOrden, fuenteDatos);
+    this.desarrolladorasFiltradas = ordenados.slice(0, this.desarrolladorasCargadas);
+
+    if (this.infiniteScroll) {
+      this.infiniteScroll.disabled = false;
+    }
+    
+  }
+  
 }
