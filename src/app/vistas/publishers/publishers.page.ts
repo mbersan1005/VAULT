@@ -1,6 +1,6 @@
-import { Component} from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule, IonInfiniteScroll, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { CommonModule } from '@angular/common';
@@ -16,14 +16,20 @@ export class PublishersPage {
 
   publishers: any[] = [];
   publishersFiltrados: any[] = [];
+  publishersBuscados: any[] = [];  
   textoBusqueda: string = '';
   publishersCargados: number = 9;
   publishersPorCargar: number = 9;
+  ordenActual: string ='juegos_desc';
+
+  @ViewChild(IonInfiniteScroll) infiniteScroll?: IonInfiniteScroll;
+  
 
   constructor(
     private toastController: ToastController,
     private router: Router,
     private apiFacade: ApiFacade,
+    private changeDetector: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -37,6 +43,8 @@ export class PublishersPage {
         if (data && data.publishers && data.publishers.length > 0) {
           this.publishers = data.publishers;
           this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
+          this.ordenarJuegos(this.ordenActual);
+          this.changeDetector.detectChanges();
         } else {
           this.mostrarToast('No se encontraron datos', 'danger');
         }
@@ -52,15 +60,30 @@ export class PublishersPage {
     this.textoBusqueda = event.target.value?.toLowerCase() || '';  
     
     if (this.textoBusqueda.trim() === '') {
-      this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
+      this.publishersBuscados = [];
+      this.publishersCargados = 9;
+  
+      this.publishersFiltrados = this.ordenarJuegos(this.ordenActual, this.publishers).slice(0, this.publishersCargados);
+  
+      if (this.infiniteScroll) {
+        this.infiniteScroll.disabled = false;
+      }
+  
       return;
     }
   
     this.apiFacade.realizarBusquedaPublishers(this.textoBusqueda).subscribe(
       (response) => {
-        console.log('Respuesta de la API:', response);
-        this.publishersFiltrados = response.publishers || [];
+        const resultados = response.publishers || [];
+  
+        this.publishersBuscados = resultados;
         this.publishersCargados = 9;
+  
+        this.publishersFiltrados = this.ordenarJuegos(this.ordenActual, resultados).slice(0, this.publishersCargados);
+  
+        if (this.infiniteScroll) {
+          this.infiniteScroll.disabled = false;
+        }
       },
       (error) => {
         console.error('Error al buscar:', error);
@@ -73,15 +96,21 @@ export class PublishersPage {
     setTimeout(() => {
       this.publishersCargados += this.publishersPorCargar;
   
+      let fuenteDatos: any[] = [];
+  
       if (this.textoBusqueda.trim() !== '') {
-        this.publishersFiltrados = this.publishersFiltrados.slice(0, this.publishersCargados);
+        fuenteDatos = [...this.publishersBuscados];
       } else {
-        this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
+        fuenteDatos = [...this.publishers];
       }
+  
+      fuenteDatos = this.ordenarJuegos(this.ordenActual, fuenteDatos);
+      
+      this.publishersFiltrados = fuenteDatos.slice(0, this.publishersCargados);
   
       event.target.complete();
   
-      if (this.publishersCargados >= (this.textoBusqueda.trim() !== '' ? this.publishersFiltrados.length : this.publishers.length)) {
+      if (this.publishersCargados >= fuenteDatos.length) {
         event.target.disabled = true;
       }
     }, 500);
@@ -101,4 +130,57 @@ export class PublishersPage {
     this.router.navigate(['/juegos-lista-filtro', categoria, nombre]);
   }
   
+  public ordenarJuegos(tipoOrden: string, lista: any[] = []) {
+    this.ordenActual = tipoOrden;
+  
+    if (lista.length === 0) {
+      lista = this.textoBusqueda.trim() !== ''
+        ? [...this.publishersBuscados]
+        : [...this.publishers];
+    }
+  
+    switch (tipoOrden) {
+      case 'nombre_asc':
+        lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        break;
+      case 'nombre_desc':
+        lista.sort((a, b) => b.nombre.localeCompare(a.nombre));
+        break;
+      case 'juegos_asc':
+        lista.sort((a, b) => a.cantidad_juegos - b.cantidad_juegos);
+        break;
+      case 'juegos_desc':
+        lista.sort((a, b) => b.cantidad_juegos - a.cantidad_juegos);
+        break;
+    }
+  
+    return lista;
+  }
+  
+  public obtenerTextoOrdenActual(): string {
+    switch (this.ordenActual) {
+      case 'nombre_asc': return 'Nombre (A-Z)';
+      case 'nombre_desc': return 'Nombre (Z-A)';
+      case 'juegos_asc': return 'Cantidad de juegos (Menor a mayor)';
+      case 'juegos_desc': return 'Cantidad de juegos (Mayor a menor)';
+      default: return 'Ordenar por...';
+    }
+  }
+
+  public aplicarOrden(nuevoOrden: string) {
+    this.ordenActual = nuevoOrden;
+  
+    const fuenteDatos = this.textoBusqueda.trim() !== ''
+      ? [...this.publishersBuscados]
+      : [...this.publishers];
+  
+    const ordenados = this.ordenarJuegos(nuevoOrden, fuenteDatos);
+    this.publishersFiltrados = ordenados.slice(0, this.publishersCargados);
+
+    if (this.infiniteScroll) {
+      this.infiniteScroll.disabled = false;
+    }
+    
+  }
+
 }

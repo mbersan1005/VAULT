@@ -51,8 +51,8 @@
   *ngIf="desarrolladorasFiltradas.length > 0 && desarrolladorasCargadas < (textoBusqueda.trim() !== '' ? desarrolladorasBuscadas.length : desarrolladoras.length)" 
   (ionInfinite)="cargarMasDesarrolladoras($event)" 
   threshold="100px" 
-  [disabled]="false"
->
+  [disabled]="false">
+  
   <ion-infinite-scroll-content 
     loadingSpinner="bubbles" 
     loadingText="Cargando más desarrolladoras..."
