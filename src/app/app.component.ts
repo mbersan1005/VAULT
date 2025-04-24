@@ -85,8 +85,17 @@ export class AppComponent {
   }
 
   toggleDarkPalette(shouldAdd: boolean) {
-    document.documentElement.classList.toggle('ion-palette-dark', shouldAdd);
+    const body = document.body;
+  
+    body.classList.remove('modo-claro', 'modo-oscuro');
+  
+    if (shouldAdd) {
+      body.classList.add('modo-oscuro');
+    } else {
+      body.classList.add('modo-claro');
+    }
   }
+  
 
   async showSplash(){
     await SplashScreen.show({
