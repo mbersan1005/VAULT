@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { AlertController, LoadingController, MenuController } from '@ionic/angular';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AlertController, IonInfiniteScroll, LoadingController, MenuController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { ApiRequestService } from '../../requests/api.requests';
@@ -28,8 +28,9 @@ export class HomePage {
   juegosCargados: number = 9; 
   juegosPorCargar: number = 9;
   ordenActual: string ='nombre_asc';
+  isLoading: boolean = false;
 
-  isLoading = false;
+  @ViewChild(IonInfiniteScroll) infiniteScroll?: IonInfiniteScroll;
   
   constructor(
     private menu: MenuController, 
@@ -83,20 +84,30 @@ export class HomePage {
     this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
     
     if (this.textoBusqueda.trim() === '') {
-      this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+      this.juegosBuscados = [];
+      this.juegosCargados = 9;
+  
+      this.juegosFiltrados = this.ordenarJuegos(this.ordenActual, this.juegos).slice(0, this.juegosCargados);
+  
+      if (this.infiniteScroll) {
+        this.infiniteScroll.disabled = false;
+      }
+  
       return;
     }
   
     this.apiFacade.realizarBusqueda(this.textoBusqueda).subscribe(
       (response) => {
-        console.log('Respuesta de la API:', response);
         const resultados = response.juegos || [];
   
-        this.juegosFiltrados = resultados.slice(0, this.juegosCargados);
         this.juegosBuscados = resultados;
-  
-        this.ordenarJuegos(this.ordenActual, this.juegosFiltrados);
         this.juegosCargados = 9;
+  
+        this.juegosFiltrados = this.ordenarJuegos(this.ordenActual, resultados).slice(0, this.juegosCargados);
+  
+        if (this.infiniteScroll) {
+          this.infiniteScroll.disabled = false;
+        }
       },
       (error) => {
         console.error('Error al buscar:', error);
@@ -109,15 +120,21 @@ export class HomePage {
     setTimeout(() => {
       this.juegosCargados += this.juegosPorCargar;
   
+      let fuenteDatos: any[] = [];
+  
       if (this.textoBusqueda.trim() !== '') {
-        this.juegosFiltrados = this.juegosFiltrados.slice(0, this.juegosCargados);
+        fuenteDatos = [...this.juegosBuscados];
       } else {
-        this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+        fuenteDatos = [...this.juegos];
       }
+  
+      fuenteDatos = this.ordenarJuegos(this.ordenActual, fuenteDatos);
+      
+      this.juegosFiltrados = fuenteDatos.slice(0, this.juegosCargados);
   
       event.target.complete();
   
-      if (this.juegosCargados >= (this.textoBusqueda.trim() !== '' ? this.juegosFiltrados.length : this.juegos.length)) {
+      if (this.juegosCargados >= fuenteDatos.length) {
         event.target.disabled = true;
       }
     }, 500);
@@ -286,8 +303,7 @@ export class HomePage {
         break;
     }
   
-    this.juegosFiltrados = lista.slice(0, this.juegosCargados);
-    this.changeDetector.detectChanges();
+    return lista;
   }
   
   public obtenerTextoOrdenActual(): string {
@@ -300,6 +316,22 @@ export class HomePage {
       case 'nota_desc': return 'Nota (Mayor a menor)';
       default: return 'Ordenar por...';
     }
+  }
+
+  public aplicarOrden(nuevoOrden: string) {
+    this.ordenActual = nuevoOrden;
+  
+    const fuenteDatos = this.textoBusqueda.trim() !== ''
+      ? [...this.juegosBuscados]
+      : [...this.juegos];
+  
+    const ordenados = this.ordenarJuegos(nuevoOrden, fuenteDatos);
+    this.juegosFiltrados = ordenados.slice(0, this.juegosCargados);
+
+    if (this.infiniteScroll) {
+      this.infiniteScroll.disabled = false;
+    }
+    
   }
   
 }
