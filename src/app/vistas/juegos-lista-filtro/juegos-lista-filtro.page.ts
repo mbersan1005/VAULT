@@ -1,8 +1,8 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, IonicModule, ToastController } from '@ionic/angular';
+import { AlertController, IonicModule, IonInfiniteScroll, ToastController } from '@ionic/angular';
 import { ApiFacade } from 'src/app/facades/api.facade';
 import { SesionService } from 'src/app/services/sesion.service';
 
@@ -25,6 +25,9 @@ export class JuegosListaFiltroPage {
   categoria: string = '';
   nombre: string = '';
   ordenActual: string ='nombre_asc';
+
+  @ViewChild(IonInfiniteScroll) infiniteScroll?: IonInfiniteScroll;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -50,7 +53,6 @@ export class JuegosListaFiltroPage {
     this.apiFacade.recibirJuegosPorCategoria(this.categoria, this.nombre).subscribe(
       (data) => {
         console.log('Datos recibidos:', data);
-  
         if (data && data.juegosFiltrados && data.juegosFiltrados.length > 0) {
           this.juegos = data.juegosFiltrados; 
           this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
@@ -70,23 +72,33 @@ export class JuegosListaFiltroPage {
   
 
   public realizarBusqueda(event: any) {
-    this.textoBusqueda = event.target.value?.toLowerCase() || '';
+    this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
     
     if (this.textoBusqueda.trim() === '') {
-      this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+      this.juegosBuscados = [];
+      this.juegosCargados = 9;
+  
+      this.juegosFiltrados = this.ordenarJuegos(this.ordenActual, this.juegos).slice(0, this.juegosCargados);
+  
+      if (this.infiniteScroll) {
+        this.infiniteScroll.disabled = false;
+      }
+  
       return;
     }
   
     this.apiFacade.realizarBusqueda(this.textoBusqueda).subscribe(
       (response) => {
-        console.log('Respuesta de la API:', response);
         const resultados = response.juegos || [];
-
-        this.juegosFiltrados = resultados.slice(0, this.juegosCargados);
+  
         this.juegosBuscados = resultados;
-
-        this.ordenarJuegos(this.ordenActual, this.juegosFiltrados);
         this.juegosCargados = 9;
+  
+        this.juegosFiltrados = this.ordenarJuegos(this.ordenActual, resultados).slice(0, this.juegosCargados);
+  
+        if (this.infiniteScroll) {
+          this.infiniteScroll.disabled = false;
+        }
       },
       (error) => {
         console.error('Error al buscar:', error);
@@ -99,15 +111,21 @@ export class JuegosListaFiltroPage {
     setTimeout(() => {
       this.juegosCargados += this.juegosPorCargar;
   
+      let fuenteDatos: any[] = [];
+  
       if (this.textoBusqueda.trim() !== '') {
-        this.juegosFiltrados = this.juegosFiltrados.slice(0, this.juegosCargados);
+        fuenteDatos = [...this.juegosBuscados];
       } else {
-        this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
+        fuenteDatos = [...this.juegos];
       }
+  
+      fuenteDatos = this.ordenarJuegos(this.ordenActual, fuenteDatos);
+      
+      this.juegosFiltrados = fuenteDatos.slice(0, this.juegosCargados);
   
       event.target.complete();
   
-      if (this.juegosCargados >= (this.textoBusqueda.trim() !== '' ? this.juegosFiltrados.length : this.juegos.length)) {
+      if (this.juegosCargados >= fuenteDatos.length) {
         event.target.disabled = true;
       }
     }, 500);
@@ -176,8 +194,7 @@ export class JuegosListaFiltroPage {
         break;
     }
   
-    this.juegosFiltrados = lista.slice(0, this.juegosCargados);
-    this.changeDetector.detectChanges();
+    return lista;
   }
   
   public obtenerTextoOrdenActual(): string {
@@ -225,5 +242,21 @@ export class JuegosListaFiltroPage {
     });
   
     await alert.present();
+  }
+
+  public aplicarOrden(nuevoOrden: string) {
+    this.ordenActual = nuevoOrden;
+  
+    const fuenteDatos = this.textoBusqueda.trim() !== ''
+      ? [...this.juegosBuscados]
+      : [...this.juegos];
+  
+    const ordenados = this.ordenarJuegos(nuevoOrden, fuenteDatos);
+    this.juegosFiltrados = ordenados.slice(0, this.juegosCargados);
+
+    if (this.infiniteScroll) {
+      this.infiniteScroll.disabled = false;
+    }
+    
   }
 }
