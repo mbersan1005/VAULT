@@ -55,9 +55,9 @@ export class HomePage {
       (data) => {
         console.log('Datos recibidos desde la API:', data);
         if (data && data.juegos && data.juegos.length > 0) {
-          this.juegos = data.juegos;  
-          this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
-          this.ordenarJuegos(this.ordenActual);
+          this.juegos = data.juegos; 
+          const juegosOrdenados = this.ordenarJuegos(this.ordenActual, [...this.juegos]); 
+          this.juegosFiltrados = juegosOrdenados.slice(0, this.juegosCargados);
           this.changeDetector.detectChanges();
         } else {
           this.mostrarToast('No se encontraron datos', 'danger');

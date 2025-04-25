@@ -23,7 +23,7 @@
 
 </ion-header>
 
-<ion-content>
+<ion-content class="fondo-logo">
   <ion-text *ngIf="juegosFiltrados.length === 0">
     <h3>No se encontraron juegos</h3>
   </ion-text>
@@ -45,8 +45,8 @@
             </div>
 
             <div *ngIf="sesion.comprobarSesion()" class="admin-buttons card-buttons">
-              <ion-button expand="block" color="primary" (click)="$event.stopPropagation(); editarJuego(juego.id)">Editar</ion-button>
-              <ion-button expand="block" color="danger" (click)="$event.stopPropagation(); eliminarJuego(juego.id)">Eliminar</ion-button>
+              <ion-button expand="block" color="tertiary" (click)="$event.stopPropagation(); editarJuego(juego.id)"><strong>Editar</strong></ion-button>
+              <ion-button expand="block" color="danger" (click)="$event.stopPropagation(); eliminarJuego(juego.id)"><strong>Eliminar</strong></ion-button>
             </div>
 
           </ion-card-content>
