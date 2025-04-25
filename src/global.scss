@@ -134,24 +134,33 @@
     }
     
     #login{
-        color: greenyellow;
+        color: #634C0F;
+        background-color: #F7E892;
+        border-radius: 5px;
       }
     
-      #logout{
-        color: red;
+    #logout{
+        color: #634C0F;
+        background-color: #F7E892;
+        border-radius: 5px;
     }
     
     ion-content.fondo-logo{
         --background: url('assets/icon/logo.png') no-repeat center/contain fixed;    
     }
 
+    .card-title-overlay h3{
+        color: #FFFEFA;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        font-weight: bold;
+    }
+      
+    .card-hover ion-card-header ion-card-title{
+        font-weight: bold;
+        text-decoration: underline;
+        text-align: center;
+    }
+      
     
-      
-
-      
-      
-      
-      
-
     }
   
