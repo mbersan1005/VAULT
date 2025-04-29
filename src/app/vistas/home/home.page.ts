@@ -215,7 +215,7 @@ export class HomePage {
   public async actualizarDatosAPI(){
     const alert = await this.alertController.create({
       header: 'Confirmar actualización de Datos',
-      message: '¿Estás seguro de que quieres actualizar los datos?\nPuede conllevar unos minutos',
+      message: '¿Estás seguro de que quieres actualizar los datos? Puede conllevar unos minutos',
       cssClass: 'custom-alert',
       buttons: [
         {

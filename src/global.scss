@@ -40,54 +40,90 @@
 
 /* Tema Claro*/
 .modo-claro {
-
-  --ion-background-color: #FFFEFA;
-  --ion-text-color: #3B2D07;
-
-  /* Colores principales */
-  --ion-color-primary: #D8A22E;
-  --ion-color-secondary: #EFBD52;
-  --ion-color-tertiary: #FDEDB4;
-
-  /* Colores utilitarios */
-  --ion-color-success: #E9C962;
-  --ion-color-warning: #EDD784;
-  --ion-color-danger: #C4801F;
-  --ion-color-light: #FFFEFA;
-  --ion-color-medium: #EFBD52;
-  --ion-color-dark: #3B2D07;
-
-
-    ion-header, ion-toolbar {
-        --border-width: 0;
-        box-shadow: none;
+    --ion-background-color: #FFFEFA;
+    --ion-text-color: #C4801F;
+  
+    /* Colores principales */
+    --ion-color-primary: #D8A22E;
+    --ion-color-secondary: #EFBD52;
+    --ion-color-tertiary: #E9C962;
+  
+    /* Colores utilitarios */
+    --ion-color-success: #E9C962;
+    --ion-color-warning: #EDD784;
+    --ion-color-danger: #C4801F;
+    --ion-color-light: #FFFEFA;
+    --ion-color-medium: #EFBD52;
+    --ion-color-dark: #090601;
+  
+    ion-header,
+    ion-toolbar {
+      --border-width: 0;
+      box-shadow: none;
     }
-    
-    #login{
-        color: greenyellow;
-      }
-    
-      #logout{
-        color: red;
+  
+    #login {
+      color: var(--ion-color-danger);
+      background-color: var(--ion-color-warning);
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  
+    #logout {
+      color: var(--ion-color-danger);
+      background-color: var(--ion-color-warning);
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  
+    ion-content.fondo-logo {
+      --background: url('assets/icon/logo-claro.png') no-repeat center/contain fixed;
+    }
+  
+    .card-hover ion-card-header ion-card-title {
+      font-weight: bold;
+      text-decoration: underline;
+      text-align: center;
+    }
+  
+    .card-title-overlay h3 {
+      color: var(--ion-color-light); 
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+      font-weight: bold;
+    }
+  
+    ion-card {
+      border: 2px solid var(--ion-color-danger);
+      box-shadow: 0 0 10px var(--ion-color-danger), 0 0 20px var(--ion-color-danger);
+      border-radius: 10px;
+      transition: box-shadow 0.3s ease;
     }
 
-    ion-button{
-        font-weight: bold;
+    ion-searchbar {
+        color: var(--ion-text-color);
     }
-      
-    ion-content.fondo-logo{
-        --background: url('assets/icon/logo.png') no-repeat center/contain fixed;    
+
+    ion-card-title{
+        color: var(--ion-color-primary);
     }
-    
+
+    p{
+        color: var(--ion-color-primary);
+    }
+
+    .extra-info p{
+        color: var(--ion-color-primary);
+    }
+
   }
+  
   
   
 /* Tema Oscuro */
 .modo-oscuro {
-
     --ion-background-color: #090601;
     --ion-text-color: #F7E892;
-  
+
     /* Colores principales */
     --ion-color-primary: #A27F27;
     --ion-color-secondary: #CFA94A;
@@ -103,64 +139,67 @@
 
     ion-card-title,
     ion-card-content {
-      color: #A27F27;
+        color: var(--ion-color-medium);
     }
 
     .additional-info p strong {
-        color: #634C0F;
+        color: var(--ion-color-success);
     }
 
     .additional-info p {
-        color: #A27F27;
+        color: var(--ion-color-medium);
     }
 
-    .details p strong{
-        color: #634C0F;
+    .details p strong {
+        color: var(--ion-color-success);
     }
 
     .details p span {
-        color: #A27F27;
+        color: var(--ion-color-medium);
     }
 
-    ion-searchbar{
-        color: #F7E892;
+    ion-searchbar {
+        color: var(--ion-color-light);
     }
 
     ion-card {
-        border: 2px solid #F7E892;
-        box-shadow: 0 0 10px #F7E892, 0 0 20px #F7E892;
+        border: 2px solid var(--ion-color-light);
+        box-shadow: 0 0 10px var(--ion-color-light), 0 0 20px var(--ion-color-light);
         border-radius: 10px;
         transition: box-shadow 0.3s ease;
     }
     
-    #login{
-        color: #634C0F;
-        background-color: #F7E892;
+    #login {
+        color: var(--ion-color-success);
+        background-color: var(--ion-color-light);
         border-radius: 5px;
-      }
-    
-    #logout{
-        color: #634C0F;
-        background-color: #F7E892;
-        border-radius: 5px;
+        font-weight: bold;
     }
     
-    ion-content.fondo-logo{
-        --background: url('assets/icon/logo.png') no-repeat center/contain fixed;    
+    #logout {
+        color: var(--ion-color-success);
+        background-color: var(--ion-color-light);
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    
+    ion-content.fondo-logo {
+        --background: url('assets/icon/logo.png') no-repeat center/contain fixed;
     }
 
-    .card-title-overlay h3{
+    .card-title-overlay h3 {
         color: #FFFEFA;
         text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
         font-weight: bold;
     }
       
-    .card-hover ion-card-header ion-card-title{
+    .card-hover ion-card-header ion-card-title {
         font-weight: bold;
         text-decoration: underline;
         text-align: center;
     }
+}
+
       
-    
-    }
+
   
