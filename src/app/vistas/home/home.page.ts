@@ -249,6 +249,43 @@ export class HomePage {
     await alert.present();
   }
 
+  public async actualizarDatosGraficas(){
+    const alert = await this.alertController.create({
+      header: 'Confirmar actualización de Datos',
+      message: '¿Estás seguro de que quieres actualizar los datos de las gráficas?',
+      cssClass: 'custom-alert',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel'
+        },
+        {
+          text: 'Sí',
+          handler: () => {
+            this.mostrarLoading();
+
+            this.apiFacade.actualizarDatosGraficas().subscribe(
+              (data) => {
+                console.log('Datos actualizados', data);
+                this.ocultarLoading();
+                this.mostrarToast('Datos actualizados correctamente', 'success');
+                
+                this.cargarJuegos();
+              },
+              (error) => {
+                console.error('Error al actualizar los datos:', error);
+                this.ocultarLoading();
+                this.mostrarToast('Error al actualizar los datos', 'danger');
+              }
+            );
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  }
+
   async mostrarLoading() {
     const loading = await this.loadingController.create({
       message: 'Actualizando datos, por favor espere...',

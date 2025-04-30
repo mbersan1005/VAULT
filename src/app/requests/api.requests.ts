@@ -236,5 +236,15 @@ export class ApiRequestService {
   
     return this.http.get(`${this.baseUrl}/obtenerAppId/${nombre}`, { headers });
   }
+
+  public actualizarDatosGraficas(): Observable<any>{
+    
+    const headers = new HttpHeaders({
+      'Authorization': this.authorizationKey,
+      'Token': this.apiToken
+    });
+
+    return this.http.get(this.baseUrl+"/actualizarGraficasJuegos", {headers});
+  }
   
 }
