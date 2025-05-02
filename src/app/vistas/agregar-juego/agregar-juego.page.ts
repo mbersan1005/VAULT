@@ -22,6 +22,8 @@ export class AgregarJuegoPage {
   tiendas: { id: number, nombre: string }[] = [];
   desarrolladoras: { id: number, nombre: string }[] = [];
   publishers: { id: number, nombre: string }[] = [];
+  imagenArchivo: File | null = null;
+
 
   constructor(
     private toastController: ToastController,
@@ -37,7 +39,6 @@ export class AgregarJuegoPage {
       descripcion: ['', Validators.required],
       nota_metacritic: [''], 
       fecha_lanzamiento: ['', Validators.required],
-      imagen: ['', [Validators.required, Validators.pattern('https?://.+')]],
       sitio_web: [''], 
       tiendas: [[]],
       plataformas: [[]],
@@ -70,8 +71,8 @@ export class AgregarJuegoPage {
   }
 
   guardarJuego() {
-    if (this.nuevoJuegoForm.valid) {
-
+    if (this.nuevoJuegoForm.valid && this.imagenArchivo) {
+  
       const juegoData = {
         ...this.nuevoJuegoForm.value,
         plataformas: this.extraerIdNombre(this.nuevoJuegoForm.value.plataformas, this.plataformas),
@@ -80,18 +81,26 @@ export class AgregarJuegoPage {
         desarrolladoras: this.extraerIdNombre(this.nuevoJuegoForm.value.desarrolladoras, this.desarrolladoras),
         publishers: this.extraerIdNombre(this.nuevoJuegoForm.value.publishers, this.publishers),
         creado_por_admin: 1,
-        nota_metacritic: this.nuevoJuegoForm.value.nota_metacritic || null, 
-        sitio_web: this.nuevoJuegoForm.value.sitio_web || null 
+        nota_metacritic: this.nuevoJuegoForm.value.nota_metacritic || null,
+        sitio_web: this.nuevoJuegoForm.value.sitio_web || null
       };
-
-      this.apiFacade.agregarJuego(juegoData).subscribe(
+  
+      const formData = new FormData();
+  
+      for (const key in juegoData) {
+        if (Array.isArray(juegoData[key])) {
+          formData.append(key, JSON.stringify(juegoData[key]));
+        } else if (juegoData[key] !== null && juegoData[key] !== undefined) {
+          formData.append(key, juegoData[key]);
+        }
+      }
+  
+      formData.append('imagen', this.imagenArchivo);
+  
+      this.apiFacade.agregarJuego(formData).subscribe(
         (response) => {
-          console.log('Juego agregado con éxito:', response);
           this.mostrarToast('Juego agregado correctamente', 'success');
-          this.router.navigateByUrl('/home').then(() => {
-            window.location.reload();
-          });
-          
+          this.router.navigateByUrl('/home').then(() => window.location.reload());
         },
         (error) => {
           console.error('Error al agregar el juego:', error);
@@ -99,9 +108,10 @@ export class AgregarJuegoPage {
         }
       );
     } else {
-      this.mostrarToast('Por favor, complete todos los campos correctamente', 'danger');
+      this.mostrarToast('Por favor, complete todos los campos correctamente y seleccione una imagen', 'danger');
     }
   }
+  
 
   private extraerIdNombre(idsSeleccionados: any[], fuente: { id: number, nombre: string }[]): { id: number, nombre: string }[] {
     return fuente.filter(item => idsSeleccionados.includes(item.id) || idsSeleccionados.includes(String(item.id))).map(item => ({
@@ -109,4 +119,12 @@ export class AgregarJuegoPage {
       nombre: item.nombre
     }));
   }
+
+  onImageSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.imagenArchivo = file;
+    }
+  }
+
 }
