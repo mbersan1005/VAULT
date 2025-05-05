@@ -25,6 +25,8 @@ export class EditarJuegoPage {
   tiendas: { id: number, nombre: string }[] = [];
   desarrolladoras: { id: number, nombre: string }[] = [];
   publishers: { id: number, nombre: string }[] = [];
+  imagenArchivo: File | null = null;
+
 
   constructor(
     private menu: MenuController,
@@ -53,7 +55,6 @@ export class EditarJuegoPage {
       descripcion: [''],
       nota_metacritic: [''], 
       fecha_lanzamiento: [''],
-      imagen: ['', [Validators.pattern('https?://.+')]],
       sitio_web: [''], 
       tiendas: [[]],
       plataformas: [[]],
@@ -151,70 +152,47 @@ export class EditarJuegoPage {
   editarJuego() {
     if (this.editarJuegoForm.valid) {
       const formValues = this.editarJuegoForm.value;
-      let juegoData: any = { ...this.juego };
   
-      if (!this.compararArrays(this.juego.publishers, formValues.publishers)) {
-        juegoData.publishers = formValues.publishers.length ?
-          this.extraerIdNombre(formValues.publishers, this.publishers) : this.juego.publishers;
+      const juegoData: any = {
+        id: this.juego.id,
+        creado_por_admin: 1,
+        nombre: formValues.nombre,
+        descripcion: formValues.descripcion,
+        nota_metacritic: formValues.nota_metacritic || null,
+        fecha_lanzamiento: formValues.fecha_lanzamiento || null,
+        sitio_web: formValues.sitio_web || null,
+        publishers: this.extraerIdNombre(formValues.publishers, this.publishers),
+        desarrolladoras: this.extraerIdNombre(formValues.desarrolladoras, this.desarrolladoras),
+        tiendas: this.extraerIdNombre(formValues.tiendas, this.tiendas),
+        plataformas_principales: this.extraerIdNombre(formValues.plataformas, this.plataformas),
+        generos: this.extraerIdNombre(formValues.generos, this.generos),
+      };
+  
+      const formData = new FormData();
+  
+      for (const key in juegoData) {
+        if (Array.isArray(juegoData[key])) {
+          formData.append(key, JSON.stringify(juegoData[key]));
+        } else if (juegoData[key] !== null && juegoData[key] !== undefined) {
+          formData.append(key, juegoData[key]);
+        }
       }
   
-      if (!this.compararArrays(this.juego.desarrolladoras, formValues.desarrolladoras)) {
-        juegoData.desarrolladoras = formValues.desarrolladoras.length ?
-          this.extraerIdNombre(formValues.desarrolladoras, this.desarrolladoras) : this.juego.desarrolladoras;
+      if (this.imagenArchivo) {
+        formData.append('imagen', this.imagenArchivo);
       }
   
-      if (formValues.nombre !== this.juego.nombre && formValues.nombre !== '') {
-        juegoData.nombre = formValues.nombre;
+      console.log('Contenido de FormData:');
+      for (const [key, value] of (formData as any).entries()) {
+        console.log(`${key}:`, value);
       }
-  
-      if (formValues.descripcion !== this.juego.descripcion && formValues.descripcion !== '') {
-        juegoData.descripcion = formValues.descripcion;
-      }
-  
-      if (formValues.nota_metacritic !== this.juego.nota_metacritic && formValues.nota_metacritic != null) {
-        juegoData.nota_metacritic = formValues.nota_metacritic || null;
-      }
-  
-      if (formValues.fecha_lanzamiento !== this.juego.fecha_lanzamiento && formValues.fecha_lanzamiento !== '') {
-        juegoData.fecha_lanzamiento = formValues.fecha_lanzamiento || null;
-      }
-  
-      if (formValues.imagen !== this.juego.imagen && formValues.imagen !== '') {
-        juegoData.imagen = formValues.imagen || null;
-      }
-  
-      if (formValues.sitio_web !== this.juego.sitio_web && formValues.sitio_web !== '') {
-        juegoData.sitio_web = formValues.sitio_web || null;
-      }
-  
-      if (!this.compararArrays(this.juego.tiendas, formValues.tiendas)) {
-        juegoData.tiendas = formValues.tiendas.length ? this.extraerIdNombre(formValues.tiendas, this.tiendas) : [];
-      }
-  
-      if (!this.compararArrays(this.juego.plataformas_principales, formValues.plataformas)) {
-        juegoData.plataformas_principales = formValues.plataformas.length ? this.extraerIdNombre(formValues.plataformas, this.plataformas) : [];
-      }
-  
-      if (!this.compararArrays(this.juego.generos, formValues.generos)) {
-        juegoData.generos = formValues.generos.length ? this.extraerIdNombre(formValues.generos, this.generos) : [];
-      }
-  
-      if (Object.keys(juegoData).length === 0 || JSON.stringify(juegoData) === JSON.stringify(this.juego)) {
-        this.mostrarToast('Debe editar al menos un dato.', 'warning');
-        return; 
-      }
-  
-      console.log('Datos a enviar:', juegoData);
-  
-      this.apiFacade.editarJuego(juegoData).subscribe(
-        (response: any) => {
-          console.log('Juego actualizado con éxito:', response);
+
+      this.apiFacade.editarJuego(formData).subscribe(
+        (response) => {
           this.mostrarToast('Juego actualizado correctamente', 'success');
-          this.router.navigateByUrl('/home').then(() => {
-            window.location.reload();
-          });
+          this.router.navigateByUrl('/home').then(() => window.location.reload());
         },
-        (error: any) => {
+        (error) => {
           console.error('Error al actualizar el juego:', error);
           this.mostrarToast('Error al actualizar el juego', 'danger');
         }
@@ -224,18 +202,13 @@ export class EditarJuegoPage {
     }
   }
   
-
-
-  
-  
-  
-  private compararArrays(a: any[], b: any[]): boolean {
-    // Asegurarse de que todos los IDs sean números antes de comparar
-    const idsA = (a || []).map(o => +o.id || +o).sort();
-    const idsB = (b || []).map(o => +o.id || +o).sort();
-    return JSON.stringify(idsA) === JSON.stringify(idsB);
+  onImageSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.imagenArchivo = file;
+    }
   }
-
+  
   private extraerIdNombre(idsSeleccionados: any[], fuente: { id: number, nombre: string }[]): { id: number, nombre: string }[] {
     return fuente.filter(item => idsSeleccionados.includes(item.id) || idsSeleccionados.includes(String(item.id))).map(item => ({
         id: item.id,

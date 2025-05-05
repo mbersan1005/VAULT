@@ -40,10 +40,10 @@
           <ion-input formControlName="fecha_lanzamiento" type="date"></ion-input>
         </ion-item>
 
-        <!-- URL de la Imagen -->
+        <!-- Selección de Imagen -->
         <ion-item>
-          <ion-label position="stacked">URL de la Imagen</ion-label>
-          <ion-input formControlName="imagen" type="url"></ion-input>
+          <ion-label position="stacked">Imagen</ion-label>
+          <input type="file" (change)="onImageSelected($event)" accept="image/*" />
         </ion-item>
 
         <!-- Sitio Web -->
