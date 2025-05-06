@@ -85,11 +85,6 @@
           </ion-select>
         </ion-item>
 
-        <!-- Mostrar desarrolladoras ya seleccionadas -->
-        <ion-text color="medium" *ngIf="juego?.desarrolladoras?.length">
-          <p><strong>Actuales:</strong> {{ getNombresDesarrolladoras() }}</p>
-        </ion-text>
-
         <!-- Publishers -->
         <ion-item>
           <ion-label>Publishers:</ion-label>
@@ -99,11 +94,6 @@
             </ion-select-option>
           </ion-select>
         </ion-item>
-
-        <!-- Mostrar publishers ya seleccionados -->
-        <ion-text color="medium" *ngIf="juego?.publishers?.length">
-          <p><strong>Actuales:</strong> {{ getNombresPublishers() }}</p>
-        </ion-text>
 
         <!-- Botón de guardar -->
         <ion-button expand="full" type="submit" [disabled]="!editarJuegoForm.valid">Editar Juego</ion-button>

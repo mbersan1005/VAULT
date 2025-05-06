@@ -110,7 +110,10 @@ export class EditarJuegoPage {
             tiendas: this.juego.tiendas.map((t: any) => +t.id),
             plataformas: this.juego.plataformas_principales.map((p: any) => +p.id),
             generos: this.juego.generos.map((g: any) => +g.id),
+            desarrolladoras: this.juego.desarrolladoras.map((d: any) => +d.id), 
+            publishers: this.juego.publishers.map((p: any) => +p.id),        
           });
+          
         }
       },
       (error) => {
