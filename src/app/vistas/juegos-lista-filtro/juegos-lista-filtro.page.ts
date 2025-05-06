@@ -60,12 +60,12 @@ export class JuegosListaFiltroPage {
           this.changeDetector.detectChanges(); 
         } else {
           console.log('No se encontraron juegos');
-          this.mostrarToast('No se encontraron juegos', 'danger'); 
+          this.mostrarToast('No se encontraron juegos', 'dark'); 
         }
       },
       (error) => {
         console.error('Error al obtener datos:', error);
-        this.mostrarToast('Error al cargar los datos', 'danger'); 
+        this.mostrarToast('Error al cargar los datos', 'dark'); 
       }
     );
   }
@@ -102,7 +102,7 @@ export class JuegosListaFiltroPage {
       },
       (error) => {
         console.error('Error al buscar:', error);
-        this.mostrarToast('Error en la búsqueda', 'danger');
+        this.mostrarToast('Error en la búsqueda', 'dark');
       }
     );
   }
@@ -144,7 +144,8 @@ export class JuegosListaFiltroPage {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }
@@ -233,7 +234,7 @@ export class JuegosListaFiltroPage {
               },
               (error) => {
                 console.error('Error al eliminar el juego:', error);
-                this.mostrarToast('Error al eliminar el juego', 'danger');
+                this.mostrarToast('Error al eliminar el juego', 'dark');
               }
             );
           }

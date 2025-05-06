@@ -41,7 +41,7 @@ export class InfoJuegoPage {
     if (this.juegoId !== null && !isNaN(this.juegoId)) {
       this.cargarJuego(this.juegoId);
     } else {
-      this.mostrarToast('ID del juego no válido', 'danger');
+      this.mostrarToast('ID del juego no válido', 'dark');
     }
   }
 
@@ -75,6 +75,7 @@ export class InfoJuegoPage {
             },
             (err) => {
               console.error('Error al obtener AppID:', err);
+              this.mostrarToast('No se ha podido cargar los datos de la gráfica', 'dark');
               this.iframeSrc = null;
             }
           );
@@ -82,7 +83,7 @@ export class InfoJuegoPage {
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos del juego', 'danger');
+        this.mostrarToast('Error al cargar los datos del juego', 'dark');
       }
     );
   }
@@ -115,7 +116,8 @@ export class InfoJuegoPage {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }

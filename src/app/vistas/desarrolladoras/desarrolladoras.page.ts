@@ -46,12 +46,12 @@ export class DesarrolladorasPage {
           this.ordenarJuegos(this.ordenActual);
           this.changeDetector.detectChanges();
         } else {
-          this.mostrarToast('No se encontraron datos', 'danger');
+          this.mostrarToast('No se encontraron datos', 'dark');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos', 'danger');
+        this.mostrarToast('Error al cargar los datos', 'dark');
       }
     );
   }
@@ -87,7 +87,7 @@ export class DesarrolladorasPage {
       },
       (error) => {
         console.error('Error al buscar:', error);
-        this.mostrarToast('Error en la búsqueda', 'danger');
+        this.mostrarToast('Error en la búsqueda', 'dark');
       }
     );
   }
@@ -121,7 +121,8 @@ export class DesarrolladorasPage {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }

@@ -34,12 +34,12 @@ export class TiendasPage {
           this.tiendas = data.tiendas;
           console.log('Tiendas cargadas:', this.tiendas);
         } else {
-          this.mostrarToast('No se encontraron datos', 'danger');
+          this.mostrarToast('No se encontraron datos', 'dark');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos', 'danger');
+        this.mostrarToast('Error al cargar los datos', 'dark');
       }
     );
   }
@@ -49,7 +49,8 @@ export class TiendasPage {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }

@@ -55,7 +55,8 @@ export class AgregarJuegoPage {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }
@@ -104,11 +105,11 @@ export class AgregarJuegoPage {
         },
         (error) => {
           console.error('Error al agregar el juego:', error);
-          this.mostrarToast('Error al agregar el juego', 'danger');
+          this.mostrarToast('Error al agregar el juego', 'dark');
         }
       );
     } else {
-      this.mostrarToast('Por favor, complete todos los campos correctamente y seleccione una imagen', 'danger');
+      this.mostrarToast('Por favor, complete todos los campos correctamente y seleccione una imagen', 'dark');
     }
   }
   

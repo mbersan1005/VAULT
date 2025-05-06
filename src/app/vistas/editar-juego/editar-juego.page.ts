@@ -47,7 +47,7 @@ export class EditarJuegoPage {
     if (this.juegoId !== null && !isNaN(this.juegoId)) {
       this.cargarJuego(this.juegoId);
     } else {
-      this.mostrarToast('ID del juego no válido', 'danger');
+      this.mostrarToast('ID del juego no válido', 'dark');
     }
 
     this.editarJuegoForm = this.formBuilder.group({
@@ -72,7 +72,8 @@ export class EditarJuegoPage {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }
@@ -114,7 +115,7 @@ export class EditarJuegoPage {
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos del juego', 'danger');
+        this.mostrarToast('Error al cargar los datos del juego', 'dark');
       }
     );
   }
@@ -194,11 +195,11 @@ export class EditarJuegoPage {
         },
         (error) => {
           console.error('Error al actualizar el juego:', error);
-          this.mostrarToast('Error al actualizar el juego', 'danger');
+          this.mostrarToast('Error al actualizar el juego', 'dark');
         }
       );
     } else {
-      this.mostrarToast('Por favor, complete todos los campos correctamente', 'danger');
+      this.mostrarToast('Por favor, complete todos los campos correctamente', 'dark');
     }
   }
   

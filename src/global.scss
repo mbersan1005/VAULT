@@ -37,6 +37,11 @@
 /* @import "@ionic/angular/css/palettes/dark.system.css"; */
 
 /* MIS CSS */
+ion-title{
+    text-align: center;
+    font-weight: bold;
+    text-decoration: underline;
+}
 
 /* Tema Claro*/
 .modo-claro {
@@ -115,9 +120,30 @@
         color: var(--ion-color-primary);
     }
 
+    form ion-input, ion-textarea {
+        border: 1px solid var(--ion-color-danger);
+        border-radius: 6px;
+        margin-bottom: 12px;
+        
+    }
+
+    ion-toast.custom-toast {
+        color: var(--ion-text-color); 
+        font-size: 16px;
+        border-radius: 10px; 
+        padding: 10px 15px; 
+        text-align: center; 
+    }
+      
+    .custom-alert .alert-message{
+        color: var(--ion-text-color); 
+    }
+
+    .custom-alert .alert-header {
+        font-weight: bold;
+    }
+
   }
-  
-  
   
 /* Tema Oscuro */
 .modo-oscuro {
@@ -198,6 +224,30 @@
         text-decoration: underline;
         text-align: center;
     }
+
+    form ion-input, ion-textarea {
+        border: 1px solid var(--ion-color-light);
+        border-radius: 6px;
+        margin-bottom: 12px;
+    }
+
+    ion-toast.custom-toast {
+        color: var(--ion-text-color); 
+        font-size: 16px;
+        border-radius: 10px; 
+        padding: 10px 15px; 
+        text-align: center; 
+    }
+      
+    .custom-alert .alert-message{
+        color: var(--ion-text-color); 
+    }
+
+    .custom-alert .alert-title {
+        font-weight: bold !important;
+        text-align: center;
+      }
+    
 }
 
       

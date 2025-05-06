@@ -34,12 +34,12 @@ export class AdminLoginPage {
 
   submitForm() {
     if (this.bloqueoActivo) {
-      this.mostrarToast('Acceso bloqueado. Intenta más tarde.', 'danger');
+      this.mostrarToast('Acceso bloqueado. Intenta más tarde.', 'dark');
       return;
     }
   
     if (this.form.password !== this.form.confirmarPassword) {
-      this.mostrarToast('Las contraseñas no coinciden.', 'warning');
+      this.mostrarToast('Las contraseñas no coinciden.', 'dark');
       return;
     }
   
@@ -67,14 +67,14 @@ export class AdminLoginPage {
     this.intentosFallidos++;
     if (this.intentosFallidos >= 3) {
       this.bloqueoActivo = true;
-      this.mostrarToast('Acceso bloqueado. Inténtalo más tarde.', 'danger');
+      this.mostrarToast('Acceso bloqueado. Inténtalo más tarde.', 'dark');
       
       setTimeout(() => {
         this.bloqueoActivo = false;
         this.intentosFallidos = 0;
       }, this.tiempoBloqueo);
     } else {
-      this.mostrarToast(`Intento fallido. Quedan ${3 - this.intentosFallidos} intentos.`, 'warning');
+      this.mostrarToast(`Intento fallido. Quedan ${3 - this.intentosFallidos} intentos.`, 'dark');
     }
   }
 
@@ -83,7 +83,8 @@ export class AdminLoginPage {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }

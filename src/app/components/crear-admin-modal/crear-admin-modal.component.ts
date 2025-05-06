@@ -40,7 +40,8 @@ export class CrearAdminModalComponent {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }
@@ -51,7 +52,7 @@ export class CrearAdminModalComponent {
       const { nombre, password, repetirPassword } = this.adminForm.value; 
       
       if (password.trim() !== repetirPassword.trim()) {  
-        this.mostrarToast('Las contraseñas no coinciden', 'danger');
+        this.mostrarToast('Las contraseñas no coinciden', 'dark');
         return;
       }
     
@@ -68,11 +69,11 @@ export class CrearAdminModalComponent {
         },
         (error) => {
           console.error('Error al crear administrador:', error);
-          this.mostrarToast('Error al crear el administrador', 'danger');
+          this.mostrarToast('Error al crear el administrador', 'dark');
         }
       );
     } else {
-      this.mostrarToast('Por favor, complete todos los campos correctamente', 'danger');
+      this.mostrarToast('Por favor, complete todos los campos correctamente', 'dark');
     }
   }
   

@@ -20,3 +20,10 @@
   ion-input{
     margin-top: 10px;
   }
+
+  ion-input {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+  }

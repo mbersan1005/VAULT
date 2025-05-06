@@ -60,12 +60,12 @@ export class HomePage {
           this.juegosFiltrados = juegosOrdenados.slice(0, this.juegosCargados);
           this.changeDetector.detectChanges();
         } else {
-          this.mostrarToast('No se encontraron datos', 'danger');
+          this.mostrarToast('No se encontraron datos', 'dark');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos', 'danger');
+        this.mostrarToast('Error al cargar los datos', 'dark');
       }
     );
   }
@@ -111,7 +111,7 @@ export class HomePage {
       },
       (error) => {
         console.error('Error al buscar:', error);
-        this.mostrarToast('Error en la búsqueda', 'danger');
+        this.mostrarToast('Error en la búsqueda', 'dark');
       }
     );
   }
@@ -150,10 +150,12 @@ export class HomePage {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }
+  
 
   public verJuego(juegoId: number){
     this.router.navigate(['/info-juego', juegoId]);
@@ -170,8 +172,8 @@ export class HomePage {
   public async crearAdministrador() {
     const modal = await this.modalController.create({
       component: CrearAdminModalComponent,
-      breakpoints: [0.32, 0.53],
-      initialBreakpoint: 0.32
+      breakpoints: [0.42, 0.53],
+      initialBreakpoint: 0.42
     });
   
     return await modal.present();
@@ -201,7 +203,7 @@ export class HomePage {
               },
               (error) => {
                 console.error('Error al eliminar el juego:', error);
-                this.mostrarToast('Error al eliminar el juego', 'danger');
+                this.mostrarToast('Error al eliminar el juego', 'dark');
               }
             );
           }
@@ -238,7 +240,7 @@ export class HomePage {
               (error) => {
                 console.error('Error al actualizar los datos:', error);
                 this.ocultarLoading();
-                this.mostrarToast('Error al actualizar los datos', 'danger');
+                this.mostrarToast('Error al actualizar los datos', 'dark');
               }
             );
           }
@@ -275,7 +277,7 @@ export class HomePage {
               (error) => {
                 console.error('Error al actualizar los datos:', error);
                 this.ocultarLoading();
-                this.mostrarToast('Error al actualizar los datos', 'danger');
+                this.mostrarToast('Error al actualizar los datos', 'dark');
               }
             );
           }

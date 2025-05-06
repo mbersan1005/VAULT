@@ -39,12 +39,12 @@ export class PlataformasPage {
           this.plataformasFiltradas = this.plataformas.slice(0, this.plataformasCargadas);
           console.log('Plataformas cargadas:', this.plataformasFiltradas);
         } else {
-          this.mostrarToast('No se encontraron plataformas', 'danger');
+          this.mostrarToast('No se encontraron plataformas', 'dark');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar las plataformas', 'danger');
+        this.mostrarToast('Error al cargar las plataformas', 'dark');
       }
     );
   }
@@ -54,7 +54,8 @@ export class PlataformasPage {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }

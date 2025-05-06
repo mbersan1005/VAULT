@@ -56,7 +56,7 @@ export class PurgarDatosComponent {
               (error) => {
                 console.error('Error al resetear los datos:', error);
                 this.ocultarLoading();
-                this.mostrarToast('Error al resetear los datos', 'danger');
+                this.mostrarToast('Error al resetear los datos', 'dark');
               }
             );
           }
@@ -73,7 +73,8 @@ export class PurgarDatosComponent {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }
@@ -88,7 +89,7 @@ export class PurgarDatosComponent {
       },
       (error) => {
         console.error('Error al obtener juegos de admins', error);
-        this.mostrarToast('Error al cargar los juegos del admin', 'danger');
+        this.mostrarToast('Error al cargar los juegos del admin', 'dark');
       }
     );
   }

@@ -34,12 +34,12 @@ export class GenerosPage {
           this.generos = data.generos;
           console.log('Generos cargados:', this.generos);
         } else {
-          this.mostrarToast('No se encontraron datos', 'danger');
+          this.mostrarToast('No se encontraron datos', 'dark');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos', 'danger');
+        this.mostrarToast('Error al cargar los datos', 'dark');
       }
     );
   }
@@ -50,7 +50,8 @@ export class GenerosPage {
       message: mensaje,
       duration: 2000,
       position: 'top',
-      color: color
+      color: color,
+      cssClass: 'custom-toast'
     });
     await toast.present();
   }
