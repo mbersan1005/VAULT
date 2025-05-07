@@ -1,9 +1,10 @@
 import { Component} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { CommonModule } from '@angular/common';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-tiendas',
@@ -17,7 +18,7 @@ export class TiendasPage {
   tiendas: any[] = [];
 
   constructor(
-    private toastController: ToastController,
+    private ui: UiService,
     private router: Router,
     private apiFacade: ApiFacade,
   ) { }
@@ -34,25 +35,14 @@ export class TiendasPage {
           this.tiendas = data.tiendas;
           console.log('Tiendas cargadas:', this.tiendas);
         } else {
-          this.mostrarToast('No se encontraron datos', 'dark');
+          this.ui.mostrarToast('No se encontraron datos', 'dark');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos', 'dark');
+        this.ui.mostrarToast('Error al cargar los datos', 'dark');
       }
     );
-  }
-
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
   }
 
   public verJuegosTienda(categoria: string, nombre: string){

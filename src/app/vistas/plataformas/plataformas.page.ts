@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-plataformas',
@@ -21,7 +22,7 @@ export class PlataformasPage {
   plataformasPorCargar: number = 9;
 
   constructor(
-    private toastController: ToastController,
+    private ui: UiService,
     private router: Router,
     private apiFacade: ApiFacade,
   ) { }
@@ -39,25 +40,14 @@ export class PlataformasPage {
           this.plataformasFiltradas = this.plataformas.slice(0, this.plataformasCargadas);
           console.log('Plataformas cargadas:', this.plataformasFiltradas);
         } else {
-          this.mostrarToast('No se encontraron plataformas', 'dark');
+          this.ui.mostrarToast('No se encontraron plataformas', 'dark');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar las plataformas', 'dark');
+        this.ui.mostrarToast('Error al cargar las plataformas', 'dark');
       }
     );
-  }
-
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
   }
 
   public verJuegosPlataforma(categoria: string, nombre: string){

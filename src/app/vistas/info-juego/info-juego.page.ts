@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { MenuController, ModalController, ToastController } from '@ionic/angular';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { ApiRequestService } from '../../requests/api.requests';
 import { CommonModule, DatePipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';  
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-info-juego',
@@ -23,12 +23,9 @@ export class InfoJuegoPage {
   iframeSrc: SafeResourceUrl | null = null;
 
   constructor(
-    private menu: MenuController,
-    private router: Router,
     private apiFacade: ApiFacade,
-    private modalController: ModalController,
     public apiRequestService: ApiRequestService,
-    private toastController: ToastController,
+    private ui: UiService,
     private datePipe: DatePipe,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
@@ -41,7 +38,7 @@ export class InfoJuegoPage {
     if (this.juegoId !== null && !isNaN(this.juegoId)) {
       this.cargarJuego(this.juegoId);
     } else {
-      this.mostrarToast('ID del juego no válido', 'dark');
+      this.ui.mostrarToast('ID del juego no válido', 'dark');
     }
   }
 
@@ -50,11 +47,11 @@ export class InfoJuegoPage {
       (data) => {
         this.juego = data.juego || data;
   
-        this.juego.tiendas = this.parseJsonData(this.juego.tiendas);
-        this.juego.plataformas_principales = this.parseJsonData(this.juego.plataformas_principales);
-        this.juego.generos = this.parseJsonData(this.juego.generos);
-        this.juego.desarrolladoras = this.parseJsonData(this.juego.desarrolladoras);
-        this.juego.publishers = this.parseJsonData(this.juego.publishers);
+        this.juego.tiendas = this.ui.parseJsonData(this.juego.tiendas);
+        this.juego.plataformas_principales = this.ui.parseJsonData(this.juego.plataformas_principales);
+        this.juego.generos = this.ui.parseJsonData(this.juego.generos);
+        this.juego.desarrolladoras = this.ui.parseJsonData(this.juego.desarrolladoras);
+        this.juego.publishers = this.ui.parseJsonData(this.juego.publishers);
   
         this.juego.publishers = this.juego.publishers || [];
         this.juego.desarrolladoras = this.juego.desarrolladoras || [];
@@ -75,7 +72,7 @@ export class InfoJuegoPage {
             },
             (err) => {
               console.error('Error al obtener AppID:', err);
-              this.mostrarToast('No se ha podido cargar los datos de la gráfica', 'dark');
+              this.ui.mostrarToast('No se ha podido cargar los datos de la gráfica', 'dark');
               this.iframeSrc = null;
             }
           );
@@ -83,21 +80,11 @@ export class InfoJuegoPage {
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos del juego', 'dark');
+        this.ui.mostrarToast('Error al cargar los datos del juego', 'dark');
       }
     );
   }
   
-  private parseJsonData(data: any): any[] {
-    if (!data) return []; 
-    try {
-      return typeof data === 'string' ? JSON.parse(data) : data; 
-    } catch (error) {
-      console.error('Error al parsear JSON:', error, data);
-      return []; 
-    }
-  }
-
   getSitioWeb(sitio: string | null): string {
     if (sitio) {
       return `<a href="${sitio}" target="_blank">${sitio}</a>`;
@@ -106,22 +93,10 @@ export class InfoJuegoPage {
     }
   }
 
-  public formatearFecha(fecha: string): string {
-    const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
-    return fechaFormateada || fecha; 
+  formatearFecha(fecha: string): string {
+    return this.ui.formatearFecha(fecha);
   }
 
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
-  }
-  
   isLastItem(array: any[], item: any): boolean {
     return array[array.length - 1] === item;
   }

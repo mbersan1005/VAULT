@@ -2,9 +2,10 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, IonicModule, IonInfiniteScroll, ToastController } from '@ionic/angular';
+import { AlertController, IonicModule, IonInfiniteScroll } from '@ionic/angular';
 import { ApiFacade } from 'src/app/facades/api.facade';
-import { SesionService } from 'src/app/services/sesion.service';
+import { SesionService } from 'src/app/services/sesion/sesion.service';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-juegos-lista-filtro',
@@ -33,7 +34,7 @@ export class JuegosListaFiltroPage {
     private route: ActivatedRoute,
     private router: Router,
     private apiFacade: ApiFacade,
-    private toastController: ToastController,
+    private ui: UiService,
     private datePipe: DatePipe,
     private changeDetector: ChangeDetectorRef,
     private alertController: AlertController,
@@ -60,12 +61,12 @@ export class JuegosListaFiltroPage {
           this.changeDetector.detectChanges(); 
         } else {
           console.log('No se encontraron juegos');
-          this.mostrarToast('No se encontraron juegos', 'dark'); 
+          this.ui.mostrarToast('No se encontraron juegos', 'dark'); 
         }
       },
       (error) => {
         console.error('Error al obtener datos:', error);
-        this.mostrarToast('Error al cargar los datos', 'dark'); 
+        this.ui.mostrarToast('Error al cargar los datos', 'dark'); 
       }
     );
   }
@@ -102,7 +103,7 @@ export class JuegosListaFiltroPage {
       },
       (error) => {
         console.error('Error al buscar:', error);
-        this.mostrarToast('Error en la búsqueda', 'dark');
+        this.ui.mostrarToast('Error en la búsqueda', 'dark');
       }
     );
   }
@@ -139,17 +140,6 @@ export class JuegosListaFiltroPage {
     this.router.navigate(['/editar-juego', juegoId]);
   }
 
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
-  }
-
   getPlataformas(plataformasJson: string): string {
     const plataformas = JSON.parse(plataformasJson); 
     return plataformas.map((plataforma: { nombre: any; }) => plataforma.nombre).join(', ');
@@ -160,9 +150,8 @@ export class JuegosListaFiltroPage {
     return generos.map((genero: { nombre: any; }) => genero.nombre).join(', ');
   }
 
-  public formatearFecha(fecha: string): string {
-    const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
-    return fechaFormateada || fecha; 
+  formatearFecha(fecha: string): string {
+    return this.ui.formatearFecha(fecha);
   }
 
   public ordenarJuegos(tipoOrden: string, lista: any[] = []) {
@@ -230,11 +219,11 @@ export class JuegosListaFiltroPage {
                 this.juegos = this.juegos.filter(juego => juego.id !== juegoId);
                 this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
   
-                this.mostrarToast('Juego eliminado correctamente', 'success');
+                this.ui.mostrarToast('Juego eliminado correctamente', 'success');
               },
               (error) => {
                 console.error('Error al eliminar el juego:', error);
-                this.mostrarToast('Error al eliminar el juego', 'dark');
+                this.ui.mostrarToast('Error al eliminar el juego', 'dark');
               }
             );
           }

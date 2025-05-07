@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule, } from '@ionic/angular';
 import { ApiFacade } from 'src/app/facades/api.facade';
-import { SesionService } from 'src/app/services/sesion.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-agregar-juego',
@@ -26,11 +26,10 @@ export class AgregarJuegoPage {
 
 
   constructor(
-    private toastController: ToastController,
+    private ui: UiService,
     private router: Router,
     private apiFacade: ApiFacade,
-    private formBuilder: FormBuilder,
-    private sesionService: SesionService
+    private formBuilder: FormBuilder
   ) { }
 
   ngOnInit() {
@@ -50,17 +49,6 @@ export class AgregarJuegoPage {
     this.cargarDatos();
   }
 
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
-  }
-
   cargarDatos() {
     this.apiFacade.obtenerDatosFormulario().subscribe((response) => {
       this.generos = response.generos || [];
@@ -76,11 +64,11 @@ export class AgregarJuegoPage {
   
       const juegoData = {
         ...this.nuevoJuegoForm.value,
-        plataformas: this.extraerIdNombre(this.nuevoJuegoForm.value.plataformas, this.plataformas),
-        generos: this.extraerIdNombre(this.nuevoJuegoForm.value.generos, this.generos),
-        tiendas: this.extraerIdNombre(this.nuevoJuegoForm.value.tiendas, this.tiendas),
-        desarrolladoras: this.extraerIdNombre(this.nuevoJuegoForm.value.desarrolladoras, this.desarrolladoras),
-        publishers: this.extraerIdNombre(this.nuevoJuegoForm.value.publishers, this.publishers),
+        plataformas: this.ui.extraerIdNombre(this.nuevoJuegoForm.value.plataformas, this.plataformas),
+        generos: this.ui.extraerIdNombre(this.nuevoJuegoForm.value.generos, this.generos),
+        tiendas: this.ui.extraerIdNombre(this.nuevoJuegoForm.value.tiendas, this.tiendas),
+        desarrolladoras: this.ui.extraerIdNombre(this.nuevoJuegoForm.value.desarrolladoras, this.desarrolladoras),
+        publishers: this.ui.extraerIdNombre(this.nuevoJuegoForm.value.publishers, this.publishers),
         creado_por_admin: 1,
         nota_metacritic: this.nuevoJuegoForm.value.nota_metacritic || null,
         sitio_web: this.nuevoJuegoForm.value.sitio_web || null
@@ -100,27 +88,19 @@ export class AgregarJuegoPage {
   
       this.apiFacade.agregarJuego(formData).subscribe(
         (response) => {
-          this.mostrarToast('Juego agregado correctamente', 'success');
+          this.ui.mostrarToast('Juego agregado correctamente', 'success');
           this.router.navigateByUrl('/home').then(() => window.location.reload());
         },
         (error) => {
           console.error('Error al agregar el juego:', error);
-          this.mostrarToast('Error al agregar el juego', 'dark');
+          this.ui.mostrarToast('Error al agregar el juego', 'dark');
         }
       );
     } else {
-      this.mostrarToast('Por favor, complete todos los campos correctamente y seleccione una imagen', 'dark');
+      this.ui.mostrarToast('Por favor, complete todos los campos correctamente y seleccione una imagen', 'dark');
     }
   }
   
-
-  private extraerIdNombre(idsSeleccionados: any[], fuente: { id: number, nombre: string }[]): { id: number, nombre: string }[] {
-    return fuente.filter(item => idsSeleccionados.includes(item.id) || idsSeleccionados.includes(String(item.id))).map(item => ({
-      id: item.id,
-      nombre: item.nombre
-    }));
-  }
-
   onImageSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {

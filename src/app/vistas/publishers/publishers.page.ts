@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, IonInfiniteScroll, ToastController } from '@ionic/angular';
+import { IonicModule, IonInfiniteScroll } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { CommonModule } from '@angular/common';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-publishers',
@@ -24,9 +25,8 @@ export class PublishersPage {
 
   @ViewChild(IonInfiniteScroll) infiniteScroll?: IonInfiniteScroll;
   
-
   constructor(
-    private toastController: ToastController,
+    private ui: UiService,
     private router: Router,
     private apiFacade: ApiFacade,
     private changeDetector: ChangeDetectorRef,
@@ -46,12 +46,12 @@ export class PublishersPage {
           this.ordenarJuegos(this.ordenActual);
           this.changeDetector.detectChanges();
         } else {
-          this.mostrarToast('No se encontraron datos', 'dark');
+          this.ui.mostrarToast('No se encontraron datos', 'dark');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos', 'dark');
+        this.ui.mostrarToast('Error al cargar los datos', 'dark');
       }
     );
   }
@@ -87,7 +87,7 @@ export class PublishersPage {
       },
       (error) => {
         console.error('Error al buscar:', error);
-        this.mostrarToast('Error en la búsqueda', 'dark');
+        this.ui.mostrarToast('Error en la búsqueda', 'dark');
       }
     );
   }
@@ -114,17 +114,6 @@ export class PublishersPage {
         event.target.disabled = true;
       }
     }, 500);
-  }
-
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
   }
 
   public verJuegosPublisher(categoria: string, nombre: string){

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms'; 
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
-import { SesionService } from 'src/app/services/sesion.service';
-
+import { SesionService } from 'src/app/services/sesion/sesion.service';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-admin-login',
@@ -26,20 +26,20 @@ export class AdminLoginPage {
   tiempoBloqueo: number = 30000; //30 segundos
 
   constructor(
-    private toastController: ToastController,
     private router: Router,
     private apiFacade: ApiFacade,
     private sesion: SesionService,
+    private ui: UiService,
   ) {}
 
   submitForm() {
     if (this.bloqueoActivo) {
-      this.mostrarToast('Acceso bloqueado. Intenta más tarde.', 'dark');
+      this.ui.mostrarToast('Acceso bloqueado. Intenta más tarde.', 'dark');
       return;
     }
   
     if (this.form.password !== this.form.confirmarPassword) {
-      this.mostrarToast('Las contraseñas no coinciden.', 'dark');
+      this.ui.mostrarToast('Las contraseñas no coinciden.', 'dark');
       return;
     }
   
@@ -48,7 +48,7 @@ export class AdminLoginPage {
 
         if (respuesta?.mensaje === 'Inicio de sesión exitoso') { 
           this.sesion.establecerSesion(true);
-          this.mostrarToast('Inicio de sesión exitoso.', 'success');
+          this.ui.mostrarToast('Inicio de sesión exitoso.', 'success');
           this.intentosFallidos = 0; 
           this.router.navigate(['/home']); 
         } else {
@@ -67,26 +67,15 @@ export class AdminLoginPage {
     this.intentosFallidos++;
     if (this.intentosFallidos >= 3) {
       this.bloqueoActivo = true;
-      this.mostrarToast('Acceso bloqueado. Inténtalo más tarde.', 'dark');
+      this.ui.mostrarToast('Acceso bloqueado. Inténtalo más tarde.', 'dark');
       
       setTimeout(() => {
         this.bloqueoActivo = false;
         this.intentosFallidos = 0;
       }, this.tiempoBloqueo);
     } else {
-      this.mostrarToast(`Intento fallido. Quedan ${3 - this.intentosFallidos} intentos.`, 'dark');
+      this.ui.mostrarToast(`Intento fallido. Quedan ${3 - this.intentosFallidos} intentos.`, 'dark');
     }
-  }
-
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
   }
 
 }

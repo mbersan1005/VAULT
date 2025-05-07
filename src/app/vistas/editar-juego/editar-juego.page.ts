@@ -1,10 +1,11 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IonicModule, MenuController, ModalController, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { ApiFacade } from 'src/app/facades/api.facade';
 import { ApiRequestService } from 'src/app/requests/api.requests';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-editar-juego',
@@ -27,14 +28,11 @@ export class EditarJuegoPage {
   publishers: { id: number, nombre: string }[] = [];
   imagenArchivo: File | null = null;
 
-
   constructor(
-    private menu: MenuController,
     private router: Router,
     private apiFacade: ApiFacade,
-    private modalController: ModalController,
     public apiRequestService: ApiRequestService,
-    private toastController: ToastController,
+    private ui: UiService,
     private datePipe: DatePipe,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -47,7 +45,7 @@ export class EditarJuegoPage {
     if (this.juegoId !== null && !isNaN(this.juegoId)) {
       this.cargarJuego(this.juegoId);
     } else {
-      this.mostrarToast('ID del juego no válido', 'dark');
+      this.ui.mostrarToast('ID del juego no válido', 'dark');
     }
 
     this.editarJuegoForm = this.formBuilder.group({
@@ -67,17 +65,6 @@ export class EditarJuegoPage {
 
   }
 
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
-  }
-
   cargarJuego(id: number) {
     this.apiFacade.recibirDatosJuego(id).subscribe(
       (data) => {
@@ -88,11 +75,11 @@ export class EditarJuegoPage {
   
         if (this.juego) {
 
-          this.juego.tiendas = this.parseJsonData(this.juego.tiendas);
-          this.juego.plataformas_principales = this.parseJsonData(this.juego.plataformas_principales);
-          this.juego.generos = this.parseJsonData(this.juego.generos);
-          this.juego.desarrolladoras = this.parseJsonData(this.juego.desarrolladoras);
-          this.juego.publishers = this.parseJsonData(this.juego.publishers);
+          this.juego.tiendas = this.ui.parseJsonData(this.juego.tiendas);
+          this.juego.plataformas_principales = this.ui.parseJsonData(this.juego.plataformas_principales);
+          this.juego.generos = this.ui.parseJsonData(this.juego.generos);
+          this.juego.desarrolladoras = this.ui.parseJsonData(this.juego.desarrolladoras);
+          this.juego.publishers = this.ui.parseJsonData(this.juego.publishers);
   
           if (!this.juego.publishers) this.juego.publishers = [];
           if (!this.juego.desarrolladoras) this.juego.desarrolladoras = [];
@@ -118,30 +105,11 @@ export class EditarJuegoPage {
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos del juego', 'dark');
+        this.ui.mostrarToast('Error al cargar los datos del juego', 'dark');
       }
     );
   }
   
-  private parseJsonData(data: any): any[] {
-    if (!data) return []; 
-    try {
-      return typeof data === 'string' ? JSON.parse(data) : data; 
-    } catch (error) {
-      console.error('Error al parsear JSON:', error, data);
-      return []; 
-    }
-  }
-
-  public formatearFecha(fecha: string): string {
-    const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
-    return fechaFormateada || fecha; 
-  }
-
-  isLastItem(array: any[], item: any): boolean {
-    return array[array.length - 1] === item;
-  }
-
   cargarDatos() {
     this.apiFacade.obtenerDatosFormulario().subscribe((response) => {
       this.generos = (response.generos || []).map((g: { id: string | number; nombre: any; }) => ({ id: +g.id, nombre: g.nombre }));
@@ -165,11 +133,11 @@ export class EditarJuegoPage {
         nota_metacritic: formValues.nota_metacritic || null,
         fecha_lanzamiento: formValues.fecha_lanzamiento || null,
         sitio_web: formValues.sitio_web || null,
-        publishers: this.extraerIdNombre(formValues.publishers, this.publishers),
-        desarrolladoras: this.extraerIdNombre(formValues.desarrolladoras, this.desarrolladoras),
-        tiendas: this.extraerIdNombre(formValues.tiendas, this.tiendas),
-        plataformas_principales: this.extraerIdNombre(formValues.plataformas, this.plataformas),
-        generos: this.extraerIdNombre(formValues.generos, this.generos),
+        publishers: this.ui.extraerIdNombre(formValues.publishers, this.publishers),
+        desarrolladoras: this.ui.extraerIdNombre(formValues.desarrolladoras, this.desarrolladoras),
+        tiendas: this.ui.extraerIdNombre(formValues.tiendas, this.tiendas),
+        plataformas_principales: this.ui.extraerIdNombre(formValues.plataformas, this.plataformas),
+        generos: this.ui.extraerIdNombre(formValues.generos, this.generos),
       };
   
       const formData = new FormData();
@@ -193,16 +161,16 @@ export class EditarJuegoPage {
 
       this.apiFacade.editarJuego(formData).subscribe(
         (response) => {
-          this.mostrarToast('Juego actualizado correctamente', 'success');
+          this.ui.mostrarToast('Juego actualizado correctamente', 'success');
           this.router.navigateByUrl('/home').then(() => window.location.reload());
         },
         (error) => {
           console.error('Error al actualizar el juego:', error);
-          this.mostrarToast('Error al actualizar el juego', 'dark');
+          this.ui.mostrarToast('Error al actualizar el juego', 'dark');
         }
       );
     } else {
-      this.mostrarToast('Por favor, complete todos los campos correctamente', 'dark');
+      this.ui.mostrarToast('Por favor, complete todos los campos correctamente', 'dark');
     }
   }
   
@@ -213,14 +181,6 @@ export class EditarJuegoPage {
     }
   }
   
-  private extraerIdNombre(idsSeleccionados: any[], fuente: { id: number, nombre: string }[]): { id: number, nombre: string }[] {
-    return fuente.filter(item => idsSeleccionados.includes(item.id) || idsSeleccionados.includes(String(item.id))).map(item => ({
-        id: item.id,
-        nombre: item.nombre
-    }));
-  }
-
-
   getNombresDesarrolladoras(): string {
     return this.juego?.desarrolladoras?.map((d: any) => d.nombre).join(', ') || '';
   }

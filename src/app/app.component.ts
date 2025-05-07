@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController, MenuController, ToastController } from '@ionic/angular';
-import { SesionService } from './services/sesion.service';
+import { AlertController, MenuController } from '@ionic/angular';
+import { SesionService } from './services/sesion/sesion.service';
 import { SplashScreen } from '@capacitor/splash-screen';
-
+import { UiService } from './services/ui/ui.service';
 
 @Component({
   selector: 'app-root',
@@ -20,17 +20,15 @@ export class AppComponent {
     private router: Router,
     public sesion: SesionService,
     private alertController: AlertController,
-    private toastController: ToastController,
+    private ui: UiService,
   ) {
     this.showSplash();
   }
 
   ngOnInit(){
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-
-        this.initializeDarkPalette(prefersDark.matches);
-    
-        prefersDark.addEventListener('change', (mediaQuery) => this.initializeDarkPalette(mediaQuery.matches));
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    this.initializeDarkPalette(prefersDark.matches);
+    prefersDark.addEventListener('change', (mediaQuery) => this.initializeDarkPalette(mediaQuery.matches));
   }
 
   openPage(page: string) {
@@ -54,7 +52,7 @@ export class AppComponent {
           handler: () => {
             this.sesion.establecerSesion(false);
             this.router.navigate(['/home']);
-            this.mostrarToast('Cierre de sesión exitoso.', 'success');
+            this.ui.mostrarToast('Cierre de sesión exitoso.', 'success');
             this.menu.close();
           }
         }
@@ -63,17 +61,6 @@ export class AppComponent {
   
     await alert.present();
     
-  }
-
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
   }
 
   initializeDarkPalette(isDark: boolean) {
@@ -87,7 +74,6 @@ export class AppComponent {
 
   toggleDarkPalette(shouldAdd: boolean) {
     const body = document.body;
-  
     body.classList.remove('modo-claro', 'modo-oscuro');
   
     if (shouldAdd) {
@@ -97,7 +83,6 @@ export class AppComponent {
     }
   }
   
-
   async showSplash(){
     await SplashScreen.show({
       autoHide: true,

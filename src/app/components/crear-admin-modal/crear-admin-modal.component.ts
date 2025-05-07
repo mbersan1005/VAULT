@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonicModule, ModalController, ToastController } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { ApiFacade } from 'src/app/facades/api.facade';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-crear-admin-modal',
@@ -21,7 +22,7 @@ export class CrearAdminModalComponent {
   constructor(
     private modalController: ModalController,
     private formBuilder: FormBuilder,
-    private toastController: ToastController,
+    private ui: UiService,
     private apiFacade: ApiFacade
   ) {
     this.adminForm = this.formBuilder.group({
@@ -32,18 +33,7 @@ export class CrearAdminModalComponent {
   }
 
   cerrarModal() {
-    this.modalController.dismiss();
-  }
-
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
+    this.ui.cerrarModal();
   }
 
   crearCuentaAdmin() {
@@ -52,7 +42,7 @@ export class CrearAdminModalComponent {
       const { nombre, password, repetirPassword } = this.adminForm.value; 
       
       if (password.trim() !== repetirPassword.trim()) {  
-        this.mostrarToast('Las contraseñas no coinciden', 'dark');
+        this.ui.mostrarToast('Las contraseñas no coinciden', 'dark');
         return;
       }
     
@@ -64,19 +54,17 @@ export class CrearAdminModalComponent {
       this.apiFacade.crearAdministrador(adminData).subscribe(
         (response) => {
           console.log('Administrador creado con éxito:', response);
-          this.mostrarToast('Administrador creado correctamente', 'success');
+          this.ui.mostrarToast('Administrador creado correctamente', 'success');
           this.modalController.dismiss();
         },
         (error) => {
           console.error('Error al crear administrador:', error);
-          this.mostrarToast('Error al crear el administrador', 'dark');
+          this.ui.mostrarToast('Error al crear el administrador', 'dark');
         }
       );
     } else {
-      this.mostrarToast('Por favor, complete todos los campos correctamente', 'dark');
+      this.ui.mostrarToast('Por favor, complete todos los campos correctamente', 'dark');
     }
   }
-  
-  
   
 }

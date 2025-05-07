@@ -1,15 +1,16 @@
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { AlertController, IonInfiniteScroll, LoadingController, MenuController } from '@ionic/angular';
+import { AlertController, IonInfiniteScroll } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { ApiRequestService } from '../../requests/api.requests';
-import { IonicModule, ModalController, ToastController } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { SesionService } from 'src/app/services/sesion.service';
+import { SesionService } from 'src/app/services/sesion/sesion.service';
 import { CrearAdminModalComponent } from 'src/app/components/crear-admin-modal/crear-admin-modal.component';
 import { PurgarDatosComponent } from 'src/app/components/purgar-datos/purgar-datos.component';
+import { UiService } from 'src/app/services/ui/ui.service';
 
 @Component({
   selector: 'app-home',
@@ -33,16 +34,14 @@ export class HomePage {
   @ViewChild(IonInfiniteScroll) infiniteScroll?: IonInfiniteScroll;
   
   constructor(
-    private menu: MenuController, 
     private router: Router,
     private apiFacade: ApiFacade,
     private modalController: ModalController,
     public apiRequestService: ApiRequestService,
-    private toastController: ToastController,
+    private ui: UiService,
     private datePipe: DatePipe,
     public sesion: SesionService,
     private alertController: AlertController,
-    private loadingController: LoadingController,
     private changeDetector: ChangeDetectorRef,
   ) {}
 
@@ -60,12 +59,12 @@ export class HomePage {
           this.juegosFiltrados = juegosOrdenados.slice(0, this.juegosCargados);
           this.changeDetector.detectChanges();
         } else {
-          this.mostrarToast('No se encontraron datos', 'dark');
+          this.ui.mostrarToast('No se encontraron datos', 'dark');
         }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.mostrarToast('Error al cargar los datos', 'dark');
+        this.ui.mostrarToast('Error al cargar los datos', 'dark');
       }
     );
   }
@@ -111,7 +110,7 @@ export class HomePage {
       },
       (error) => {
         console.error('Error al buscar:', error);
-        this.mostrarToast('Error en la búsqueda', 'dark');
+        this.ui.mostrarToast('Error en la búsqueda', 'dark');
       }
     );
   }
@@ -140,22 +139,9 @@ export class HomePage {
     }, 500);
   }
   
-  public formatearFecha(fecha: string): string {
-    const fechaFormateada = this.datePipe.transform(fecha, 'dd-MM-yyyy');
-    return fechaFormateada || fecha; 
+  formatearFecha(fecha: string): string {
+    return this.ui.formatearFecha(fecha);
   }
-
-  private async mostrarToast(mensaje: string, color: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top',
-      color: color,
-      cssClass: 'custom-toast'
-    });
-    await toast.present();
-  }
-  
 
   public verJuego(juegoId: number){
     this.router.navigate(['/info-juego', juegoId]);
@@ -199,11 +185,11 @@ export class HomePage {
                 this.juegos = this.juegos.filter(juego => juego.id !== juegoId);
                 this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
   
-                this.mostrarToast('Juego eliminado correctamente', 'success');
+                this.ui.mostrarToast('Juego eliminado correctamente', 'success');
               },
               (error) => {
                 console.error('Error al eliminar el juego:', error);
-                this.mostrarToast('Error al eliminar el juego', 'dark');
+                this.ui.mostrarToast('Error al eliminar el juego', 'dark');
               }
             );
           }
@@ -227,20 +213,20 @@ export class HomePage {
         {
           text: 'Sí',
           handler: () => {
-            this.mostrarLoading();
+            this.ui.mostrarLoading();
 
             this.apiFacade.actualizarDatosAPI().subscribe(
               (data) => {
                 console.log('Datos actualizados', data);
-                this.ocultarLoading();
-                this.mostrarToast('Datos actualizados correctamente', 'success');
+                this.ui.ocultarLoading();
+                this.ui.mostrarToast('Datos actualizados correctamente', 'success');
                 
                 this.cargarJuegos();
               },
               (error) => {
                 console.error('Error al actualizar los datos:', error);
-                this.ocultarLoading();
-                this.mostrarToast('Error al actualizar los datos', 'dark');
+                this.ui.ocultarLoading();
+                this.ui.mostrarToast('Error al actualizar los datos', 'dark');
               }
             );
           }
@@ -264,20 +250,20 @@ export class HomePage {
         {
           text: 'Sí',
           handler: () => {
-            this.mostrarLoading();
+            this.ui.mostrarLoading();
 
             this.apiFacade.actualizarDatosGraficas().subscribe(
               (data) => {
                 console.log('Datos actualizados', data);
-                this.ocultarLoading();
-                this.mostrarToast('Datos actualizados correctamente', 'success');
+                this.ui.ocultarLoading();
+                this.ui.mostrarToast('Datos actualizados correctamente', 'success');
                 
                 this.cargarJuegos();
               },
               (error) => {
                 console.error('Error al actualizar los datos:', error);
-                this.ocultarLoading();
-                this.mostrarToast('Error al actualizar los datos', 'dark');
+                this.ui.ocultarLoading();
+                this.ui.mostrarToast('Error al actualizar los datos', 'dark');
               }
             );
           }
@@ -286,20 +272,6 @@ export class HomePage {
     });
   
     await alert.present();
-  }
-
-  async mostrarLoading() {
-    const loading = await this.loadingController.create({
-      message: 'Actualizando datos, por favor espere...',
-      spinner: 'crescent',
-      duration: 0,
-    });
-  
-    await loading.present();
-  }
-  
-  async ocultarLoading() {
-    await this.loadingController.dismiss();
   }
 
   public async purgarDatosAPI() {
