@@ -93,8 +93,4 @@ export class ApiFacade {
     return this.request.obtenerAppId(nombre);
   }
 
-  public actualizarDatosGraficas(): Observable<any>{
-    return this.request.actualizarDatosGraficas();
-  }
-  
 }

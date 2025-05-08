@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiRequestService {
 
-  baseUrl: string = 'https://apirest.saicasl.eu/api1/api/public'; //https://api-vault.onrender.com
+  baseUrl: string = 'https://apirest.saicasl.eu/api1/api/public'; //https://api-vault.onrender.com -- https://apirest.saicasl.eu/api1/api/public
   apiToken: string = '318be955-c62b-40d7-a7b3-c4de08ceb444';
   authorizationKey: string = 'Bearer i8zz9PWQdXr7OpKW2BMZ4LgH8tXE3ms3H2YLuEFmfrGTVkt2Gxm9i3VdJdSCS47A';
 
@@ -237,14 +237,4 @@ export class ApiRequestService {
     return this.http.get(`${this.baseUrl}/obtenerAppId/${nombre}`, { headers });
   }
 
-  public actualizarDatosGraficas(): Observable<any>{
-    
-    const headers = new HttpHeaders({
-      'Authorization': this.authorizationKey,
-      'Token': this.apiToken
-    });
-
-    return this.http.get(this.baseUrl+"/actualizarGraficasJuegos", {headers});
-  }
-  
 }

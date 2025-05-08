@@ -236,44 +236,7 @@ export class HomePage {
   
     await alert.present();
   }
-
-  public async actualizarDatosGraficas(){
-    const alert = await this.alertController.create({
-      header: 'Confirmar actualización de Datos',
-      message: '¿Estás seguro de que quieres actualizar los datos de las gráficas?',
-      cssClass: 'custom-alert',
-      buttons: [
-        {
-          text: 'No',
-          role: 'cancel'
-        },
-        {
-          text: 'Sí',
-          handler: () => {
-            this.ui.mostrarLoading();
-
-            this.apiFacade.actualizarDatosGraficas().subscribe(
-              (data) => {
-                console.log('Datos actualizados', data);
-                this.ui.ocultarLoading();
-                this.ui.mostrarToast('Datos actualizados correctamente', 'success');
-                
-                this.cargarJuegos();
-              },
-              (error) => {
-                console.error('Error al actualizar los datos:', error);
-                this.ui.ocultarLoading();
-                this.ui.mostrarToast('Error al actualizar los datos', 'dark');
-              }
-            );
-          }
-        }
-      ]
-    });
   
-    await alert.present();
-  }
-
   public async purgarDatosAPI() {
     const modal = await this.modalController.create({
       component: PurgarDatosComponent,
