@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiRequestService {
 
-  baseUrl: string = 'https://codeigniter-api-production.up.railway.app'; //https://apirest.saicasl.eu/api1/api/public -- https://codeigniter-api-production.up.railway.app
+  baseUrl: string = 'https://vault-ci4-api.up.railway.app'; //https://apirest.saicasl.eu/api1/api/public -- https://vault-ci4-api.up.railway.app
   apiToken: string = '318be955-c62b-40d7-a7b3-c4de08ceb444';
   authorizationKey: string = 'Bearer i8zz9PWQdXr7OpKW2BMZ4LgH8tXE3ms3H2YLuEFmfrGTVkt2Gxm9i3VdJdSCS47A';
 
