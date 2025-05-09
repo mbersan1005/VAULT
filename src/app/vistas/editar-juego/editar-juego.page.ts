@@ -86,21 +86,13 @@ export class EditarJuegoPage {
           if (!this.juego.generos) this.juego.generos = [];
           if (!this.juego.plataformas_principales) this.juego.plataformas_principales = [];
           if (!this.juego.tiendas) this.juego.tiendas = [];
-  
+
           this.editarJuegoForm.patchValue({
-            nombre: this.juego.nombre,
             descripcion: this.juego.descripcion,
-            nota_metacritic: Number(this.juego.nota_metacritic),
             fecha_lanzamiento: this.juego.fecha_lanzamiento ? this.datePipe.transform(this.juego.fecha_lanzamiento, 'yyyy-MM-dd') : '',
-            imagen: this.juego.imagen,
-            sitio_web: this.juego.sitio_web,
-            tiendas: this.juego.tiendas.map((t: any) => +t.id),
-            plataformas: this.juego.plataformas_principales.map((p: any) => +p.id),
-            generos: this.juego.generos.map((g: any) => +g.id),
-            desarrolladoras: this.juego.desarrolladoras.map((d: any) => +d.id), 
-            publishers: this.juego.publishers.map((p: any) => +p.id),        
+            sitio_web: this.juego.sitio_web,      
           });
-          
+  
         }
       },
       (error) => {
@@ -189,4 +181,15 @@ export class EditarJuegoPage {
     return this.juego?.publishers?.map((p: any) => p.nombre).join(', ') || '';
   }  
 
+  getNombresGeneros(): string {
+    return this.juego?.generos?.map((g: any) => g.nombre).join(', ') || '';
+  }
+  
+  getNombresPlataformas(): string {
+    return this.juego?.plataformas_principales?.map((p: any) => p.nombre).join(', ') || '';
+  }  
+  
+  getNombresTiendas(): string {
+    return this.juego?.tiendas?.map((t: any) => t.nombre).join(', ') || '';
+  }
 }

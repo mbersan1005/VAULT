@@ -15,19 +15,19 @@
         <!-- Nombre del Juego -->
         <ion-item>
           <ion-label position="stacked">Nombre del Juego</ion-label>
-          <ion-input formControlName="nombre" type="text"></ion-input>
+          <ion-input formControlName="nombre" type="text" [placeholder]="juego?.nombre || 'Nombre del juego'"></ion-input>
         </ion-item>
 
         <!-- Descripción -->
         <ion-item>
           <ion-label position="stacked">Descripción</ion-label>
-          <ion-textarea formControlName="descripcion" rows="6"></ion-textarea>
+          <ion-textarea formControlName="descripcion" rows="6" type="text"></ion-textarea>
         </ion-item>
 
         <!-- Nota -->
         <ion-item>
           <ion-label position="stacked">Nota</ion-label>
-          <ion-input formControlName="nota_metacritic" type="number"></ion-input>
+          <ion-input formControlName="nota_metacritic" type="number" [placeholder]="juego?.nota_metacritic || 'Nota Metacritic'"></ion-input>
         </ion-item>
 
         <!-- Fecha de Lanzamiento -->
@@ -45,10 +45,13 @@
         <!-- Sitio Web -->
         <ion-item>
           <ion-label position="stacked">Sitio Web</ion-label>
-          <ion-input formControlName="sitio_web" type="url"></ion-input>
+          <ion-input formControlName="sitio_web" type="url" [placeholder]="juego?.sitio_web || 'Sitio web del juego'"></ion-input>
         </ion-item>
 
         <!-- Tiendas -->
+        <p *ngIf="juego?.tiendas && juego.tiendas.length > 0">
+          <strong>Tiendas actuales:</strong> {{ getNombresTiendas() }}
+        </p>
         <ion-item>
           <ion-label>Tiendas:</ion-label>
           <ion-select formControlName="tiendas" multiple="true" interface="popover">
@@ -58,8 +61,10 @@
           </ion-select>
         </ion-item>
           
-
         <!-- Plataformas -->
+        <p *ngIf="juego?.plataformas_principales && juego.plataformas_principales.length > 0">
+          <strong>Plataformas actuales:</strong> {{ getNombresPlataformas() }}
+        </p>
         <ion-item>
           <ion-label>Plataformas:</ion-label>
           <ion-select formControlName="plataformas" multiple="true" interface="popover">
@@ -68,6 +73,9 @@
         </ion-item>
 
         <!-- Géneros -->
+        <p *ngIf="juego?.generos && juego.generos.length > 0">
+          <strong>Géneros actuales:</strong> {{ getNombresGeneros() }}
+        </p>
         <ion-item>
           <ion-label>Géneros:</ion-label>
           <ion-select formControlName="generos" multiple="true" interface="popover">
@@ -76,6 +84,9 @@
         </ion-item>
 
         <!-- Desarrolladoras -->
+        <p *ngIf="juego?.desarrolladoras && juego.desarrolladoras.length > 0">
+          <strong>Desarrolladoras actuales:</strong> {{ getNombresDesarrolladoras() }}
+        </p>
         <ion-item>
           <ion-label>Desarrolladoras:</ion-label>
           <ion-select formControlName="desarrolladoras" multiple="true" interface="popover" >
@@ -86,6 +97,9 @@
         </ion-item>
 
         <!-- Publishers -->
+        <p *ngIf="juego?.publishers && juego.publishers.length > 0">
+          <strong>Publishers actuales:</strong> {{ getNombresPublishers() }}
+        </p>
         <ion-item>
           <ion-label>Publishers:</ion-label>
           <ion-select formControlName="publishers" multiple="true" interface="popover" >
