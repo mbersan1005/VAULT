@@ -33,7 +33,7 @@ export class CrearAdminModalComponent {
   }
 
   cerrarModal() {
-    this.ui.cerrarModal();
+    this.modalController.dismiss();
   }
 
   crearCuentaAdmin() {

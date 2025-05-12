@@ -40,10 +40,6 @@ export class UiService {
     await this.loadingController.dismiss();
   }
   
-  async cerrarModal() {
-    await this.modalController.dismiss();
-  }
-
   extraerIdNombre(idsSeleccionados: any[], fuente: { id: number, nombre: string }[]): { id: number, nombre: string }[] {
     return fuente.filter(item => idsSeleccionados.includes(item.id) || idsSeleccionados.includes(String(item.id))).map(item => ({
       id: item.id,

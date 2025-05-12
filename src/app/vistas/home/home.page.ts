@@ -244,6 +244,12 @@ export class HomePage {
       initialBreakpoint: 0.5
     });
     
+    modal.onDidDismiss().then((resultado) => {
+      if (resultado.data?.refrescar) {
+        this.cargarJuegos();
+      }
+    });
+
     return await modal.present();
   }
 

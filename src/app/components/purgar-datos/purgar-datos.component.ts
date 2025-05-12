@@ -27,10 +27,10 @@ export class PurgarDatosComponent {
     this.cargarJuegosAdmin();
   }
 
-  cerrarModal() {
-    this.ui.cerrarModal();
+  cerrarModal(refrescar: boolean = false) {
+    this.modalController.dismiss({ refrescar });
   }
-
+  
   async confirmarAccion() {
     const alert = await this.alertController.create({
       header: 'Confirmar reseteo de datos',
@@ -50,7 +50,7 @@ export class PurgarDatosComponent {
                 console.log('Datos reseteados con éxito:', response);
                 this.ui.ocultarLoading();
                 this.ui.mostrarToast('Datos reseteados correctamente', 'success');
-                this.cerrarModal();
+                this.cerrarModal(true);
               },
               (error) => {
                 console.error('Error al resetear los datos:', error);
