@@ -62,4 +62,24 @@ export class UiService {
     }
   }
 
+  mostrarRespuestaExitosa(data: any, fallback: string = 'Operación exitosa') {
+    const mensaje = data?.mensaje || fallback;
+    this.mostrarToast(mensaje, 'success');
+  }
+  
+  mostrarRespuestaError(error: any, fallback: string = 'Ocurrió un error') {
+    let mensaje = fallback;
+  
+    if (error?.error) {
+      if (typeof error.error === 'object') {
+        mensaje = error.error.error || error.error.mensaje || fallback;
+      } else if (typeof error.error === 'string') {
+        mensaje = error.error;
+      }
+    }
+  
+    this.mostrarToast(mensaje, 'dark');
+  }
+  
+
 }

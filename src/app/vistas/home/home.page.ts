@@ -39,7 +39,6 @@ export class HomePage {
     private modalController: ModalController,
     public apiRequestService: ApiRequestService,
     private ui: UiService,
-    private datePipe: DatePipe,
     public sesion: SesionService,
     private alertController: AlertController,
     private changeDetector: ChangeDetectorRef,
@@ -64,7 +63,7 @@ export class HomePage {
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.ui.mostrarToast('Error al cargar los datos', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }
@@ -110,7 +109,7 @@ export class HomePage {
       },
       (error) => {
         console.error('Error al buscar:', error);
-        this.ui.mostrarToast('Error en la búsqueda', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }
@@ -185,11 +184,12 @@ export class HomePage {
                 this.juegos = this.juegos.filter(juego => juego.id !== juegoId);
                 this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
   
-                this.ui.mostrarToast('Juego eliminado correctamente', 'success');
+                this.ui.mostrarRespuestaExitosa(data, 'Operación exitosa');
               },
               (error) => {
                 console.error('Error al eliminar el juego:', error);
-                this.ui.mostrarToast('Error al eliminar el juego', 'dark');
+                this.ui.mostrarRespuestaError(error, 'Operación errónea');
+
               }
             );
           }
@@ -219,14 +219,14 @@ export class HomePage {
               (data) => {
                 console.log('Datos actualizados', data);
                 this.ui.ocultarLoading();
-                this.ui.mostrarToast('Datos actualizados correctamente', 'success');
+                this.ui.mostrarRespuestaExitosa(data, 'Operación exitosa');
                 
                 this.cargarJuegos();
               },
               (error) => {
                 console.error('Error al actualizar los datos:', error);
                 this.ui.ocultarLoading();
-                this.ui.mostrarToast('Error al actualizar los datos', 'dark');
+                this.ui.mostrarRespuestaError(error, 'Operación errónea');
               }
             );
           }
