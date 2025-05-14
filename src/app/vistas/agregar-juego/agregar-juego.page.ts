@@ -39,11 +39,11 @@ export class AgregarJuegoPage {
       nota_metacritic: [''], 
       fecha_lanzamiento: ['', Validators.required],
       sitio_web: [''], 
-      tiendas: [[]],
-      plataformas: [[]],
-      generos: [[]],
-      desarrolladoras: [[]],
-      publishers: [[]],
+      tiendas: [[], Validators.required],
+      plataformas: [[], Validators.required],
+      generos: [[], Validators.required],
+      desarrolladoras: [[], Validators.required],
+      publishers: [[], Validators.required],
     });
 
     this.cargarDatos();
@@ -56,7 +56,11 @@ export class AgregarJuegoPage {
       this.tiendas = response.tiendas || [];
       this.desarrolladoras = response.desarrolladoras || [];
       this.publishers = response.publishers || [];
-    });
+    },(error) => {
+      console.error('Error al agregar el juego:', error);
+      this.ui.mostrarRespuestaError(error, 'Operación errónea');    
+    }
+  );
   }
 
   guardarJuego() {
@@ -88,12 +92,12 @@ export class AgregarJuegoPage {
   
       this.apiFacade.agregarJuego(formData).subscribe(
         (response) => {
-          this.ui.mostrarToast('Juego agregado correctamente', 'success');
+          this.ui.mostrarRespuestaExitosa(response, 'Operación exitosa');
           this.router.navigateByUrl('/home').then(() => window.location.reload());
         },
         (error) => {
           console.error('Error al agregar el juego:', error);
-          this.ui.mostrarToast('Error al agregar el juego', 'dark');
+          this.ui.mostrarRespuestaError(error, 'Operación errónea');        
         }
       );
     } else {

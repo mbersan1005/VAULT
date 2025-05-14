@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class ApiRequestService {
 
   //https://apirest.saicasl.eu/api1/api/public -- https://vault-ci4-api.up.railway.app -- https://api-vault.onrender.com
-  baseUrl: string = 'https://apirest.saicasl.eu/api1/api/public';
+  baseUrl: string = 'https://api-vault.onrender.com';
   apiToken: string = '318be955-c62b-40d7-a7b3-c4de08ceb444';
   authorizationKey: string = 'Bearer i8zz9PWQdXr7OpKW2BMZ4LgH8tXE3ms3H2YLuEFmfrGTVkt2Gxm9i3VdJdSCS47A';
 

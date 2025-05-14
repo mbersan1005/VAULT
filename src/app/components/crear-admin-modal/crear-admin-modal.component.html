@@ -11,17 +11,17 @@
   <form [formGroup]="adminForm" (ngSubmit)="crearCuentaAdmin()">
     <ion-item>
       <ion-label position="stacked">Nombre</ion-label>
-      <ion-input formControlName="nombre"></ion-input>
+      <ion-input formControlName="nombre" placeholder="Nombre con mínimo 3 carácteres"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="stacked">Contraseña</ion-label>
-      <ion-input type="password" formControlName="password"></ion-input>
+      <ion-input type="password" formControlName="password" placeholder="Contraseña con mínimo 8 carácteres"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="stacked">Repetir Contraseña</ion-label>
-      <ion-input type="password" formControlName="repetirPassword"></ion-input>
+      <ion-input type="password" formControlName="repetirPassword" placeholder="Repita la contraseña anterior"></ion-input>
     </ion-item>
 
     <ion-button expand="block" type="submit" [disabled]="adminForm.invalid">Crear cuenta</ion-button>

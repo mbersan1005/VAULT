@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,6 @@ export class UiService {
   constructor(
     private toastController: ToastController,
     private loadingController: LoadingController,
-    private modalController: ModalController,
     private datePipe: DatePipe,
 
     ) { }

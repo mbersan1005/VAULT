@@ -48,7 +48,7 @@ export class AdminLoginPage {
 
         if (respuesta?.mensaje === 'Inicio de sesión exitoso') { 
           this.sesion.establecerSesion(true);
-          this.ui.mostrarToast('Inicio de sesión exitoso.', 'success');
+          this.ui.mostrarRespuestaExitosa(respuesta, 'Operación exitosa');
           this.intentosFallidos = 0; 
           this.router.navigate(['/home']); 
         } else {
@@ -58,6 +58,7 @@ export class AdminLoginPage {
       },
       error: (error) => {
         console.error('Error en inicio de sesión:', error); 
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
         this.registrarIntentoFallido();
       }
     });

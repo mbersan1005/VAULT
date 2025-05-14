@@ -49,14 +49,13 @@ export class PurgarDatosComponent {
               (response) => {
                 console.log('Datos reseteados con éxito:', response);
                 this.ui.ocultarLoading();
-                this.ui.mostrarToast('Datos reseteados correctamente', 'success');
+                this.ui.mostrarRespuestaExitosa(response, 'Operación exitosa');
                 this.cerrarModal(true);
               },
               (error) => {
                 console.error('Error al resetear los datos:', error);
                 this.ui.ocultarLoading();
-                this.ui.mostrarToast('Error al resetear los datos', 'dark');
-              }
+                this.ui.mostrarRespuestaError(error, 'Operación errónea');              }
             );
           }
         }
@@ -75,7 +74,7 @@ export class PurgarDatosComponent {
       },
       (error) => {
         console.error('Error al obtener juegos de admins', error);
-        this.ui.mostrarToast('Error al cargar los juegos del admin', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }

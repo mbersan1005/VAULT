@@ -54,12 +54,12 @@ export class CrearAdminModalComponent {
       this.apiFacade.crearAdministrador(adminData).subscribe(
         (response) => {
           console.log('Administrador creado con éxito:', response);
-          this.ui.mostrarToast('Administrador creado correctamente', 'success');
+          this.ui.mostrarRespuestaExitosa(response, 'Operación exitosa');
           this.modalController.dismiss();
         },
         (error) => {
           console.error('Error al crear administrador:', error);
-          this.ui.mostrarToast('Error al crear el administrador', 'dark');
+          this.ui.mostrarRespuestaError(error, 'Operación errónea');
         }
       );
     } else {
