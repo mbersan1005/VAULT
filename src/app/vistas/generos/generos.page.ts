@@ -31,16 +31,12 @@ export class GenerosPage {
     this.apiFacade.recibirGeneros().subscribe(
       (data) => {
         console.log('Datos recibidos desde la API:', data);  
-        if (data && data.generos && data.generos.length > 0) {
-          this.generos = data.generos;
-          console.log('Generos cargados:', this.generos);
-        } else {
-          this.ui.mostrarToast('No se encontraron datos', 'dark');
-        }
+        this.generos = data.generos;
+        console.log('Generos cargados:', this.generos);
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.ui.mostrarToast('Error al cargar los datos', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }
