@@ -27,7 +27,7 @@
         <!-- Nota -->
         <ion-item>
           <ion-label position="stacked">Nota</ion-label>
-          <ion-input formControlName="nota_metacritic" type="number"></ion-input>
+          <ion-input formControlName="nota_metacritic" type="number" min="0" max="100"></ion-input>
         </ion-item>
 
         <!-- Fecha de Lanzamiento -->
@@ -39,7 +39,7 @@
         <!-- Selección de Imagen -->
         <ion-item>
           <ion-label position="stacked">Imagen</ion-label>
-          <input type="file" (change)="onImageSelected($event)" accept="image/*" />
+          <input type="file" (change)="onImageSelected($event)" accept="image/jpeg, image/jpg, image/png" />
         </ion-item>
 
         <!-- Sitio Web -->

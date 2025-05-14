@@ -97,7 +97,7 @@ export class EditarJuegoPage {
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.ui.mostrarToast('Error al cargar los datos del juego', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }
@@ -120,16 +120,28 @@ export class EditarJuegoPage {
       const juegoData: any = {
         id: this.juego.id,
         creado_por_admin: 1,
-        nombre: formValues.nombre,
-        descripcion: formValues.descripcion,
-        nota_metacritic: formValues.nota_metacritic || null,
-        fecha_lanzamiento: formValues.fecha_lanzamiento || null,
-        sitio_web: formValues.sitio_web || null,
-        publishers: this.ui.extraerIdNombre(formValues.publishers, this.publishers),
-        desarrolladoras: this.ui.extraerIdNombre(formValues.desarrolladoras, this.desarrolladoras),
-        tiendas: this.ui.extraerIdNombre(formValues.tiendas, this.tiendas),
-        plataformas_principales: this.ui.extraerIdNombre(formValues.plataformas, this.plataformas),
-        generos: this.ui.extraerIdNombre(formValues.generos, this.generos),
+        nombre: formValues.nombre?.trim() || this.juego.nombre,
+        descripcion: formValues.descripcion?.trim() || this.juego.descripcion,
+        nota_metacritic: formValues.nota_metacritic !== null && formValues.nota_metacritic !== ''
+          ? formValues.nota_metacritic
+          : this.juego.nota_metacritic,
+        fecha_lanzamiento: formValues.fecha_lanzamiento || this.juego.fecha_lanzamiento,
+        sitio_web: formValues.sitio_web?.trim() || this.juego.sitio_web,
+        publishers: formValues.publishers?.length
+          ? this.ui.extraerIdNombre(formValues.publishers, this.publishers)
+          : this.juego.publishers,
+        desarrolladoras: formValues.desarrolladoras?.length
+          ? this.ui.extraerIdNombre(formValues.desarrolladoras, this.desarrolladoras)
+          : this.juego.desarrolladoras,
+        tiendas: formValues.tiendas?.length
+          ? this.ui.extraerIdNombre(formValues.tiendas, this.tiendas)
+          : this.juego.tiendas,
+        plataformas_principales: formValues.plataformas?.length
+          ? this.ui.extraerIdNombre(formValues.plataformas, this.plataformas)
+          : this.juego.plataformas_principales,
+        generos: formValues.generos?.length
+          ? this.ui.extraerIdNombre(formValues.generos, this.generos)
+          : this.juego.generos,
       };
   
       const formData = new FormData();
@@ -153,12 +165,12 @@ export class EditarJuegoPage {
 
       this.apiFacade.editarJuego(formData).subscribe(
         (response) => {
-          this.ui.mostrarToast('Juego actualizado correctamente', 'success');
+          this.ui.mostrarRespuestaExitosa(response, 'Operación exitosa');
           this.router.navigateByUrl('/home').then(() => window.location.reload());
         },
         (error) => {
           console.error('Error al actualizar el juego:', error);
-          this.ui.mostrarToast('Error al actualizar el juego', 'dark');
+          this.ui.mostrarRespuestaError(error, 'Operación errónea');
         }
       );
     } else {

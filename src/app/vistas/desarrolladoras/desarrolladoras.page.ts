@@ -41,18 +41,14 @@ export class DesarrolladorasPage {
     this.apiFacade.recibirDesarrolladoras().subscribe(
       (data) => {
         console.log('Datos recibidos desde la API:', data);  
-        if (data && data.desarrolladoras && data.desarrolladoras.length > 0) {
           this.desarrolladoras = data.desarrolladoras;
           this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
           this.ordenarJuegos(this.ordenActual);
           this.changeDetector.detectChanges();
-        } else {
-          this.ui.mostrarToast('No se encontraron datos', 'dark');
-        }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.ui.mostrarToast('Error al cargar los datos', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }
@@ -79,7 +75,6 @@ export class DesarrolladorasPage {
   
         this.desarrolladorasBuscadas = resultados;
         this.desarrolladorasCargadas = 9;
-  
         this.desarrolladorasFiltradas = this.ordenarJuegos(this.ordenActual, resultados).slice(0, this.desarrolladorasCargadas);
   
         if (this.infiniteScroll) {
@@ -88,7 +83,7 @@ export class DesarrolladorasPage {
       },
       (error) => {
         console.error('Error al buscar:', error);
-        this.ui.mostrarToast('Error en la búsqueda', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }

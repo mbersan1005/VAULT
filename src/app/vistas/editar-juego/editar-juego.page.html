@@ -27,7 +27,7 @@
         <!-- Nota -->
         <ion-item>
           <ion-label position="stacked">Nota</ion-label>
-          <ion-input formControlName="nota_metacritic" type="number" [placeholder]="juego?.nota_metacritic || 'Nota Metacritic'"></ion-input>
+          <ion-input formControlName="nota_metacritic" type="number" [placeholder]="juego?.nota_metacritic || 'Nota Metacritic'" min="0" max="100"></ion-input>
         </ion-item>
 
         <!-- Fecha de Lanzamiento -->

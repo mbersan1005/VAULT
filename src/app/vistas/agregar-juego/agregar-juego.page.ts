@@ -107,9 +107,20 @@ export class AgregarJuegoPage {
   
   onImageSelected(event: any) {
     const file: File = event.target.files[0];
-    if (file) {
-      this.imagenArchivo = file;
+    if (!file) return;
+  
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  
+    if (!allowedTypes.includes(file.type)) {
+      alert('Solo se permiten imágenes JPG, JPEG o PNG.');
+      this.imagenArchivo = null;
+      (event.target as HTMLInputElement).value = '';
+      return;
     }
+  
+    this.imagenArchivo = file;
+  
   }
+  
 
 }
