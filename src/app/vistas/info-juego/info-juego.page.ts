@@ -26,7 +26,6 @@ export class InfoJuegoPage {
     private apiFacade: ApiFacade,
     public apiRequestService: ApiRequestService,
     private ui: UiService,
-    private datePipe: DatePipe,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
   ) {}
@@ -37,9 +36,8 @@ export class InfoJuegoPage {
 
     if (this.juegoId !== null && !isNaN(this.juegoId)) {
       this.cargarJuego(this.juegoId);
-    } else {
-      this.ui.mostrarToast('ID del juego no válido', 'dark');
     }
+    
   }
 
   cargarJuego(id: number) {
@@ -72,7 +70,7 @@ export class InfoJuegoPage {
             },
             (err) => {
               console.error('Error al obtener AppID:', err);
-              this.ui.mostrarToast('No se ha podido cargar los datos de la gráfica', 'dark');
+              this.ui.mostrarRespuestaError(err, 'Operación errónea');
               this.iframeSrc = null;
             }
           );
@@ -80,7 +78,7 @@ export class InfoJuegoPage {
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.ui.mostrarToast('Error al cargar los datos del juego', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }

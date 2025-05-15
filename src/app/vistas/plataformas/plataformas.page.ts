@@ -35,17 +35,13 @@ export class PlataformasPage {
     this.apiFacade.recibirPlataformas().subscribe(
       (data) => {
         console.log('Datos recibidos desde la API:', data);
-        if (data && data.plataformas && data.plataformas.length > 0) {
           this.plataformas = data.plataformas;
           this.plataformasFiltradas = this.plataformas.slice(0, this.plataformasCargadas);
           console.log('Plataformas cargadas:', this.plataformasFiltradas);
-        } else {
-          this.ui.mostrarToast('No se encontraron plataformas', 'dark');
-        }
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.ui.mostrarToast('Error al cargar las plataformas', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }

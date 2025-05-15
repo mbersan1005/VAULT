@@ -1,25 +1,24 @@
-ion-title{
-  text-align: center;
-  size: 50px;
-}
 
 .card-hover {
   position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out; 
 }
 
 .card-hover:hover {
   transform: scale(1.05); 
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); 
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15); 
   cursor: pointer;
 }
 
 .extra-info {
   display: none; 
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
 }
 
 .card-hover:hover .extra-info {
   display: block; 
+  opacity: 1; 
 }
 
 .admin-buttons {
@@ -30,6 +29,7 @@ ion-title{
 .card-hover:hover .card-buttons {
   opacity: 1;
   display: flex;
+  transition: opacity 0.4s ease-in-out;
 }
 
 .top-buttons {
@@ -64,5 +64,3 @@ ion-select{
   margin-left: 20px;
   width: 280px;
 }
-
-

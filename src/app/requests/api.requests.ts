@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -235,7 +235,10 @@ export class ApiRequestService {
       'Token': this.apiToken
     });
   
-    return this.http.get(`${this.baseUrl}/obtenerAppId/${nombre}`, { headers });
+    const params = new HttpParams().set('nombreJuego', nombre);
+  
+    return this.http.get(`${this.baseUrl}/obtenerAppId`, { headers, params });
   }
+  
 
 }

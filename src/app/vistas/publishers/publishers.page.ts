@@ -39,19 +39,15 @@ export class PublishersPage {
   public cargarPublishers() {
     this.apiFacade.recibirPublishers().subscribe(
       (data) => {
-        console.log('Datos recibidos desde la API:', data);  
-        if (data && data.publishers && data.publishers.length > 0) {
-          this.publishers = data.publishers;
-          this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
-          this.ordenarJuegos(this.ordenActual);
-          this.changeDetector.detectChanges();
-        } else {
-          this.ui.mostrarToast('No se encontraron datos', 'dark');
-        }
+        console.log('Datos recibidos desde la API:', data);
+        this.publishers = data.publishers;
+        this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
+        this.ordenarJuegos(this.ordenActual);
+        this.changeDetector.detectChanges();
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.ui.mostrarToast('Error al cargar los datos', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }
@@ -87,7 +83,7 @@ export class PublishersPage {
       },
       (error) => {
         console.error('Error al buscar:', error);
-        this.ui.mostrarToast('Error en la búsqueda', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }

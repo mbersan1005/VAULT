@@ -52,14 +52,10 @@ export class HomePage {
     this.apiFacade.recibirJuegos().subscribe(
       (data) => {
         console.log('Datos recibidos desde la API:', data);
-        if (data && data.juegos && data.juegos.length > 0) {
-          this.juegos = data.juegos; 
-          const juegosOrdenados = this.ordenarJuegos(this.ordenActual, [...this.juegos]); 
-          this.juegosFiltrados = juegosOrdenados.slice(0, this.juegosCargados);
-          this.changeDetector.detectChanges();
-        } else {
-          this.ui.mostrarToast('No se encontraron datos', 'dark');
-        }
+        this.juegos = data.juegos; 
+        const juegosOrdenados = this.ordenarJuegos(this.ordenActual, [...this.juegos]); 
+        this.juegosFiltrados = juegosOrdenados.slice(0, this.juegosCargados);
+        this.changeDetector.detectChanges();
       },
       (error) => {
         console.error('Error al obtener los datos:', error);

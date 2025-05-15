@@ -31,16 +31,11 @@ export class TiendasPage {
     this.apiFacade.recibirTiendas().subscribe(
       (data) => {
         console.log('Datos recibidos desde la API:', data);  
-        if (data && data.tiendas && data.tiendas.length > 0) {
-          this.tiendas = data.tiendas;
-          console.log('Tiendas cargadas:', this.tiendas);
-        } else {
-          this.ui.mostrarToast('No se encontraron datos', 'dark');
-        }
+        this.tiendas = data.tiendas;
       },
       (error) => {
         console.error('Error al obtener los datos:', error);
-        this.ui.mostrarToast('Error al cargar los datos', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }
@@ -50,7 +45,6 @@ export class TiendasPage {
   }
 
   getUrlCompleta(dominio: string): string {
-
     if (dominio && !dominio.startsWith('http')) {
       return 'https://' + dominio;
     }

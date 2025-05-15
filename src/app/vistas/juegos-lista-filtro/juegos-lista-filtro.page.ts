@@ -35,7 +35,6 @@ export class JuegosListaFiltroPage {
     private router: Router,
     private apiFacade: ApiFacade,
     private ui: UiService,
-    private datePipe: DatePipe,
     private changeDetector: ChangeDetectorRef,
     private alertController: AlertController,
     public sesion: SesionService,
@@ -54,19 +53,14 @@ export class JuegosListaFiltroPage {
     this.apiFacade.recibirJuegosPorCategoria(this.categoria, this.nombre).subscribe(
       (data) => {
         console.log('Datos recibidos:', data);
-        if (data && data.juegosFiltrados && data.juegosFiltrados.length > 0) {
           this.juegos = data.juegosFiltrados; 
           this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
           this.ordenarJuegos(this.ordenActual);
           this.changeDetector.detectChanges(); 
-        } else {
-          console.log('No se encontraron juegos');
-          this.ui.mostrarToast('No se encontraron juegos', 'dark'); 
-        }
       },
       (error) => {
         console.error('Error al obtener datos:', error);
-        this.ui.mostrarToast('Error al cargar los datos', 'dark'); 
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }
@@ -103,7 +97,7 @@ export class JuegosListaFiltroPage {
       },
       (error) => {
         console.error('Error al buscar:', error);
-        this.ui.mostrarToast('Error en la búsqueda', 'dark');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );
   }
@@ -219,11 +213,11 @@ export class JuegosListaFiltroPage {
                 this.juegos = this.juegos.filter(juego => juego.id !== juegoId);
                 this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
   
-                this.ui.mostrarToast('Juego eliminado correctamente', 'success');
+                this.ui.mostrarRespuestaExitosa(data, 'Operación exitosa');
               },
               (error) => {
                 console.error('Error al eliminar el juego:', error);
-                this.ui.mostrarToast('Error al eliminar el juego', 'dark');
+                this.ui.mostrarRespuestaError(error, 'Operación errónea');
               }
             );
           }
