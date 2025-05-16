@@ -12,6 +12,9 @@
     <ion-card-content>
       <form [formGroup]="editarJuegoForm" (ngSubmit)="editarJuego()">
         
+        <p class="info">Los campos que no han sido alterados no se verán modificados</p>
+        <p class="info">Por favor, rellene como mínimo un campo</p>
+        
         <!-- Nombre del Juego -->
         <ion-item>
           <ion-label position="stacked">Nombre del Juego</ion-label>
