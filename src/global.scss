@@ -38,13 +38,62 @@
 
 /* MIS CSS */
 
-ion-title{
+ion-header ion-toolbar:first-of-type {
+    margin-top: 15px;
+  }
+  
+ion-title {
+    position: relative;
     text-align: center;
-    font-weight: bold;
-    text-decoration: underline;
-    font-size:xx-large;
-}
-
+    font-size: clamp(18px, 5vw, 28px); 
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 10px 0;
+    overflow: hidden;
+    text-shadow: 1px 1px 2px var(--ion-color-medium);
+    color: var(--ion-text-color);
+    
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    word-break: break-word;
+    line-height: 1.2;
+  }
+  
+  ion-title::before,
+  ion-title::after {
+    content: '';
+    display: block;
+    position: absolute;
+    height: 3px;
+    width: 40%;
+    background-color: var(--ion-color-medium);
+    opacity: 0.8;
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: center;
+    animation: lineExpand 0.5s ease-out forwards;
+  }
+  
+  ion-title::before {
+    top: 0;
+    left: 30%;
+    animation-delay: 0.3s;
+  }
+  
+  ion-title::after {
+    bottom: 0;
+    left: 30%;
+    animation-delay: 0.3s;
+  }
+  
+  @keyframes lineExpand {
+    to {
+      transform: scaleX(1);
+    }
+  }
+  
 /* Tema Claro*/
 .modo-claro {
     --ion-background-color: #FFFEFA;
@@ -69,10 +118,6 @@ ion-title{
       box-shadow: none;
     }
   
-    ion-title{
-        text-shadow: 1px 1px 2px var(--ion-color-medium);
-    }
-
     #login {
       color: var(--ion-color-danger);
       background-color: var(--ion-color-warning);
@@ -172,10 +217,6 @@ ion-title{
     ion-card-title,
     ion-card-content {
         color: var(--ion-color-medium);
-    }
-
-    ion-title{
-        text-shadow: 1px 1px 2px var(--ion-color-secondary);
     }
 
     .additional-info p strong {

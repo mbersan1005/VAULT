@@ -1,7 +1,7 @@
-ion-title{
-    text-align: center;
+  ion-header ion-toolbar:first-of-type {
+    margin-bottom: 10px;
   }
-  
+
   ion-card {
       width: 100%;
       max-width: 600px; 
