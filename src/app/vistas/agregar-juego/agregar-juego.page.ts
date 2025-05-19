@@ -24,7 +24,6 @@ export class AgregarJuegoPage {
   publishers: { id: number, nombre: string }[] = [];
   imagenArchivo: File | null = null;
 
-
   constructor(
     private ui: UiService,
     private router: Router,

@@ -153,8 +153,8 @@ export class HomePage {
   public async crearAdministrador() {
     const modal = await this.modalController.create({
       component: CrearAdminModalComponent,
-      breakpoints: [0.42, 0.53],
-      initialBreakpoint: 0.42
+      breakpoints: [0.43, 0.53],
+      initialBreakpoint: 0.43
     });
   
     return await modal.present();
