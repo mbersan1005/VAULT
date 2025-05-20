@@ -90,7 +90,9 @@ export class EditarJuegoPage {
           this.editarJuegoForm.patchValue({
             descripcion: this.juego.descripcion,
             fecha_lanzamiento: this.juego.fecha_lanzamiento ? this.datePipe.transform(this.juego.fecha_lanzamiento, 'yyyy-MM-dd') : '',
-            sitio_web: this.juego.sitio_web,      
+            sitio_web: this.juego.sitio_web,
+            nota_metacritic: this.juego.nota_metacritic,   
+            nombre: this.juego.nombre,   
           });
   
         }
@@ -185,23 +187,4 @@ export class EditarJuegoPage {
     }
   }
   
-  getNombresDesarrolladoras(): string {
-    return this.juego?.desarrolladoras?.map((d: any) => d.nombre).join(', ') || '';
-  }
-  
-  getNombresPublishers(): string {
-    return this.juego?.publishers?.map((p: any) => p.nombre).join(', ') || '';
-  }  
-
-  getNombresGeneros(): string {
-    return this.juego?.generos?.map((g: any) => g.nombre).join(', ') || '';
-  }
-  
-  getNombresPlataformas(): string {
-    return this.juego?.plataformas_principales?.map((p: any) => p.nombre).join(', ') || '';
-  }  
-  
-  getNombresTiendas(): string {
-    return this.juego?.tiendas?.map((t: any) => t.nombre).join(', ') || '';
-  }
 }

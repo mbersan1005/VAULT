@@ -52,8 +52,11 @@
         </ion-item>
 
         <!-- Tiendas -->
-        <p *ngIf="juego?.tiendas && juego.tiendas.length > 0">
-          <strong>Tiendas actuales:</strong> {{ getNombresTiendas() }}
+        <p *ngIf="juego?.tiendas?.length">
+          <strong>Tiendas actuales: </strong>
+          <ion-chip *ngFor="let tienda of juego.tiendas" >
+            {{ tienda.nombre }}
+          </ion-chip>
         </p>
         <ion-item>
           <ion-label>Tiendas:</ion-label>
@@ -65,34 +68,43 @@
         </ion-item>
           
         <!-- Plataformas -->
-        <p *ngIf="juego?.plataformas_principales && juego.plataformas_principales.length > 0">
-          <strong>Plataformas actuales:</strong> {{ getNombresPlataformas() }}
+        <p *ngIf="juego?.plataformas_principales?.length">
+          <strong>Plataformas actuales: </strong>
+          <ion-chip *ngFor="let plataforma of juego.plataformas_principales">
+            {{ plataforma.nombre }}
+          </ion-chip>
         </p>
         <ion-item>
-          <ion-label>Plataformas:</ion-label>
+          <ion-label>Plataformas: </ion-label>
           <ion-select formControlName="plataformas" multiple="true" interface="popover">
             <ion-select-option *ngFor="let plataforma of plataformas" [value]="plataforma.id"> {{ plataforma.nombre }} </ion-select-option>
           </ion-select>
         </ion-item>
 
         <!-- Géneros -->
-        <p *ngIf="juego?.generos && juego.generos.length > 0">
-          <strong>Géneros actuales:</strong> {{ getNombresGeneros() }}
+        <p *ngIf="juego?.generos?.length">
+          <strong>Géneros actuales: </strong>
+          <ion-chip *ngFor="let genero of juego.generos">
+            {{ genero.nombre }}
+          </ion-chip>
         </p>
         <ion-item>
-          <ion-label>Géneros:</ion-label>
+          <ion-label>Géneros: </ion-label>
           <ion-select formControlName="generos" multiple="true" interface="popover">
             <ion-select-option *ngFor="let genero of generos" [value]="genero.id">{{ genero.nombre }}</ion-select-option>
           </ion-select>
         </ion-item>
 
         <!-- Desarrolladoras -->
-        <p *ngIf="juego?.desarrolladoras && juego.desarrolladoras.length > 0">
-          <strong>Desarrolladoras actuales:</strong> {{ getNombresDesarrolladoras() }}
+        <p *ngIf="juego?.desarrolladoras?.length">
+          <strong>Desarrolladoras actuales: </strong>
+          <ion-chip *ngFor="let d of juego.desarrolladoras">
+            {{ d.nombre }}
+          </ion-chip>
         </p>
         <ion-item>
-          <ion-label>Desarrolladoras:</ion-label>
-          <ion-select formControlName="desarrolladoras" multiple="true" interface="popover" >
+          <ion-label>Desarrolladoras: </ion-label>
+          <ion-select formControlName="desarrolladoras" multiple="true" interface="popover">
             <ion-select-option *ngFor="let desarrolladora of desarrolladoras" [value]="desarrolladora.id">
               {{ desarrolladora.nombre }}
             </ion-select-option>
@@ -100,8 +112,11 @@
         </ion-item>
 
         <!-- Publishers -->
-        <p *ngIf="juego?.publishers && juego.publishers.length > 0">
-          <strong>Publishers actuales:</strong> {{ getNombresPublishers() }}
+        <p *ngIf="juego?.publishers?.length">
+          <strong>Publishers actuales: </strong>
+          <ion-chip *ngFor="let p of juego.publishers">
+            {{ p.nombre }}
+          </ion-chip>
         </p>
         <ion-item>
           <ion-label>Publishers:</ion-label>
