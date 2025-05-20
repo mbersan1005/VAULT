@@ -28,6 +28,9 @@ export class EditarJuegoPage {
   publishers: { id: number, nombre: string }[] = [];
   imagenArchivo: File | null = null;
 
+  private valoresOriginales: any = {};
+
+
   constructor(
     private router: Router,
     private apiFacade: ApiFacade,
@@ -94,7 +97,9 @@ export class EditarJuegoPage {
             nota_metacritic: this.juego.nota_metacritic,   
             nombre: this.juego.nombre,   
           });
-  
+
+          this.valoresOriginales = { ...this.editarJuegoForm.getRawValue() };
+          
         }
       },
       (error) => {
@@ -121,30 +126,28 @@ export class EditarJuegoPage {
   
       const juegoData: any = {
         id: this.juego.id,
-        creado_por_admin: 1,
-        nombre: formValues.nombre?.trim() || this.juego.nombre,
-        descripcion: formValues.descripcion?.trim() || this.juego.descripcion,
-        nota_metacritic: formValues.nota_metacritic !== null && formValues.nota_metacritic !== ''
-          ? formValues.nota_metacritic
-          : this.juego.nota_metacritic,
-        fecha_lanzamiento: formValues.fecha_lanzamiento || this.juego.fecha_lanzamiento,
-        sitio_web: formValues.sitio_web?.trim() || this.juego.sitio_web,
-        publishers: formValues.publishers?.length
-          ? this.ui.extraerIdNombre(formValues.publishers, this.publishers)
-          : this.juego.publishers,
+        nombre: formValues.nombre,
+        nota_metacritic: formValues.nota_metacritic,
+        fecha_lanzamiento: formValues.fecha_lanzamiento,
+        sitio_web: formValues.sitio_web,
+        descripcion: formValues.descripcion,
+        plataformas: formValues.plataformas?.length
+          ? this.ui.extraerIdNombre(formValues.plataformas, this.plataformas)
+          : this.juego.plataformas_principales,
         desarrolladoras: formValues.desarrolladoras?.length
           ? this.ui.extraerIdNombre(formValues.desarrolladoras, this.desarrolladoras)
           : this.juego.desarrolladoras,
+        publishers: formValues.publishers?.length
+          ? this.ui.extraerIdNombre(formValues.publishers, this.publishers)
+          : this.juego.publishers,
         tiendas: formValues.tiendas?.length
           ? this.ui.extraerIdNombre(formValues.tiendas, this.tiendas)
           : this.juego.tiendas,
-        plataformas_principales: formValues.plataformas?.length
-          ? this.ui.extraerIdNombre(formValues.plataformas, this.plataformas)
-          : this.juego.plataformas_principales,
         generos: formValues.generos?.length
           ? this.ui.extraerIdNombre(formValues.generos, this.generos)
           : this.juego.generos,
       };
+      
   
       const formData = new FormData();
   
@@ -187,4 +190,33 @@ export class EditarJuegoPage {
     }
   }
   
+  hayCambios(): boolean {
+    const valoresActuales = this.editarJuegoForm.getRawValue();
+  
+    return Object.keys(valoresActuales).some(key => {
+      const original = this.normalizarValor(this.valoresOriginales[key]);
+      const actual = this.normalizarValor(valoresActuales[key]);
+  
+      if (Array.isArray(original) || Array.isArray(actual)) {
+        return JSON.stringify(original || []) !== JSON.stringify(actual || []);
+      }
+  
+      return original !== actual;
+    });
+  }
+  
+  private normalizarValor(valor: any): any {
+    if (valor === null || valor === undefined) return '';
+    
+    if (typeof valor === 'string') return valor.trim();
+    
+    if (typeof valor === 'number') return valor.toString(); // convierte números a string para comparar
+    
+    if (valor instanceof Date) return this.datePipe.transform(valor, 'yyyy-MM-dd');
+  
+    return valor;
+  }
+  
+  
+
 }

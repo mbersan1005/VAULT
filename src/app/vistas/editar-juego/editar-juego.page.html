@@ -13,7 +13,7 @@
       <form [formGroup]="editarJuegoForm" (ngSubmit)="editarJuego()">
         
         <p class="info">Los campos que no han sido alterados no se verán modificados</p>
-        <p class="info">Por favor, rellene como mínimo un campo</p>
+        <p class="info">Por favor, edite como mínimo un campo</p>
         
         <!-- Nombre del Juego -->
         <ion-item>
@@ -128,7 +128,8 @@
         </ion-item>
 
         <!-- Botón de guardar -->
-        <ion-button expand="full" type="submit" [disabled]="!editarJuegoForm.valid">Editar Juego</ion-button>
+        <ion-button expand="full" type="submit" [disabled]="!editarJuegoForm.valid || !hayCambios()">Editar Juego</ion-button>
+      
       </form>
     </ion-card-content>
   </ion-card>
