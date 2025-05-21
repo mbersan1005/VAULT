@@ -217,6 +217,8 @@ export class EditarJuegoPage {
     return valor;
   }
   
-  
+  puedeEnviar(): boolean {
+  return this.editarJuegoForm.valid && (this.hayCambios() || this.imagenArchivo !== null);
+  }
 
 }

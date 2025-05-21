@@ -128,7 +128,7 @@
         </ion-item>
 
         <!-- Botón de guardar -->
-        <ion-button expand="full" type="submit" [disabled]="!editarJuegoForm.valid || !hayCambios()">Editar Juego</ion-button>
+        <ion-button expand="full" type="submit" [disabled]="!editarJuegoForm.valid || !puedeEnviar()">Editar Juego</ion-button>
       
       </form>
     </ion-card-content>
