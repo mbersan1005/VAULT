@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
@@ -39,6 +39,7 @@ export class EditarJuegoPage {
     private datePipe: DatePipe,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -220,5 +221,17 @@ export class EditarJuegoPage {
   puedeEnviar(): boolean {
   return this.editarJuegoForm.valid && (this.hayCambios() || this.imagenArchivo !== null);
   }
+
+  eliminarImagen() {
+  this.imagenArchivo = null;
+
+  const inputFile = document.getElementById('input-imagen') as HTMLInputElement;
+  if (inputFile) {
+    inputFile.value = '';
+  }
+
+  this.cdr.detectChanges();
+}
+
 
 }

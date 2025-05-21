@@ -42,7 +42,11 @@
         <!-- Selección de Imagen -->
         <ion-item>
           <ion-label position="stacked">Imagen</ion-label>
-          <input type="file" (change)="onImageSelected($event)" accept="image/*" />
+          <input id="input-imagen" type="file" (change)="onImageSelected($event)" accept="image/*" />
+        
+          <ion-button fill="clear" *ngIf="imagenArchivo" (click)="eliminarImagen()">
+          Quitar imagen seleccionada
+          </ion-button>
         </ion-item>
 
         <!-- Sitio Web -->
