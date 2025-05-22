@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonicModule, } from '@ionic/angular';
@@ -28,7 +28,8 @@ export class AgregarJuegoPage {
     private ui: UiService,
     private router: Router,
     private apiFacade: ApiFacade,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -121,5 +122,15 @@ export class AgregarJuegoPage {
   
   }
   
+  eliminarImagen() {
+  this.imagenArchivo = null;
+
+  const inputFile = document.getElementById('input-imagen') as HTMLInputElement;
+  if (inputFile) {
+    inputFile.value = '';
+  }
+
+  this.cdr.detectChanges();
+}
 
 }
