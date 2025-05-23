@@ -8,22 +8,29 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+
+  <!-- Formulario reactivo ligado al FormGroup "adminForm" -->
   <form [formGroup]="adminForm" (ngSubmit)="crearCuentaAdmin()">
+
+    <!-- Campo para el nombre del administrador -->
     <ion-item>
       <ion-label position="stacked">Nombre</ion-label>
       <ion-input formControlName="nombre" placeholder="Nombre con mínimo 3 carácteres"></ion-input>
     </ion-item>
 
+    <!-- Campo para ingresar la contraseña -->
     <ion-item>
       <ion-label position="stacked">Contraseña</ion-label>
       <ion-input type="password" formControlName="password" placeholder="Contraseña con mínimo 8 carácteres"></ion-input>
     </ion-item>
 
+    <!-- Campo para repetir la contraseña -->
     <ion-item>
       <ion-label position="stacked">Repetir Contraseña</ion-label>
       <ion-input type="password" formControlName="repetirPassword" placeholder="Repita la contraseña anterior"></ion-input>
     </ion-item>
 
+    <!-- Botón para enviar el formulario; se desactiva si es inválido -->
     <ion-button expand="block" type="submit" [disabled]="adminForm.invalid">Crear cuenta</ion-button>
   </form>
 </ion-content>
