@@ -13,24 +13,29 @@ import { UiService } from 'src/app/services/ui/ui.service';
 })
 export class PurgarDatosComponent {
   
+  // Lista de juegos administrados (insertados o modificados)
   juegos: any[] = [];
 
+  /*CONSTRUCTOR*/
   constructor(
-    private modalController: ModalController,
-    private ui: UiService,
-    private apiFacade: ApiFacade,
-    private alertController: AlertController,
+    private modalController: ModalController, //Para cerrar el modal
+    private ui: UiService, //Servicio para toasts y alertas
+    private apiFacade: ApiFacade, //Acceso al backend
+    private alertController: AlertController, //Para mostrar alertas de confirmación
   
   ) {}
 
+  //Método que se ejecuta al cargar el componente
   ngOnInit() {
     this.cargarJuegosAdmin();
   }
 
+  //Método para cerrar el modal, opcionalmente refrescando datos
   cerrarModal(refrescar: boolean = false) {
     this.modalController.dismiss({ refrescar });
   }
   
+  //Método que muestra un cuadro de diálogo para confirmar la acción de purgado
   async confirmarAccion() {
     const alert = await this.alertController.create({
       header: 'Confirmar reseteo de datos',
@@ -38,11 +43,11 @@ export class PurgarDatosComponent {
       cssClass: 'custom-alert',
       buttons: [
         {
-          text: 'No',
+          text: 'No', //Cancela la acción
           role: 'cancel'
         },
         {
-          text: 'Sí',
+          text: 'Sí', //Ejecuta la acción
           handler: () => {
             this.ui.mostrarLoading();
             this.apiFacade.purgarDatos().subscribe(
@@ -64,6 +69,7 @@ export class PurgarDatosComponent {
     await alert.present();
   }
 
+  //Método que carga los juegos que han sido modificados o insertados por administradores
   public cargarJuegosAdmin() {
     this.apiFacade.recibirJuegosAdmin().subscribe(
       (data) => {

@@ -64,7 +64,7 @@ export class CrearAdminModalComponent {
         (response) => {
           console.log('Administrador creado con éxito:', response);
           this.ui.mostrarRespuestaExitosa(response, 'Operación exitosa');
-          this.modalController.dismiss(); //Se cierra el modal en caso de éxito
+          this.modalController.dismiss();
         },
         (error) => {
           console.error('Error al crear administrador:', error);
