@@ -24,15 +24,15 @@ export class HomePage {
 
   juegos: any[] = [];
   juegosFiltrados: any[] = [];
-  juegosBuscados: any[] = [];  
-  textoBusqueda: string = ''; 
-  juegosCargados: number = 9; 
+  juegosBuscados: any[] = [];
+  textoBusqueda: string = '';
+  juegosCargados: number = 9;
   juegosPorCargar: number = 9;
-  ordenActual: string ='nombre_asc';
+  ordenActual: string = 'nombre_asc';
   isLoading: boolean = false;
 
   @ViewChild(IonInfiniteScroll) infiniteScroll?: IonInfiniteScroll;
-  
+
   constructor(
     private router: Router,
     private apiFacade: ApiFacade,
@@ -42,9 +42,9 @@ export class HomePage {
     public sesion: SesionService,
     private alertController: AlertController,
     private changeDetector: ChangeDetectorRef,
-  ) {}
+  ) { }
 
-  ngOnInit(){
+  ngOnInit() {
     this.cargarJuegos();
   }
 
@@ -52,8 +52,8 @@ export class HomePage {
     this.apiFacade.recibirJuegos().subscribe(
       (data) => {
         console.log('Datos recibidos desde la API:', data);
-        this.juegos = data.juegos; 
-        const juegosOrdenados = this.ordenarJuegos(this.ordenActual, [...this.juegos]); 
+        this.juegos = data.juegos;
+        const juegosOrdenados = this.ordenarJuegos(this.ordenActual, [...this.juegos]);
         this.juegosFiltrados = juegosOrdenados.slice(0, this.juegosCargados);
         this.changeDetector.detectChanges();
       },
@@ -65,7 +65,7 @@ export class HomePage {
   }
 
   getPlataformas(plataformasJson: string): string {
-    const plataformas = JSON.parse(plataformasJson); 
+    const plataformas = JSON.parse(plataformasJson);
     return plataformas.map((plataforma: { nombre: any; }) => plataforma.nombre).join(', ');
   }
 
@@ -75,30 +75,30 @@ export class HomePage {
   }
 
   public realizarBusqueda(event: any) {
-    this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
-    
+    this.textoBusqueda = event.target.value?.toLowerCase() || '';
+
     if (this.textoBusqueda.trim() === '') {
       this.juegosBuscados = [];
       this.juegosCargados = 9;
-  
+
       this.juegosFiltrados = this.ordenarJuegos(this.ordenActual, this.juegos).slice(0, this.juegosCargados);
-  
+
       if (this.infiniteScroll) {
         this.infiniteScroll.disabled = false;
       }
-  
+
       return;
     }
-  
+
     this.apiFacade.realizarBusqueda(this.textoBusqueda).subscribe(
       (response) => {
         const resultados = response.juegos || [];
-  
+
         this.juegosBuscados = resultados;
         this.juegosCargados = 9;
-  
+
         this.juegosFiltrados = this.ordenarJuegos(this.ordenActual, resultados).slice(0, this.juegosCargados);
-  
+
         if (this.infiniteScroll) {
           this.infiniteScroll.disabled = false;
         }
@@ -109,44 +109,44 @@ export class HomePage {
       }
     );
   }
-  
+
   public cargarMasJuegos(event: any) {
     setTimeout(() => {
       this.juegosCargados += this.juegosPorCargar;
-  
+
       let fuenteDatos: any[] = [];
-  
+
       if (this.textoBusqueda.trim() !== '') {
         fuenteDatos = [...this.juegosBuscados];
       } else {
         fuenteDatos = [...this.juegos];
       }
-  
+
       fuenteDatos = this.ordenarJuegos(this.ordenActual, fuenteDatos);
-      
+
       this.juegosFiltrados = fuenteDatos.slice(0, this.juegosCargados);
-  
+
       event.target.complete();
-  
+
       if (this.juegosCargados >= fuenteDatos.length) {
         event.target.disabled = true;
       }
     }, 500);
   }
-  
+
   formatearFecha(fecha: string): string {
     return this.ui.formatearFecha(fecha);
   }
 
-  public verJuego(juegoId: number){
+  public verJuego(juegoId: number) {
     this.router.navigate(['/info-juego', juegoId]);
   }
 
-  public agregarJuego(){
+  public agregarJuego() {
     this.router.navigate(['/agregar-juego']);
   }
 
-  public editarJuego(juegoId: number){
+  public editarJuego(juegoId: number) {
     this.router.navigate(['/editar-juego', juegoId]);
   }
 
@@ -156,10 +156,10 @@ export class HomePage {
       breakpoints: [0.43, 0.53],
       initialBreakpoint: 0.43
     });
-  
+
     return await modal.present();
   }
-  
+
   public async eliminarJuego(juegoId: number) {
     const alert = await this.alertController.create({
       header: 'Confirmar eliminación',
@@ -175,11 +175,18 @@ export class HomePage {
           handler: () => {
             this.apiFacade.eliminarJuego(juegoId).subscribe(
               (data) => {
-                console.log('Juego eliminado:', data);
-                
+
                 this.juegos = this.juegos.filter(juego => juego.id !== juegoId);
-                this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
-  
+
+                if (this.textoBusqueda.trim() !== '') {
+                  this.juegosBuscados = this.juegosBuscados.filter(juego => juego.id !== juegoId);
+                  const ordenados = this.ordenarJuegos(this.ordenActual, [...this.juegosBuscados]);
+                  this.juegosFiltrados = ordenados.slice(0, this.juegosCargados);
+                } else {
+                  const ordenados = this.ordenarJuegos(this.ordenActual, [...this.juegos]);
+                  this.juegosFiltrados = ordenados.slice(0, this.juegosCargados);
+                }
+
                 this.ui.mostrarRespuestaExitosa(data, 'Operación exitosa');
               },
               (error) => {
@@ -192,11 +199,11 @@ export class HomePage {
         }
       ]
     });
-  
+
     await alert.present();
   }
-  
-  public async actualizarDatosAPI(){
+
+  public async actualizarDatosAPI() {
     const alert = await this.alertController.create({
       header: 'Confirmar actualización de Datos',
       message: '¿Estás seguro de que quieres actualizar los datos? Puede conllevar unos minutos',
@@ -216,7 +223,7 @@ export class HomePage {
                 console.log('Datos actualizados', data);
                 this.ui.ocultarLoading();
                 this.ui.mostrarRespuestaExitosa(data, 'Operación exitosa');
-                
+
                 this.cargarJuegos();
               },
               (error) => {
@@ -229,17 +236,17 @@ export class HomePage {
         }
       ]
     });
-  
+
     await alert.present();
   }
-  
+
   public async purgarDatosAPI() {
     const modal = await this.modalController.create({
       component: PurgarDatosComponent,
       breakpoints: [0.5, 1],
       initialBreakpoint: 0.5
     });
-    
+
     modal.onDidDismiss().then((resultado) => {
       if (resultado.data?.refrescar) {
         this.cargarJuegos();
@@ -251,13 +258,13 @@ export class HomePage {
 
   public ordenarJuegos(tipoOrden: string, lista: any[] = []) {
     this.ordenActual = tipoOrden;
-  
+
     if (lista.length === 0) {
       lista = this.textoBusqueda.trim() !== ''
         ? [...this.juegosBuscados]
         : [...this.juegos];
     }
-  
+
     switch (tipoOrden) {
       case 'nombre_asc':
         lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -278,10 +285,10 @@ export class HomePage {
         lista.sort((a, b) => b.nota_metacritic - a.nota_metacritic);
         break;
     }
-  
+
     return lista;
   }
-  
+
   public obtenerTextoOrdenActual(): string {
     switch (this.ordenActual) {
       case 'nombre_asc': return 'Nombre (A-Z)';
@@ -296,18 +303,18 @@ export class HomePage {
 
   public aplicarOrden(nuevoOrden: string) {
     this.ordenActual = nuevoOrden;
-  
+
     const fuenteDatos = this.textoBusqueda.trim() !== ''
       ? [...this.juegosBuscados]
       : [...this.juegos];
-  
+
     const ordenados = this.ordenarJuegos(nuevoOrden, fuenteDatos);
     this.juegosFiltrados = ordenados.slice(0, this.juegosCargados);
 
     if (this.infiniteScroll) {
       this.infiniteScroll.disabled = false;
     }
-    
+
   }
-  
+
 }

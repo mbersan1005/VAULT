@@ -39,9 +39,9 @@ export class PublishersPage {
   public cargarPublishers() {
     this.apiFacade.recibirPublishers().subscribe(
       (data) => {
-        console.log('Datos recibidos desde la API:', data);
         this.publishers = data.publishers;
-        this.publishersFiltrados = this.publishers.slice(0, this.publishersCargados);
+        const listaOrdenada = this.ordenarJuegos(this.ordenActual, this.publishers);
+        this.publishersFiltrados = listaOrdenada.slice(0, this.publishersCargados);
         this.ordenarJuegos(this.ordenActual);
         this.changeDetector.detectChanges();
       },

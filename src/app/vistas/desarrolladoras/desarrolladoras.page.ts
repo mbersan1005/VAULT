@@ -40,9 +40,9 @@ export class DesarrolladorasPage {
   public cargarDesarrolladoras() {
     this.apiFacade.recibirDesarrolladoras().subscribe(
       (data) => {
-        console.log('Datos recibidos desde la API:', data);  
           this.desarrolladoras = data.desarrolladoras;
-          this.desarrolladorasFiltradas = this.desarrolladoras.slice(0, this.desarrolladorasCargadas);
+          const listaOrdenada = this.ordenarJuegos(this.ordenActual, this.desarrolladoras);
+          this.desarrolladorasFiltradas = listaOrdenada.slice(0, this.desarrolladorasCargadas);
           this.ordenarJuegos(this.ordenActual);
           this.changeDetector.detectChanges();
       },
