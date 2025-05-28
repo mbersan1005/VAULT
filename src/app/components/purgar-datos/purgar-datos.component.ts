@@ -12,8 +12,8 @@ import { UiService } from 'src/app/services/ui/ui.service';
   imports: [IonicModule, CommonModule, ReactiveFormsModule]
 })
 export class PurgarDatosComponent {
-  
-  // Lista de juegos administrados (insertados o modificados)
+
+  //Lista de juegos administrados (insertados o modificados)
   juegos: any[] = [];
 
   /*CONSTRUCTOR*/
@@ -22,8 +22,8 @@ export class PurgarDatosComponent {
     private ui: UiService, //Servicio para toasts y alertas
     private apiFacade: ApiFacade, //Acceso al backend
     private alertController: AlertController, //Para mostrar alertas de confirmación
-  
-  ) {}
+
+  ) { }
 
   //Método que se ejecuta al cargar el componente
   ngOnInit() {
@@ -34,7 +34,7 @@ export class PurgarDatosComponent {
   cerrarModal(refrescar: boolean = false) {
     this.modalController.dismiss({ refrescar });
   }
-  
+
   //Método que muestra un cuadro de diálogo para confirmar la acción de purgado
   async confirmarAccion() {
     const alert = await this.alertController.create({
@@ -52,15 +52,14 @@ export class PurgarDatosComponent {
             this.ui.mostrarLoading();
             this.apiFacade.purgarDatos().subscribe(
               (response) => {
-                console.log('Datos reseteados con éxito:', response);
                 this.ui.ocultarLoading();
                 this.ui.mostrarRespuestaExitosa(response, 'Operación exitosa');
                 this.cerrarModal(true);
               },
               (error) => {
-                console.error('Error al resetear los datos:', error);
                 this.ui.ocultarLoading();
-                this.ui.mostrarRespuestaError(error, 'Operación errónea');              }
+                this.ui.mostrarRespuestaError(error, 'Operación errónea');
+              }
             );
           }
         }
@@ -73,13 +72,11 @@ export class PurgarDatosComponent {
   public cargarJuegosAdmin() {
     this.apiFacade.recibirJuegosAdmin().subscribe(
       (data) => {
-        console.log('Juegos de admins recibidos desde la API:', data);
         if (data && data.juegos && data.juegos.length > 0) {
-          this.juegos = data.juegos;  
+          this.juegos = data.juegos;
         }
       },
       (error) => {
-        console.error('Error al obtener juegos de admins', error);
         this.ui.mostrarRespuestaError(error, 'Operación errónea');
       }
     );

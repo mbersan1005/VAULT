@@ -17,141 +17,161 @@ import { UiService } from 'src/app/services/ui/ui.service';
 })
 export class JuegosListaFiltroPage {
 
+  //Array que almacena todos los juegos recibidos de la API
   juegos: any[] = [];
+  
+  //Array que contiene los juegos a mostrar según la paginación
   juegosFiltrados: any[] = [];
+  
+  //Array que almacena los resultados de búsqueda de juegos
   juegosBuscados: any[] = [];  
+  
+  //Texto ingresado en el campo de búsqueda
   textoBusqueda: string = '';
+  
+  //Número inicial de juegos cargados en la vista
   juegosCargados: number = 9;
+  
+  //Número de juegos que se cargarán en cada acción del scroll infinito
   juegosPorCargar: number = 9;
+  
+  //Categoría de juegos, obtenida de los parámetros de la URL
   categoria: string = '';
+  
+  //Nombre relacionado a la categoría, también obtenido de los parámetros de la URL
   nombre: string = '';
-  ordenActual: string ='nombre_asc';
+  
+  //Orden actual aplicado a la lista de juegos
+  ordenActual: string = 'nombre_asc';
 
+  //Referencia al componente IonInfiniteScroll para controlarlo dinámicamente
   @ViewChild(IonInfiniteScroll) infiniteScroll?: IonInfiniteScroll;
 
-
+  /*CONSTRUCTOR*/
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private apiFacade: ApiFacade,
-    private ui: UiService,
-    private changeDetector: ChangeDetectorRef,
-    private alertController: AlertController,
-    public sesion: SesionService,
-    
+    private route: ActivatedRoute, //Permite acceder a los parámetros de la ruta
+    private router: Router, //Servicio para la navegación entre páginas
+    private apiFacade: ApiFacade, //Encapsula las llamadas a la API
+    private ui: UiService, //Servicio para mostrar mensajes y notificaciones
+    private changeDetector: ChangeDetectorRef, //Permite actualizar la vista manualmente
+    private alertController: AlertController, //Controla la presentación de alertas de confirmación
+    public sesion: SesionService, //Servicio relacionado con la sesión del usuario
   ) { }
 
+  //Método que se suscribe a los parámetros de la ruta y carga los juegos filtrados por categoría
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.categoria = params.get('categoria')!;
-      this.nombre = params.get('nombre')!;
-      this.cargarJuegosPorCategoria();
+      this.categoria = params.get('categoria')!; //Asigna la categoría recibida por la URL
+      this.nombre = params.get('nombre')!; //Asigna el nombre recibido por la URL
+      this.cargarJuegosPorCategoria(); //Llama al método para cargar los juegos filtrados
     });
   }
 
+  //Método que recupera los juegos de una categoría específica desde la API
   public cargarJuegosPorCategoria() {
     this.apiFacade.recibirJuegosPorCategoria(this.categoria, this.nombre).subscribe(
       (data) => {
-        console.log('Datos recibidos:', data);
-          this.juegos = data.juegosFiltrados; 
-          this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
-          this.ordenarJuegos(this.ordenActual);
-          this.changeDetector.detectChanges(); 
+        this.juegos = data.juegosFiltrados; //Asigna los juegos obtenidos a la variable "juegos"
+        this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados); //Configura la paginación inicial
+        this.ordenarJuegos(this.ordenActual); //Aplica el orden actual a la lista de juegos
+        this.changeDetector.detectChanges(); //Fuerza la actualización de la vista
       },
       (error) => {
-        console.error('Error al obtener datos:', error);
-        this.ui.mostrarRespuestaError(error, 'Operación errónea');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea'); //Notifica el error al usuario
       }
     );
   }
   
-
+  //Método que ejecuta una búsqueda de juegos según el texto ingresado por el usuario
   public realizarBusqueda(event: any) {
-    this.textoBusqueda = event.target.value?.toLowerCase() || ''; 
-    
+    this.textoBusqueda = event.target.value?.toLowerCase() || ''; //Convierte el texto a minúsculas
+
     if (this.textoBusqueda.trim() === '') {
+      //Si no hay texto de búsqueda, reinicia la lista y la paginación de los juegos
       this.juegosBuscados = [];
       this.juegosCargados = 9;
-  
       this.juegosFiltrados = this.ordenarJuegos(this.ordenActual, this.juegos).slice(0, this.juegosCargados);
-  
       if (this.infiniteScroll) {
-        this.infiniteScroll.disabled = false;
+        this.infiniteScroll.disabled = false; //Habilita el scroll infinito
       }
-  
       return;
     }
   
+    //Realiza la búsqueda a través de la API
     this.apiFacade.realizarBusqueda(this.textoBusqueda).subscribe(
       (response) => {
         const resultados = response.juegos || [];
-  
-        this.juegosBuscados = resultados;
-        this.juegosCargados = 9;
-  
+        this.juegosBuscados = resultados; //Asigna los resultados obtenidos de la búsqueda
+        this.juegosCargados = 9; //Reinicia la cantidad de juegos mostrados
         this.juegosFiltrados = this.ordenarJuegos(this.ordenActual, resultados).slice(0, this.juegosCargados);
-  
         if (this.infiniteScroll) {
-          this.infiniteScroll.disabled = false;
+          this.infiniteScroll.disabled = false; //Habilita nuevamente el scroll infinito
         }
       },
       (error) => {
-        console.error('Error al buscar:', error);
-        this.ui.mostrarRespuestaError(error, 'Operación errónea');
+        this.ui.mostrarRespuestaError(error, 'Operación errónea'); //Notifica el error al usuario
       }
     );
   }
   
+  //Método que incrementa la cantidad de juegos mostrados al activar el scroll infinito
   public cargarMasJuegos(event: any) {
     setTimeout(() => {
-      this.juegosCargados += this.juegosPorCargar;
-  
+      this.juegosCargados += this.juegosPorCargar; //Incrementa la cantidad de juegos cargados
+
       let fuenteDatos: any[] = [];
-  
+      //Selecciona la fuente de datos correcta: resultados de búsqueda o lista completa
       if (this.textoBusqueda.trim() !== '') {
         fuenteDatos = [...this.juegosBuscados];
       } else {
         fuenteDatos = [...this.juegos];
       }
   
-      fuenteDatos = this.ordenarJuegos(this.ordenActual, fuenteDatos);
-      
-      this.juegosFiltrados = fuenteDatos.slice(0, this.juegosCargados);
+      fuenteDatos = this.ordenarJuegos(this.ordenActual, fuenteDatos); //Aplica el orden a la fuente de datos
+      this.juegosFiltrados = fuenteDatos.slice(0, this.juegosCargados); //Actualiza la lista de juegos mostrados
   
-      event.target.complete();
+      event.target.complete(); //Informa que la carga adicional ha finalizado
   
+      //Si se han cargado todos los juegos disponibles, deshabilita el scroll infinito
       if (this.juegosCargados >= fuenteDatos.length) {
         event.target.disabled = true;
       }
     }, 500);
   }
 
+  //Método que navega a la página de detalle del juego seleccionado
   public verJuego(juegoId: number) {
     this.router.navigate(['/info-juego', juegoId]);
   }
 
-  public editarJuego(juegoId: number){
+  //Método que navega a la página de edición del juego seleccionado
+  public editarJuego(juegoId: number) {
     this.router.navigate(['/editar-juego', juegoId]);
   }
 
+  //Método que convierte un JSON de plataformas en una cadena de nombres separados por comas
   getPlataformas(plataformasJson: string): string {
-    const plataformas = JSON.parse(plataformasJson); 
+    const plataformas = JSON.parse(plataformasJson);
     return plataformas.map((plataforma: { nombre: any; }) => plataforma.nombre).join(', ');
   }
 
+  //Método que convierte un JSON de géneros en una cadena de nombres separados por comas
   getGeneros(generosJson: string): string {
     const generos = JSON.parse(generosJson);
     return generos.map((genero: { nombre: any; }) => genero.nombre).join(', ');
   }
 
+  //Método que formatea una fecha utilizando el servicio UiService
   formatearFecha(fecha: string): string {
     return this.ui.formatearFecha(fecha);
   }
 
+  //Método que ordena la lista de juegos según el tipo de orden especificado
   public ordenarJuegos(tipoOrden: string, lista: any[] = []) {
     this.ordenActual = tipoOrden;
   
     if (lista.length === 0) {
+      //Si no se provee una lista, utiliza los datos de búsqueda o la lista completa de juegos
       lista = this.textoBusqueda.trim() !== ''
         ? [...this.juegosBuscados]
         : [...this.juegos];
@@ -181,6 +201,7 @@ export class JuegosListaFiltroPage {
     return lista;
   }
   
+  //Método que retorna una descripción legible del orden actual aplicado a la lista de juegos
   public obtenerTextoOrdenActual(): string {
     switch (this.ordenActual) {
       case 'nombre_asc': return 'Nombre (A-Z)';
@@ -193,6 +214,7 @@ export class JuegosListaFiltroPage {
     }
   }
 
+  //Método que solicita confirmación para eliminar un juego y lo elimina utilizando la API
   public async eliminarJuego(juegoId: number) {
     const alert = await this.alertController.create({
       header: 'Confirmar eliminación',
@@ -208,15 +230,12 @@ export class JuegosListaFiltroPage {
           handler: () => {
             this.apiFacade.eliminarJuego(juegoId).subscribe(
               (data) => {
-                console.log('Juego eliminado:', data);
-                
+                //Remueve el juego eliminado de la lista global
                 this.juegos = this.juegos.filter(juego => juego.id !== juegoId);
                 this.juegosFiltrados = this.juegos.slice(0, this.juegosCargados);
-  
                 this.ui.mostrarRespuestaExitosa(data, 'Operación exitosa');
               },
               (error) => {
-                console.error('Error al eliminar el juego:', error);
                 this.ui.mostrarRespuestaError(error, 'Operación errónea');
               }
             );
@@ -228,6 +247,7 @@ export class JuegosListaFiltroPage {
     await alert.present();
   }
 
+  //Método que aplica un nuevo orden a la lista de juegos y actualiza la vista
   public aplicarOrden(nuevoOrden: string) {
     this.ordenActual = nuevoOrden;
   
@@ -237,10 +257,9 @@ export class JuegosListaFiltroPage {
   
     const ordenados = this.ordenarJuegos(nuevoOrden, fuenteDatos);
     this.juegosFiltrados = ordenados.slice(0, this.juegosCargados);
-
+  
     if (this.infiniteScroll) {
-      this.infiniteScroll.disabled = false;
+      this.infiniteScroll.disabled = false; //Habilita el scroll infinito tras cambiar el orden
     }
-    
   }
 }

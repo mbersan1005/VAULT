@@ -4,6 +4,11 @@ import { SesionService } from '../services/sesion/sesion.service';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 
+/*
+ * Guard que protege rutas restringidas a administradores.
+ * Solo permite el acceso si hay una sesión válida activa.
+ * Si no hay sesión, muestra un mensaje y redirige al usuario a la página de inicio.
+ */
 export const autentificadorGuard: CanActivateFn = async (route, state) => {
   const sesionService = inject(SesionService);
   const router = inject(Router);

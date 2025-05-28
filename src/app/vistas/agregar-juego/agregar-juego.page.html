@@ -12,6 +12,7 @@
     <ion-card-content>
       <form [formGroup]="nuevoJuegoForm" (ngSubmit)="guardarJuego()">
         
+        <!-- Indicaciones -->
         <p>Los campos obligatorios están marcados con un <strong>*</strong></p>
         <p>Por favor, relleno todos los campos obligatorios</p>
 
@@ -43,7 +44,6 @@
         <ion-item>
           <ion-label position="stacked">Imagen*</ion-label>
           <input id="input-imagen" type="file" (change)="onImageSelected($event)" accept="image/jpeg, image/jpg, image/png" />
-
           <ion-button fill="clear" *ngIf="imagenArchivo" (click)="eliminarImagen()">
           Quitar imagen seleccionada
           </ion-button>

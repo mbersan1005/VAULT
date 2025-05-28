@@ -19,7 +19,7 @@ export class CrearAdminModalComponent {
 
   //Formulario reactivo para capturar los datos del nuevo administrador
   adminForm!: FormGroup;
-  
+
   /*CONSTRUCTOR*/
   constructor(
     private modalController: ModalController, //Controla el cierre del modal
@@ -40,34 +40,32 @@ export class CrearAdminModalComponent {
     this.modalController.dismiss();
   }
 
-  /*Método que se ejecuta al enviar el formulario*/
+  //Método que se ejecuta al enviar el formulario
   crearCuentaAdmin() {
     if (this.adminForm.valid) {
 
-      const { nombre, password, repetirPassword } = this.adminForm.value; 
-      
+      const { nombre, password, repetirPassword } = this.adminForm.value;
+
       /*Se comprueba de que las contraseñas coincidan, de no ser así se
       informará al usuario */
-      if (password.trim() !== repetirPassword.trim()) {  
+      if (password.trim() !== repetirPassword.trim()) {
         this.ui.mostrarToast('Las contraseñas no coinciden', 'dark');
         return;
       }
-      
+
       //Datos que serán enviados al backend
       const adminData = {
         nombre: nombre.trim(),
         password: password.trim()
       };
-      
+
       //Llamada al servicio encargado de crear el nuevo administrador
       this.apiFacade.crearAdministrador(adminData).subscribe(
         (response) => {
-          console.log('Administrador creado con éxito:', response);
           this.ui.mostrarRespuestaExitosa(response, 'Operación exitosa');
           this.modalController.dismiss();
         },
         (error) => {
-          console.error('Error al crear administrador:', error);
           this.ui.mostrarRespuestaError(error, 'Operación errónea');
         }
       );
@@ -76,5 +74,5 @@ export class CrearAdminModalComponent {
       this.ui.mostrarToast('Por favor, complete todos los campos correctamente', 'dark');
     }
   }
-  
+
 }
