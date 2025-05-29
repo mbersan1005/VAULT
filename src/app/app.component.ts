@@ -15,7 +15,7 @@ export class AppComponent {
 
   //Indica si el modo oscuro está activado
   paletteToggle = false;
-  
+
   /*CONSTRUCTOR*/
   constructor(
     private menu: MenuController, //Controla el menú lateral
@@ -63,7 +63,7 @@ export class AppComponent {
         }
       ]
     });
-  
+
     await alert.present(); //Presenta la alerta de confirmación
   }
 
@@ -82,14 +82,14 @@ export class AppComponent {
   toggleDarkPalette(shouldAdd: boolean) {
     const body = document.body;
     body.classList.remove('modo-claro', 'modo-oscuro'); //Elimina clases de modo de color previas
-  
+
     if (shouldAdd) {
       body.classList.add('modo-oscuro'); //Activa el modo oscuro
     } else {
       body.classList.add('modo-claro');  //Activa el modo claro
     }
   }
-  
+
   //Método que muestra la pantalla de splash durante 3000 ms al iniciar la aplicación
   async showSplash() {
     await SplashScreen.show({

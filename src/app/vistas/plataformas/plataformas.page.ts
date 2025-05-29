@@ -17,13 +17,13 @@ export class PlataformasPage {
 
   //Array que almacena todas las plataformas recibidas desde la API
   plataformas: any[] = [];
-  
+
   //Array que contiene las plataformas que se mostrarán de forma paginada
   plataformasFiltradas: any[] = [];
-  
+
   //Número de plataformas cargadas inicialmente en la vista
-  plataformasCargadas: number = 9; 
-  
+  plataformasCargadas: number = 9;
+
   //Número de plataformas que se agregarán en cada carga adicional
   plataformasPorCargar: number = 9;
 
@@ -63,15 +63,15 @@ export class PlataformasPage {
     setTimeout(() => {
       //Incrementa el contador de plataformas cargadas
       this.plataformasCargadas += this.plataformasPorCargar;
-      
+
       //Actualiza la lista de plataformas visibles según el nuevo contador
       this.plataformasFiltradas = this.plataformas.slice(0, this.plataformasCargadas);
-  
+
       event.target.complete(); //Indica que la carga adicional ha finalizado
-  
+
       //Si se han cargado todas las plataformas, deshabilita el scroll infinito
       if (this.plataformasCargadas >= this.plataformas.length) {
-        event.target.disabled = true;  
+        event.target.disabled = true;
       }
     }, 500);
   }

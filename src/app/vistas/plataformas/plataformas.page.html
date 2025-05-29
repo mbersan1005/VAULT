@@ -9,10 +9,12 @@
 
 <ion-content class="fondo-logo">
 
+  <!-- Texto mostrado si no hay plataformas disponibles -->
   <ion-text *ngIf="plataformas.length === 0">
     <h3>No se encontraron plataformas</h3>
   </ion-text>
 
+  <!-- Se genera una tarjeta por cada plataformas -->
   <ion-grid *ngIf="plataformas.length > 0">
     <ion-row>
       <ion-col size="12" size-md="4" *ngFor="let plataforma of plataformasFiltradas; let i = index">
@@ -33,8 +35,10 @@
     </ion-row>
   </ion-grid>
 
+  <!-- Scroll infinito para cargar más plataformas cuando se llegue al final -->
   <ion-infinite-scroll threshold="100px" (ionInfinite)="cargarMasPlataformas($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más plataformas..."></ion-infinite-scroll-content>
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="Cargando más plataformas..."></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
 </ion-content>

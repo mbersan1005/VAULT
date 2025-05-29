@@ -7,15 +7,21 @@
   </ion-toolbar>
 
   <ion-toolbar>
-    <ion-searchbar [debounce]="500" (ionInput)="realizarBusqueda($event)" placeholder="Buscar juegos..."></ion-searchbar>
+    <!-- Barra de búsqueda -->
+    <ion-searchbar [debounce]="500" (ionInput)="realizarBusqueda($event)"
+      placeholder="Buscar juegos..."></ion-searchbar>
   </ion-toolbar>
 
+  <!-- Ion-Select con filtros de ordenamiento-->
   <ion-toolbar>
-    <ion-select interface="popover" [(ngModel)]="ordenActual" (ionChange)="aplicarOrden($event.detail.value)" [placeholder]="'Filtro: ' + obtenerTextoOrdenActual()">
+    <ion-select interface="popover" [(ngModel)]="ordenActual" (ionChange)="aplicarOrden($event.detail.value)"
+      [placeholder]="'Filtro: ' + obtenerTextoOrdenActual()">
       <ion-select-option *ngIf="ordenActual !== 'nombre_asc'" value="nombre_asc">Nombre (A-Z)</ion-select-option>
       <ion-select-option *ngIf="ordenActual !== 'nombre_desc'" value="nombre_desc">Nombre (Z-A)</ion-select-option>
-      <ion-select-option *ngIf="ordenActual !== 'fecha_asc'" value="fecha_asc">Fecha (Antiguos primero)</ion-select-option>
-      <ion-select-option *ngIf="ordenActual !== 'fecha_desc'" value="fecha_desc">Fecha (Recientes primero)</ion-select-option>
+      <ion-select-option *ngIf="ordenActual !== 'fecha_asc'" value="fecha_asc">Fecha (Antiguos
+        primero)</ion-select-option>
+      <ion-select-option *ngIf="ordenActual !== 'fecha_desc'" value="fecha_desc">Fecha (Recientes
+        primero)</ion-select-option>
       <ion-select-option *ngIf="ordenActual !== 'nota_asc'" value="nota_asc">Nota (Menor a mayor)</ion-select-option>
       <ion-select-option *ngIf="ordenActual !== 'nota_desc'" value="nota_desc">Nota (Mayor a menor)</ion-select-option>
     </ion-select>
@@ -24,10 +30,12 @@
 </ion-header>
 
 <ion-content class="fondo-logo">
+  <!-- Mensaje cuando no se encuentran juegos -->
   <ion-text *ngIf="juegosFiltrados.length === 0">
     <h3>No se encontraron juegos</h3>
   </ion-text>
 
+  <!-- Se genera una tarjeta por cada juego -->
   <ion-grid *ngIf="juegosFiltrados.length > 0">
     <ion-row>
       <ion-col size="12" size-md="4" *ngFor="let juego of juegosFiltrados; let i = index">
@@ -44,9 +52,12 @@
               <p><strong>Géneros:</strong> {{ getGeneros(juego.generos) }}</p>
             </div>
 
+            <!-- Botones de administración visibles si hay sesión activa -->
             <div *ngIf="sesion.comprobarSesion()" class="admin-buttons card-buttons">
-              <ion-button expand="block" color="tertiary" (click)="$event.stopPropagation(); editarJuego(juego.id)"><strong>Editar</strong></ion-button>
-              <ion-button expand="block" color="danger" (click)="$event.stopPropagation(); eliminarJuego(juego.id)"><strong>Eliminar</strong></ion-button>
+              <ion-button expand="block" color="tertiary"
+                (click)="$event.stopPropagation(); editarJuego(juego.id)"><strong>Editar</strong></ion-button>
+              <ion-button expand="block" color="danger"
+                (click)="$event.stopPropagation(); eliminarJuego(juego.id)"><strong>Eliminar</strong></ion-button>
             </div>
 
           </ion-card-content>
@@ -55,15 +66,12 @@
     </ion-row>
   </ion-grid>
 
-  <ion-infinite-scroll 
-  *ngIf="juegosFiltrados.length > 0 && juegosCargados < (textoBusqueda.trim() !== '' ? juegosBuscados.length : juegos.length)" 
-  (ionInfinite)="cargarMasJuegos($event)" 
-  threshold="100px" 
-  [disabled]="false">
+  <!-- Scroll infinito para cargar más juegos cuando se llega al final -->
+  <ion-infinite-scroll
+    *ngIf="juegosFiltrados.length > 0 && juegosCargados < (textoBusqueda.trim() !== '' ? juegosBuscados.length : juegos.length)"
+    (ionInfinite)="cargarMasJuegos($event)" threshold="100px" [disabled]="false">
 
-    <ion-infinite-scroll-content 
-      loadingSpinner="bubbles" 
-      loadingText="Cargando más juegos..."
-    ></ion-infinite-scroll-content>
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+      loadingText="Cargando más juegos..."></ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>

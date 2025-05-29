@@ -19,28 +19,28 @@ export class JuegosListaFiltroPage {
 
   //Array que almacena todos los juegos recibidos de la API
   juegos: any[] = [];
-  
+
   //Array que contiene los juegos a mostrar según la paginación
   juegosFiltrados: any[] = [];
-  
+
   //Array que almacena los resultados de búsqueda de juegos
-  juegosBuscados: any[] = [];  
-  
+  juegosBuscados: any[] = [];
+
   //Texto ingresado en el campo de búsqueda
   textoBusqueda: string = '';
-  
+
   //Número inicial de juegos cargados en la vista
   juegosCargados: number = 9;
-  
+
   //Número de juegos que se cargarán en cada acción del scroll infinito
   juegosPorCargar: number = 9;
-  
+
   //Categoría de juegos, obtenida de los parámetros de la URL
   categoria: string = '';
-  
+
   //Nombre relacionado a la categoría, también obtenido de los parámetros de la URL
   nombre: string = '';
-  
+
   //Orden actual aplicado a la lista de juegos
   ordenActual: string = 'nombre_asc';
 
@@ -81,7 +81,7 @@ export class JuegosListaFiltroPage {
       }
     );
   }
-  
+
   //Método que ejecuta una búsqueda de juegos según el texto ingresado por el usuario
   public realizarBusqueda(event: any) {
     this.textoBusqueda = event.target.value?.toLowerCase() || ''; //Convierte el texto a minúsculas
@@ -96,7 +96,7 @@ export class JuegosListaFiltroPage {
       }
       return;
     }
-  
+
     //Realiza la búsqueda a través de la API
     this.apiFacade.realizarBusqueda(this.textoBusqueda).subscribe(
       (response) => {
@@ -113,7 +113,7 @@ export class JuegosListaFiltroPage {
       }
     );
   }
-  
+
   //Método que incrementa la cantidad de juegos mostrados al activar el scroll infinito
   public cargarMasJuegos(event: any) {
     setTimeout(() => {
@@ -126,12 +126,12 @@ export class JuegosListaFiltroPage {
       } else {
         fuenteDatos = [...this.juegos];
       }
-  
+
       fuenteDatos = this.ordenarJuegos(this.ordenActual, fuenteDatos); //Aplica el orden a la fuente de datos
       this.juegosFiltrados = fuenteDatos.slice(0, this.juegosCargados); //Actualiza la lista de juegos mostrados
-  
+
       event.target.complete(); //Informa que la carga adicional ha finalizado
-  
+
       //Si se han cargado todos los juegos disponibles, deshabilita el scroll infinito
       if (this.juegosCargados >= fuenteDatos.length) {
         event.target.disabled = true;
@@ -169,14 +169,14 @@ export class JuegosListaFiltroPage {
   //Método que ordena la lista de juegos según el tipo de orden especificado
   public ordenarJuegos(tipoOrden: string, lista: any[] = []) {
     this.ordenActual = tipoOrden;
-  
+
     if (lista.length === 0) {
       //Si no se provee una lista, utiliza los datos de búsqueda o la lista completa de juegos
       lista = this.textoBusqueda.trim() !== ''
         ? [...this.juegosBuscados]
         : [...this.juegos];
     }
-  
+
     switch (tipoOrden) {
       case 'nombre_asc':
         lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -197,10 +197,10 @@ export class JuegosListaFiltroPage {
         lista.sort((a, b) => b.nota_metacritic - a.nota_metacritic);
         break;
     }
-  
+
     return lista;
   }
-  
+
   //Método que retorna una descripción legible del orden actual aplicado a la lista de juegos
   public obtenerTextoOrdenActual(): string {
     switch (this.ordenActual) {
@@ -243,21 +243,21 @@ export class JuegosListaFiltroPage {
         }
       ]
     });
-  
+
     await alert.present();
   }
 
   //Método que aplica un nuevo orden a la lista de juegos y actualiza la vista
   public aplicarOrden(nuevoOrden: string) {
     this.ordenActual = nuevoOrden;
-  
+
     const fuenteDatos = this.textoBusqueda.trim() !== ''
       ? [...this.juegosBuscados]
       : [...this.juegos];
-  
+
     const ordenados = this.ordenarJuegos(nuevoOrden, fuenteDatos);
     this.juegosFiltrados = ordenados.slice(0, this.juegosCargados);
-  
+
     if (this.infiniteScroll) {
       this.infiniteScroll.disabled = false; //Habilita el scroll infinito tras cambiar el orden
     }

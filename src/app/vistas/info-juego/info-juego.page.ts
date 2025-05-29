@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { ApiFacade } from '../../facades/api.facade';
 import { ApiRequestService } from '../../requests/api.requests';
 import { CommonModule, DatePipe } from '@angular/common';
-import { IonicModule } from '@ionic/angular';  
+import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UiService } from 'src/app/services/ui/ui.service';
@@ -20,8 +20,10 @@ export class InfoJuegoPage {
 
   //ID del juego obtenido de la URL
   juegoId: number | null = null;
+  
   //Objeto que almacenará los datos del juego
   juego: any = {};
+  
   //URL segura para el iframe embebido (SteamDB)
   iframeSrc: SafeResourceUrl | null = null;
 
@@ -32,7 +34,7 @@ export class InfoJuegoPage {
     private ui: UiService, //Servicio para mostrar mensajes al usuario
     private route: ActivatedRoute, //Permite acceder a los parámetros de la ruta
     private sanitizer: DomSanitizer, //Servicio para sanitizar URLs
-  ) {}
+  ) { }
 
   //Método que inicializa el componente y carga los datos del juego si el ID es válido
   ngOnInit() {
@@ -88,7 +90,7 @@ export class InfoJuegoPage {
       }
     );
   }
-  
+
   //Método que retorna un enlace HTML si el sitio está definido; caso contrario, retorna "No establecido"
   getSitioWeb(sitio: string | null): string {
     if (sitio) {
@@ -107,5 +109,5 @@ export class InfoJuegoPage {
   isLastItem(array: any[], item: any): boolean {
     return array[array.length - 1] === item;
   }
-  
+
 }

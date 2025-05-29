@@ -8,15 +8,17 @@
 </ion-header>
 
 <ion-content class="fondo-logo">
-  
+
+  <!-- Texto mostrado si no hay tiendas disponibles -->
   <ion-text *ngIf="tiendas.length === 0">
     <h3>No se encontraron tiendas</h3>
   </ion-text>
 
+  <!-- Se genera una tarjeta por cada tienda -->
   <ion-grid *ngIf="tiendas.length > 0">
     <ion-row>
       <ion-col size="12" size-md="4" *ngFor="let tienda of tiendas; let i = index">
-        <ion-card  class="card-hover" (click)="verJuegosTienda('tiendas', tienda.nombre)">
+        <ion-card class="card-hover" (click)="verJuegosTienda('tiendas', tienda.nombre)">
           <div class="image-container">
             <img [src]="tienda.imagen" alt="Imagen de {{ tienda.nombre }}">
             <div class="card-title-overlay">
@@ -25,7 +27,8 @@
           </div>
           <ion-card-content>
             <div>
-              <p><strong>Dominio: </strong> <a [href]="getUrlCompleta(tienda.dominio)" target="_blank">{{ tienda.dominio }}</a></p>
+              <p><strong>Dominio: </strong> <a [href]="getUrlCompleta(tienda.dominio)" target="_blank">{{ tienda.dominio
+                  }}</a></p>
               <p><strong>Cantidad de juegos:</strong> {{ tienda.cantidad_juegos }} </p>
             </div>
           </ion-card-content>

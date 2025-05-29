@@ -41,7 +41,7 @@ export class GenerosPage {
       }
     );
   }
-  
+
   //Método que redirige a la lista de juegos filtrada por el género seleccionado
   public verJuegosGenero(categoria: string, nombre: string) {
     this.router.navigate(['/juegos-lista-filtro', categoria, nombre]); //Navega pasando los parámetros de categoría y nombre

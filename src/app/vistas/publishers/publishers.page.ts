@@ -17,22 +17,22 @@ export class PublishersPage {
 
   //Array que almacena todos los publishers obtenidos de la API
   publishers: any[] = [];
-  
+
   //Array que contiene los publishers que se mostrarán actualmente (paginados)
   publishersFiltrados: any[] = [];
-  
+
   //Array que almacena los publishers resultado de una búsqueda
   publishersBuscados: any[] = [];
-  
+
   //Texto ingresado en el campo de búsqueda (convertido a minúsculas)
   textoBusqueda: string = '';
-  
+
   //Número inicial de publishers cargados en la vista
   publishersCargados: number = 9;
-  
+
   //Número de publishers que se cargarán en cada evento de scroll infinito
   publishersPorCargar: number = 9;
-  
+
   //Orden actual aplicado a la lista de publishers (por ejemplo, 'juegos_desc')
   ordenActual: string = 'juegos_desc';
 
@@ -67,7 +67,7 @@ export class PublishersPage {
       }
     );
   }
-  
+
   //Método que ejecuta la búsqueda de publishers según el texto ingresado en el input
   public realizarBusqueda(event: any) {
     this.textoBusqueda = event.target.value?.toLowerCase() || ''; //Convierte el texto a minúsculas y lo asigna
@@ -77,14 +77,14 @@ export class PublishersPage {
       this.publishersBuscados = [];
       this.publishersCargados = 9;
       this.publishersFiltrados = this.ordenarJuegos(this.ordenActual, this.publishers).slice(0, this.publishersCargados);
-      
+
       if (this.infiniteScroll) {
         this.infiniteScroll.disabled = false; //Habilita el scroll infinito
       }
-      
+
       return;
     }
-  
+
     //Realiza la búsqueda a través de la API según el texto ingresado
     this.apiFacade.realizarBusquedaPublishers(this.textoBusqueda).subscribe(
       (response) => {
@@ -92,7 +92,7 @@ export class PublishersPage {
         this.publishersBuscados = resultados; //Almacena los publishers encontrados
         this.publishersCargados = 9; //Reinicia la cantidad de publishers mostrados
         this.publishersFiltrados = this.ordenarJuegos(this.ordenActual, resultados).slice(0, this.publishersCargados);
-  
+
         if (this.infiniteScroll) {
           this.infiniteScroll.disabled = false; //Habilita el scroll infinito después de la búsqueda
         }
@@ -107,44 +107,44 @@ export class PublishersPage {
   public cargarMasPublishers(event: any) {
     setTimeout(() => {
       this.publishersCargados += this.publishersPorCargar; //Incrementa el contador de publishers cargados
-  
+
       let fuenteDatos: any[] = [];
-  
+
       //Selecciona la fuente de datos correcta: publisher resultado de búsqueda o lista completa
       if (this.textoBusqueda.trim() !== '') {
         fuenteDatos = [...this.publishersBuscados];
       } else {
         fuenteDatos = [...this.publishers];
       }
-  
+
       fuenteDatos = this.ordenarJuegos(this.ordenActual, fuenteDatos); //Ordena la fuente de datos según el orden actual
       this.publishersFiltrados = fuenteDatos.slice(0, this.publishersCargados); //Actualiza la lista de publishers mostrados
-  
+
       event.target.complete(); //Indica que la carga adicional ha finalizado
-  
+
       //Si se han cargado todos los publishers disponibles, deshabilita el scroll infinito
       if (this.publishersCargados >= fuenteDatos.length) {
         event.target.disabled = true;
       }
     }, 500);
   }
-  
+
   //Método que navega a la lista de juegos filtrada por el publisher seleccionado
   public verJuegosPublisher(categoria: string, nombre: string) {
     this.router.navigate(['/juegos-lista-filtro', categoria, nombre]);
   }
-  
+
   //Método que ordena la lista de publishers según el tipo de orden establecido
   public ordenarJuegos(tipoOrden: string, lista: any[] = []) {
     this.ordenActual = tipoOrden;
-  
+
     if (lista.length === 0) {
       //Si no se proporciona una lista, determina la fuente de datos en función del campo de búsqueda
       lista = this.textoBusqueda.trim() !== ''
         ? [...this.publishersBuscados]
         : [...this.publishers];
     }
-  
+
     switch (tipoOrden) {
       case 'nombre_asc':
         lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -159,10 +159,10 @@ export class PublishersPage {
         lista.sort((a, b) => b.cantidad_juegos - a.cantidad_juegos);
         break;
     }
-  
+
     return lista;
   }
-  
+
   //Método que retorna una descripción legible del orden actual aplicado
   public obtenerTextoOrdenActual(): string {
     switch (this.ordenActual) {
@@ -177,14 +177,14 @@ export class PublishersPage {
   //Método que aplica un nuevo orden a la lista de publishers y actualiza la vista
   public aplicarOrden(nuevoOrden: string) {
     this.ordenActual = nuevoOrden;
-  
+
     const fuenteDatos = this.textoBusqueda.trim() !== ''
       ? [...this.publishersBuscados]
       : [...this.publishers];
-  
+
     const ordenados = this.ordenarJuegos(nuevoOrden, fuenteDatos);
     this.publishersFiltrados = ordenados.slice(0, this.publishersCargados);
-  
+
     if (this.infiniteScroll) {
       this.infiniteScroll.disabled = false; //Habilita el scroll infinito tras cambiar el orden
     }

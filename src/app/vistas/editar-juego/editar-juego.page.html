@@ -11,14 +11,16 @@
   <ion-card>
     <ion-card-content>
       <form [formGroup]="editarJuegoForm" (ngSubmit)="editarJuego()">
-        
+
+        <!-- Indicaciones -->
         <p class="info">Los campos que no han sido alterados no se verán modificados</p>
         <p class="info">Por favor, edite como mínimo un campo</p>
-        
+
         <!-- Nombre del Juego -->
         <ion-item>
           <ion-label position="stacked">Nombre del Juego</ion-label>
-          <ion-input formControlName="nombre" type="text" [placeholder]="juego?.nombre || 'Nombre del juego'"></ion-input>
+          <ion-input formControlName="nombre" type="text"
+            [placeholder]="juego?.nombre || 'Nombre del juego'"></ion-input>
         </ion-item>
 
         <!-- Descripción -->
@@ -30,7 +32,8 @@
         <!-- Nota -->
         <ion-item>
           <ion-label position="stacked">Nota</ion-label>
-          <ion-input formControlName="nota_metacritic" type="number" [placeholder]="juego?.nota_metacritic || 'Nota Metacritic'" min="0" max="100"></ion-input>
+          <ion-input formControlName="nota_metacritic" type="number"
+            [placeholder]="juego?.nota_metacritic || 'Nota Metacritic'" min="0" max="100"></ion-input>
         </ion-item>
 
         <!-- Fecha de Lanzamiento -->
@@ -43,22 +46,23 @@
         <ion-item>
           <ion-label position="stacked">Imagen</ion-label>
           <input id="input-imagen" type="file" (change)="onImageSelected($event)" accept="image/*" />
-        
+
           <ion-button fill="clear" *ngIf="imagenArchivo" (click)="eliminarImagen()">
-          Quitar imagen seleccionada
+            Quitar imagen seleccionada
           </ion-button>
         </ion-item>
 
         <!-- Sitio Web -->
         <ion-item>
           <ion-label position="stacked">Sitio Web</ion-label>
-          <ion-input formControlName="sitio_web" type="url" [placeholder]="juego?.sitio_web || 'Sitio web del juego'"></ion-input>
+          <ion-input formControlName="sitio_web" type="url"
+            [placeholder]="juego?.sitio_web || 'Sitio web del juego'"></ion-input>
         </ion-item>
 
         <!-- Tiendas -->
         <p *ngIf="juego?.tiendas?.length">
           <strong>Tiendas actuales: </strong>
-          <ion-chip *ngFor="let tienda of juego.tiendas" >
+          <ion-chip *ngFor="let tienda of juego.tiendas">
             {{ tienda.nombre }}
           </ion-chip>
         </p>
@@ -70,7 +74,7 @@
             </ion-select-option>
           </ion-select>
         </ion-item>
-          
+
         <!-- Plataformas -->
         <p *ngIf="juego?.plataformas_principales?.length">
           <strong>Plataformas actuales: </strong>
@@ -81,7 +85,8 @@
         <ion-item>
           <ion-label>Plataformas: </ion-label>
           <ion-select formControlName="plataformas" multiple="true" interface="popover">
-            <ion-select-option *ngFor="let plataforma of plataformas" [value]="plataforma.id"> {{ plataforma.nombre }} </ion-select-option>
+            <ion-select-option *ngFor="let plataforma of plataformas" [value]="plataforma.id"> {{ plataforma.nombre }}
+            </ion-select-option>
           </ion-select>
         </ion-item>
 
@@ -95,7 +100,8 @@
         <ion-item>
           <ion-label>Géneros: </ion-label>
           <ion-select formControlName="generos" multiple="true" interface="popover">
-            <ion-select-option *ngFor="let genero of generos" [value]="genero.id">{{ genero.nombre }}</ion-select-option>
+            <ion-select-option *ngFor="let genero of generos" [value]="genero.id">{{ genero.nombre
+              }}</ion-select-option>
           </ion-select>
         </ion-item>
 
@@ -124,7 +130,7 @@
         </p>
         <ion-item>
           <ion-label>Publishers:</ion-label>
-          <ion-select formControlName="publishers" multiple="true" interface="popover" >
+          <ion-select formControlName="publishers" multiple="true" interface="popover">
             <ion-select-option *ngFor="let publisher of publishers" [value]="publisher.id">
               {{ publisher.nombre }}
             </ion-select-option>
@@ -132,8 +138,9 @@
         </ion-item>
 
         <!-- Botón de guardar -->
-        <ion-button expand="full" type="submit" [disabled]="!editarJuegoForm.valid || !puedeEnviar()">Editar Juego</ion-button>
-      
+        <ion-button expand="full" type="submit" [disabled]="!editarJuegoForm.valid || !puedeEnviar()">Editar
+          Juego</ion-button>
+
       </form>
     </ion-card-content>
   </ion-card>

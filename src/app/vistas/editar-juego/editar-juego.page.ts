@@ -13,27 +13,34 @@ import { UiService } from 'src/app/services/ui/ui.service';
   styleUrls: ['./editar-juego.page.scss'],
   standalone: true,
   imports: [IonicModule, FormsModule, CommonModule, ReactiveFormsModule],
-  providers: [DatePipe]  
+  providers: [DatePipe]
 })
 export class EditarJuegoPage {
 
   //ID del juego obtenido de la URL
   juegoId: number | null = null;
+
   //Objeto que almacenará los datos del juego
   juego: any = {};
 
   //Formulario reactivo para editar la información del juego
   editarJuegoForm!: FormGroup;
+
   //Lista de géneros disponibles
   generos: { id: number, nombre: string }[] = [];
+
   //Lista de plataformas disponibles
   plataformas: { id: number, nombre: string }[] = [];
+
   //Lista de tiendas disponibles
   tiendas: { id: number, nombre: string }[] = [];
+
   //Lista de desarrolladoras disponibles
   desarrolladoras: { id: number, nombre: string }[] = [];
+
   //Lista de publishers disponibles
   publishers: { id: number, nombre: string }[] = [];
+
   //Archivo de imagen seleccionado
   imagenArchivo: File | null = null;
 
@@ -68,9 +75,9 @@ export class EditarJuegoPage {
     this.editarJuegoForm = this.formBuilder.group({
       nombre: [''],
       descripcion: [''],
-      nota_metacritic: [''], 
+      nota_metacritic: [''],
       fecha_lanzamiento: [''],
-      sitio_web: [''], 
+      sitio_web: [''],
       tiendas: [[]],
       plataformas: [[]],
       generos: [[]],
@@ -107,8 +114,8 @@ export class EditarJuegoPage {
             descripcion: this.juego.descripcion,
             fecha_lanzamiento: this.juego.fecha_lanzamiento ? this.datePipe.transform(this.juego.fecha_lanzamiento, 'yyyy-MM-dd') : '',
             sitio_web: this.juego.sitio_web,
-            nota_metacritic: this.juego.nota_metacritic,   
-            nombre: this.juego.nombre,   
+            nota_metacritic: this.juego.nota_metacritic,
+            nombre: this.juego.nombre,
           });
 
           //Guarda los valores originales del formulario para comparaciones futuras
@@ -218,11 +225,11 @@ export class EditarJuegoPage {
   //Método que normaliza el valor para la comparación (string, number o Date)
   private normalizarValor(valor: any): any {
     if (valor === null || valor === undefined) return '';
-    
+
     if (typeof valor === 'string') return valor.trim();
-    
+
     if (typeof valor === 'number') return valor.toString(); //Convierte números a string para comparar
-    
+
     if (valor instanceof Date) return this.datePipe.transform(valor, 'yyyy-MM-dd');
 
     return valor;

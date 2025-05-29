@@ -53,5 +53,5 @@ export class TiendasPage {
       return 'https://' + dominio;
     }
     return dominio;
-  }  
+  }
 }
