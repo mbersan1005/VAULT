@@ -41,6 +41,15 @@ export class AppComponent {
     this.menu.close();
   }
 
+  //Método que navega a Google Drive para descargar el APK de VAULT
+  descargarApk(){
+  const fileId = '1fDjI6IdMBjeq6nMIsYafjO9aYbH0Vj5x';
+  const apkUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+  // Abre el enlace en una nueva pestaña (web) o navegador externo (Android)
+  window.open(apkUrl, '_blank');
+  }
+
   //Método que solicita confirmación para cerrar sesión y, de confirmarse, finaliza la sesión del usuario
   async logout() {
     const alert = await this.alertController.create({
