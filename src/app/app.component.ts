@@ -4,7 +4,6 @@ import { AlertController, MenuController } from '@ionic/angular';
 import { SesionService } from './services/sesion/sesion.service';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { UiService } from './services/ui/ui.service';
-import { Browser } from '@capacitor/browser';
 
 @Component({
   selector: 'app-root',
@@ -44,11 +43,10 @@ export class AppComponent {
 
   //Método que navega a Google Drive para descargar el APK de VAULT
   async descargarApk(){
-  const fileId = '1fDjI6IdMBjeq6nMIsYafjO9aYbH0Vj5x';
-  const apkUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    const apkUrl = `https://github.com/mbersan1005/VAULT/releases/download/V1.0.0/VAULT.apk`;
 
-  //Abre el enlace en una nueva pestaña (web) o navegador externo (Android)
-    await Browser.open({ url: apkUrl });
+    //Abre el enlace en una nueva pestaña (web) o navegador externo (Android)
+    window.open(apkUrl, '_blank');
   }
 
   //Método que solicita confirmación para cerrar sesión y, de confirmarse, finaliza la sesión del usuario
