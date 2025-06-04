@@ -43,7 +43,7 @@ export class AppComponent {
 
   //Método que navega a Google Drive para descargar el APK de VAULT
   async descargarApk(){
-    const apkUrl = `https://github.com/mbersan1005/VAULT/releases/download/v1.0.0/VAULT.apk`;
+    const apkUrl = `https://github.com/mbersan1005/VAULT/releases/download/v1.0.0-android/VAULT.apk`;
 
     //Abre el enlace en una nueva pestaña (web) o navegador externo (Android)
     window.open(apkUrl, '_blank');
