@@ -68,14 +68,17 @@ export class HomePage {
 
   //Método que recupera los juegos desde la API, los ordena y actualiza la vista
   public cargarJuegos() {
+    this.ui.mostrarLoading('Cargando juegos, por favor espere...');
     this.apiFacade.recibirJuegos().subscribe(
       (data) => {
         this.juegos = data.juegos; //Asigna los juegos recibidos
         const juegosOrdenados = this.ordenarJuegos(this.ordenActual, [...this.juegos]); //Ordena los juegos
         this.juegosFiltrados = juegosOrdenados.slice(0, this.juegosCargados); //Limita los juegos a mostrar
         this.changeDetector.detectChanges(); //Actualiza la vista
+        this.ui.ocultarLoading();
       },
       (error) => {
+        this.ui.ocultarLoading();
         this.ui.mostrarRespuestaError(error, 'Operación errónea'); //Notifica error al usuario
       }
     );

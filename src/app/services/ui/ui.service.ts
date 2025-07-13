@@ -27,9 +27,9 @@ export class UiService {
   }
 
   //Método que presenta un spinner de carga con un mensaje informativo
-  async mostrarLoading() {
+  async mostrarLoading(mensaje: string = 'Actualizando datos, por favor espere...') {
     const loading = await this.loadingController.create({
-      message: 'Actualizando datos, por favor espere...',
+      message: mensaje,
       spinner: 'crescent',
       duration: 0,
     });
